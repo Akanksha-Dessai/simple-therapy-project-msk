@@ -141,13 +141,20 @@ npm run db:generate  # Generate migration files
 **Database Storage Toggle:**
 The app currently uses in-memory storage (`MemStorage`) which includes realistic seed data. To switch to PostgreSQL:
 
-```typescript
-// In server/storage.ts, change this line:
-export const storage = new MemStorage();
-
-// To this:
-export const storage = new DatabaseStorage();
-```
+1. **Set up your PostgreSQL database** and ensure `DATABASE_URL` environment variable is configured
+2. **Execute the database setup script** to create tables and seed data:
+   ```bash
+   psql -h localhost -U your_username -d your_database -f database-setup.sql
+   ```
+3. **Switch to database mode** by updating `server/storage.ts`:
+   ```typescript
+   // Comment this line:
+   export const storage = new MemStorage();
+   
+   // Uncomment this line:
+   export const storage = new DatabaseStorage();
+   ```
+4. **Restart your development server** - the app will now use PostgreSQL with the same test data
 
 **Critical Dependencies:**
 - All UI components are from shadcn/ui (Radix UI)

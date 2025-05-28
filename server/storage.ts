@@ -572,7 +572,7 @@ export class DatabaseStorage implements IStorage {
     return await this.db
       .select()
       .from(assetCategories)
-      .where(sql`${assetCategories.programTypes} @> ARRAY[${programType}]`)
+      .where(sql`${assetCategories.programType} @> ARRAY[${programType}]`)
       .orderBy(assetCategories.displayOrder);
   }
 
