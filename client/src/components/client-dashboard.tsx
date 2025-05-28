@@ -179,26 +179,7 @@ export default function ClientDashboard({ client }: ClientDashboardProps) {
         </CardContent>
       </Card>
 
-      {/* Language Selector */}
-      <Card>
-        <CardContent className="p-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <Globe className="h-5 w-5 text-gray-600 dark:text-muted-foreground" />
-              <span className="text-sm font-medium text-gray-700 dark:text-foreground">Language / Idioma:</span>
-            </div>
-            <Select value={selectedLanguage} onValueChange={setSelectedLanguage}>
-              <SelectTrigger className="w-48">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="English">🇺🇸 English</SelectItem>
-                <SelectItem value="Spanish">🇪🇸 Español</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </CardContent>
-      </Card>
+
       {/* Communications Toolkit Description */}
       <Card className="mb-8">
         <CardContent className="p-8">
@@ -231,6 +212,26 @@ export default function ClientDashboard({ client }: ClientDashboardProps) {
       {/* Only show assets after a program is selected */}
       {selectedProgram && (
         <>
+          {/* Language Selector - appears after program selection */}
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <Globe className="h-5 w-5 text-gray-600 dark:text-muted-foreground" />
+                  <span className="text-sm font-medium text-gray-700 dark:text-foreground">Language / Idioma:</span>
+                </div>
+                <Select value={selectedLanguage} onValueChange={setSelectedLanguage}>
+                  <SelectTrigger className="w-48">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="English">🇺🇸 English</SelectItem>
+                    <SelectItem value="Spanish">🇪🇸 Español</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </CardContent>
+          </Card>
           {/* Launch Materials */}
           {launchAssets.length > 0 && (
             <Card>
