@@ -55,10 +55,12 @@ export interface IStorage {
 
 export class MemStorage implements IStorage {
   private clients: Map<number, Client> = new Map();
+  private assetCategories: Map<number, AssetCategory> = new Map();
   private assetTemplates: Map<number, AssetTemplate> = new Map();
   private clientAssets: Map<number, ClientAsset> = new Map();
   private users: Map<number, User> = new Map();
   private currentClientId = 1;
+  private currentCategoryId = 1;
   private currentTemplateId = 1;
   private currentAssetId = 1;
   private currentUserId = 1;
@@ -77,7 +79,7 @@ export class MemStorage implements IStorage {
     };
     this.users.set(adminUser.id, adminUser);
 
-    // Create sample clients
+    // Create sample clients with program types
     const client1: Client = {
       id: this.currentClientId++,
       name: "Acme Corporation",
@@ -86,6 +88,7 @@ export class MemStorage implements IStorage {
       logoUrl: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100",
       eligibilityLanguage: "Available to all full-time employees and their families",
       qrCodeUrl: null,
+      programTypes: ["SimpleMSK", "SimpleEAP"],
       status: "active",
       createdAt: new Date(),
       updatedAt: new Date()
@@ -99,6 +102,7 @@ export class MemStorage implements IStorage {
       logoUrl: "https://images.unsplash.com/photo-1497366216548-37526070297c?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100",
       eligibilityLanguage: "Available to all employees working 20+ hours per week",
       qrCodeUrl: null,
+      programTypes: ["SimpleBehavioural", "SimpleWellbeing"],
       status: "active",
       createdAt: new Date(),
       updatedAt: new Date()
@@ -112,6 +116,7 @@ export class MemStorage implements IStorage {
       logoUrl: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100",
       eligibilityLanguage: "Available to all staff members and immediate family",
       qrCodeUrl: null,
+      programTypes: ["SimpleMSK"],
       status: "pending",
       createdAt: new Date(),
       updatedAt: new Date()
@@ -121,70 +126,162 @@ export class MemStorage implements IStorage {
     this.clients.set(client2.id, client2);
     this.clients.set(client3.id, client3);
 
-    // Create sample asset templates
+    // Create asset categories for different programs
+    const categories: AssetCategory[] = [
+      // SimpleMSK Categories
+      {
+        id: this.currentCategoryId++,
+        name: "Intro Materials",
+        slug: "intro-materials",
+        description: "Essential materials to introduce the program",
+        programType: "SimpleMSK",
+        displayOrder: 1,
+        status: "active",
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        id: this.currentCategoryId++,
+        name: "Program Features",
+        slug: "program-features",
+        description: "Materials highlighting specific program features",
+        programType: "SimpleMSK",
+        displayOrder: 2,
+        status: "active",
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        id: this.currentCategoryId++,
+        name: "2025 Calendar Promos",
+        slug: "calendar-promos",
+        description: "Monthly promotional calendar materials",
+        programType: "SimpleMSK",
+        displayOrder: 3,
+        status: "active",
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        id: this.currentCategoryId++,
+        name: "Campaigns",
+        slug: "campaigns",
+        description: "Awareness campaigns and topic-specific materials",
+        programType: "SimpleMSK",
+        displayOrder: 4,
+        status: "active",
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        id: this.currentCategoryId++,
+        name: "Interactive Toolkits",
+        slug: "interactive-toolkits",
+        description: "Interactive digital resources and toolkits",
+        programType: "SimpleMSK",
+        displayOrder: 5,
+        status: "active",
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      // SimpleEAP Categories
+      {
+        id: this.currentCategoryId++,
+        name: "Intro Materials",
+        slug: "eap-intro-materials",
+        description: "EAP program introduction materials",
+        programType: "SimpleEAP",
+        displayOrder: 1,
+        status: "active",
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        id: this.currentCategoryId++,
+        name: "2025 Calendar Promos",
+        slug: "eap-calendar-promos",
+        description: "EAP monthly promotional materials",
+        programType: "SimpleEAP",
+        displayOrder: 2,
+        status: "active",
+        createdAt: new Date(),
+        updatedAt: new Date()
+      }
+    ];
+
+    categories.forEach(category => {
+      this.assetCategories.set(category.id, category);
+    });
+
+    // Create sample asset templates linked to categories
     const templates: AssetTemplate[] = [
       {
         id: this.currentTemplateId++,
-        name: "Executive Leader Email",
-        category: "launch",
-        type: "email",
-        originalFileName: "executive-email-template.docx",
-        fileUrl: "/templates/executive-email.docx",
-        fileType: "docx",
+        name: "Program flyer",
+        categoryId: 1, // Intro Materials
+        type: "flyer",
+        originalFileName: "program-flyer.pdf",
+        fileUrl: "/templates/program-flyer.pdf",
+        fileType: "pdf",
         version: "v2.1",
-        description: "Ready-to-send email template for leadership announcement",
+        description: "Visual overview flyer highlighting key benefits",
+        supportedLanguages: ["English", "Spanish"],
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
         id: this.currentTemplateId++,
-        name: "Program Overview Flyer",
-        category: "launch",
-        type: "flyer",
-        originalFileName: "program-overview-flyer.pdf",
-        fileUrl: "/templates/program-overview.pdf",
-        fileType: "pdf",
+        name: "Supervisor intro letter",
+        categoryId: 1, // Intro Materials
+        type: "email",
+        originalFileName: "supervisor-intro.docx",
+        fileUrl: "/templates/supervisor-intro.docx",
+        fileType: "docx",
         version: "v1.8",
-        description: "Visual overview flyer highlighting key benefits",
+        description: "Introduction letter for supervisors",
+        supportedLanguages: ["English", "Spanish"],
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        id: this.currentTemplateId++,
+        name: "January Flyer 2025",
+        categoryId: 3, // Calendar Promos
+        type: "flyer",
+        originalFileName: "january-2025-flyer.pdf",
+        fileUrl: "/templates/january-2025.pdf",
+        fileType: "pdf",
+        version: "v1.0",
+        description: "January 2025 promotional flyer",
+        supportedLanguages: ["English", "Spanish"],
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
         id: this.currentTemplateId++,
         name: "Mental Health Awareness",
-        category: "ongoing",
+        categoryId: 4, // Campaigns
         type: "flyer",
-        originalFileName: "mental-health-flyer.pdf",
+        originalFileName: "mental-health-campaign.pdf",
         fileUrl: "/templates/mental-health.pdf",
         fileType: "pdf",
         version: "v3.2",
-        description: "Mental health awareness campaign flyer",
+        description: "Mental health awareness campaign materials",
+        supportedLanguages: ["English", "Spanish"],
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
         id: this.currentTemplateId++,
-        name: "Stress Management Tips",
-        category: "ongoing",
-        type: "poster",
-        originalFileName: "stress-management-poster.png",
-        fileUrl: "/templates/stress-management.png",
-        fileType: "png",
-        version: "v2.5",
-        description: "Poster with stress management tips and techniques",
-        createdAt: new Date(),
-        updatedAt: new Date()
-      },
-      {
-        id: this.currentTemplateId++,
-        name: "Employee Wellness Week",
-        category: "ongoing",
-        type: "banner",
-        originalFileName: "wellness-week-banner.jpg",
-        fileUrl: "/templates/wellness-week.jpg",
-        fileType: "jpg",
-        version: "v1.0",
-        description: "Digital banner for employee wellness week promotion",
+        name: "Grief and Loss Toolkit",
+        categoryId: 5, // Interactive Toolkits
+        type: "toolkit",
+        originalFileName: "grief-loss-toolkit.pdf",
+        fileUrl: "/templates/grief-loss-toolkit.pdf",
+        fileType: "pdf",
+        version: "v2.0",
+        description: "Interactive toolkit for grief and loss support",
+        supportedLanguages: ["English", "Spanish"],
         createdAt: new Date(),
         updatedAt: new Date()
       }
@@ -200,6 +297,10 @@ export class MemStorage implements IStorage {
     const newClient: Client = {
       ...client,
       id: this.currentClientId++,
+      logoUrl: client.logoUrl || null,
+      qrCodeUrl: client.qrCodeUrl || null,
+      programTypes: client.programTypes || ["SimpleMSK"],
+      status: client.status || "active",
       createdAt: new Date(),
       updatedAt: new Date()
     };
@@ -232,11 +333,54 @@ export class MemStorage implements IStorage {
     return this.clients.delete(id);
   }
 
+  // Asset category operations
+  async createAssetCategory(category: InsertAssetCategory): Promise<AssetCategory> {
+    const newCategory: AssetCategory = {
+      ...category,
+      id: this.currentCategoryId++,
+      description: category.description || null,
+      status: category.status || "active",
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+    this.assetCategories.set(newCategory.id, newCategory);
+    return newCategory;
+  }
+
+  async getAssetCategory(id: number): Promise<AssetCategory | undefined> {
+    return this.assetCategories.get(id);
+  }
+
+  async getAllAssetCategories(): Promise<AssetCategory[]> {
+    return Array.from(this.assetCategories.values());
+  }
+
+  async getAssetCategoriesByProgram(programType: string): Promise<AssetCategory[]> {
+    return Array.from(this.assetCategories.values())
+      .filter(category => category.programType === programType && category.status === "active")
+      .sort((a, b) => a.displayOrder - b.displayOrder);
+  }
+
+  async updateAssetCategory(id: number, updates: Partial<InsertAssetCategory>): Promise<AssetCategory | undefined> {
+    const category = this.assetCategories.get(id);
+    if (!category) return undefined;
+    
+    const updatedCategory = { ...category, ...updates, updatedAt: new Date() };
+    this.assetCategories.set(id, updatedCategory);
+    return updatedCategory;
+  }
+
+  async deleteAssetCategory(id: number): Promise<boolean> {
+    return this.assetCategories.delete(id);
+  }
+
   // Asset template operations
   async createAssetTemplate(template: InsertAssetTemplate): Promise<AssetTemplate> {
     const newTemplate: AssetTemplate = {
       ...template,
       id: this.currentTemplateId++,
+      description: template.description || null,
+      supportedLanguages: template.supportedLanguages || ["English"],
       createdAt: new Date(),
       updatedAt: new Date()
     };
@@ -252,8 +396,8 @@ export class MemStorage implements IStorage {
     return Array.from(this.assetTemplates.values());
   }
 
-  async getAssetTemplatesByCategory(category: string): Promise<AssetTemplate[]> {
-    return Array.from(this.assetTemplates.values()).filter(template => template.category === category);
+  async getAssetTemplatesByCategory(categoryId: number): Promise<AssetTemplate[]> {
+    return Array.from(this.assetTemplates.values()).filter(template => template.categoryId === categoryId);
   }
 
   async updateAssetTemplate(id: number, updates: Partial<InsertAssetTemplate>): Promise<AssetTemplate | undefined> {
@@ -274,6 +418,8 @@ export class MemStorage implements IStorage {
     const newAsset: ClientAsset = {
       ...clientAsset,
       id: this.currentAssetId++,
+      downloadCount: clientAsset.downloadCount || 0,
+      lastDownloaded: clientAsset.lastDownloaded || null,
       createdAt: new Date()
     };
     this.clientAssets.set(newAsset.id, newAsset);
@@ -305,7 +451,8 @@ export class MemStorage implements IStorage {
   async createUser(user: InsertUser): Promise<User> {
     const newUser: User = {
       ...user,
-      id: this.currentUserId++
+      id: this.currentUserId++,
+      role: user.role || "admin"
     };
     this.users.set(newUser.id, newUser);
     return newUser;
@@ -320,5 +467,4 @@ export class MemStorage implements IStorage {
   }
 }
 
-// Import new storage implementation
-export { storage } from "./storage-new";
+export const storage = new MemStorage();

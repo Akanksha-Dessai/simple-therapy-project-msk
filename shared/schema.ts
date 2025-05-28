@@ -10,7 +10,20 @@ export const clients = pgTable("clients", {
   logoUrl: text("logo_url"),
   eligibilityLanguage: text("eligibility_language").notNull(),
   qrCodeUrl: text("qr_code_url"),
+  programTypes: text("program_types").array().notNull().default(["SimpleMSK"]), // Programs client has access to
   status: text("status").notNull().default("active"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const assetCategories = pgTable("asset_categories", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  slug: text("slug").notNull().unique(),
+  description: text("description"),
+  programType: text("program_type").notNull(), // SimpleMSK, SimpleBehavioural, etc.
+  displayOrder: integer("display_order").notNull().default(0),
+  status: text("status").notNull().default("active"), // active, inactive
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
@@ -18,13 +31,14 @@ export const clients = pgTable("clients", {
 export const assetTemplates = pgTable("asset_templates", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
-  category: text("category").notNull(), // 'launch', 'ongoing', 'future'
+  categoryId: integer("category_id").notNull().references(() => assetCategories.id),
   type: text("type").notNull(), // 'flyer', 'poster', 'banner', 'email', 'video', etc.
   originalFileName: text("original_file_name").notNull(),
   fileUrl: text("file_url").notNull(),
   fileType: text("file_type").notNull(), // 'pdf', 'ppt', 'docx', 'png', 'jpg'
   version: text("version").notNull(),
   description: text("description"),
+  supportedLanguages: text("supported_languages").array().notNull().default(["English"]), // English, Spanish, etc.
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
@@ -52,6 +66,12 @@ export const insertClientSchema = createInsertSchema(clients).omit({
   updatedAt: true,
 });
 
+export const insertAssetCategorySchema = createInsertSchema(assetCategories).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
 export const insertAssetTemplateSchema = createInsertSchema(assetTemplates).omit({
   id: true,
   createdAt: true,
@@ -69,6 +89,8 @@ export const insertUserSchema = createInsertSchema(users).omit({
 
 export type Client = typeof clients.$inferSelect;
 export type InsertClient = z.infer<typeof insertClientSchema>;
+export type AssetCategory = typeof assetCategories.$inferSelect;
+export type InsertAssetCategory = z.infer<typeof insertAssetCategorySchema>;
 export type AssetTemplate = typeof assetTemplates.$inferSelect;
 export type InsertAssetTemplate = z.infer<typeof insertAssetTemplateSchema>;
 export type ClientAsset = typeof clientAssets.$inferSelect;
