@@ -78,7 +78,10 @@ export default function Home() {
               </span>
             </div>
             <div className="text-sm text-gray-500 dark:text-muted-foreground flex flex-col items-end">
-              <div>© 2025 SimpleTherapy. All rights reserved.</div>
+              <div>SimpleTherapy, Inc. is located at 1080 W Shaw Ave, Ste 105, Fresno, CA 93711 © 2025</div>
+              <div className="mt-1">
+                <a href="mailto:support@simpletherapy.com" className="text-primary hover:underline">support@simpletherapy.com</a>
+              </div>
               <div className="mt-1">
                 Account Support: <a href="mailto:account.support@simpletherapy.com" className="text-primary hover:underline">account.support@simpletherapy.com</a>
               </div>
