@@ -325,6 +325,32 @@ export default function AdminPanel() {
                         </p>
                       </div>
                       <div>
+                        <Label htmlFor="activePrograms">Active Programs</Label>
+                        <div className="space-y-2">
+                          <p className="text-xs text-gray-500">
+                            Select which programs this client can access
+                          </p>
+                          <div className="grid grid-cols-2 gap-2">
+                            <div className="flex items-center space-x-2">
+                              <input type="checkbox" id="simpleMSK" name="activePrograms" value="SimpleMSK" className="rounded" />
+                              <label htmlFor="simpleMSK" className="text-sm">SimpleMSK</label>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                              <input type="checkbox" id="simpleEAP" name="activePrograms" value="SimpleEAP" className="rounded" />
+                              <label htmlFor="simpleEAP" className="text-sm">SimpleEAP</label>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                              <input type="checkbox" id="simpleBehavioural" name="activePrograms" value="SimpleBehavioural" className="rounded" />
+                              <label htmlFor="simpleBehavioural" className="text-sm">SimpleBehavioural</label>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                              <input type="checkbox" id="simpleWellbeing" name="activePrograms" value="SimpleWellbeing" className="rounded" />
+                              <label htmlFor="simpleWellbeing" className="text-sm">SimpleWellbeing</label>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div>
                         <Label htmlFor="eligibilityLanguage">Eligibility Language</Label>
                         <Textarea id="eligibilityLanguage" name="eligibilityLanguage" rows={3} placeholder="Enter eligibility text..." />
                       </div>
@@ -353,6 +379,7 @@ export default function AdminPanel() {
                         <TableHead>Client Code</TableHead>
                         <TableHead>Cualinc Code</TableHead>
                         <TableHead>Marquee Code</TableHead>
+                        <TableHead>Active Programs</TableHead>
                         <TableHead>Access Code</TableHead>
                         <TableHead>Landing Page</TableHead>
                         <TableHead>Status</TableHead>
@@ -382,6 +409,15 @@ export default function AdminPanel() {
                             <code className="bg-green-50 dark:bg-green-900 px-2 py-1 rounded text-sm text-green-700 dark:text-green-300">
                               {client.marqueeCode || 'MQ-ACME-2024'}
                             </code>
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex flex-wrap gap-1">
+                              {(client.activePrograms || ['SimpleMSK', 'SimpleEAP']).map((program: string) => (
+                                <Badge key={program} variant="secondary" className="text-xs">
+                                  {program}
+                                </Badge>
+                              ))}
+                            </div>
                           </TableCell>
                           <TableCell>
                             <code className="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded text-sm">
