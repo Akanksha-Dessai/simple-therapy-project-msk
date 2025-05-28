@@ -588,6 +588,41 @@ export default function AdminPanel() {
                         <Label htmlFor="originalFileName">File Name</Label>
                         <Input id="originalFileName" name="originalFileName" required />
                       </div>
+                      
+                      {/* File Upload Zone */}
+                      <div>
+                        <Label>Upload Asset File</Label>
+                        <UploadZone onUpload={(file) => {
+                          // Auto-populate file name if empty
+                          const fileNameInput = document.getElementById('originalFileName') as HTMLInputElement;
+                          if (fileNameInput && !fileNameInput.value) {
+                            fileNameInput.value = file.name;
+                          }
+                          
+                          // Auto-select file type based on extension
+                          const extension = file.name.split('.').pop()?.toLowerCase();
+                          const fileTypeSelect = document.querySelector('[name="fileType"]') as HTMLSelectElement;
+                          if (fileTypeSelect && extension) {
+                            const typeMap: Record<string, string> = {
+                              'pdf': 'pdf',
+                              'ppt': 'ppt',
+                              'pptx': 'ppt',
+                              'docx': 'docx',
+                              'png': 'png',
+                              'jpg': 'jpg',
+                              'jpeg': 'jpg',
+                              'mp4': 'mp4',
+                              'mov': 'mov',
+                              'avi': 'avi',
+                              'html': 'html'
+                            };
+                            if (typeMap[extension]) {
+                              fileTypeSelect.value = typeMap[extension];
+                              fileTypeSelect.dispatchEvent(new Event('change', { bubbles: true }));
+                            }
+                          }
+                        }} />
+                      </div>
                       <div>
                         <Label htmlFor="fileType">File Type</Label>
                         <Select name="fileType" required>
