@@ -335,7 +335,10 @@ export default function AdminPanel() {
                     <TableHeader>
                       <TableRow>
                         <TableHead>Client</TableHead>
+                        <TableHead>Client ID</TableHead>
+                        <TableHead>Client Code</TableHead>
                         <TableHead>Access Code</TableHead>
+                        <TableHead>Landing Page</TableHead>
                         <TableHead>Status</TableHead>
                         <TableHead>Actions</TableHead>
                       </TableRow>
