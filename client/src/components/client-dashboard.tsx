@@ -17,6 +17,7 @@ export default function ClientDashboard({ client }: ClientDashboardProps) {
   const [selectedType, setSelectedType] = useState("all");
   const [selectedProgram, setSelectedProgram] = useState<string | null>(null);
   const [selectedLanguage, setSelectedLanguage] = useState("English");
+  const [categoryFilters, setCategoryFilters] = useState<{[key: string]: string}>({});
 
   const { data: assetsData, isLoading } = useQuery({
     queryKey: [`/api/client/${client.id}/assets`],
@@ -27,6 +28,26 @@ export default function ClientDashboard({ client }: ClientDashboardProps) {
     queryKey: ['/api/admin/categories'],
     queryFn: () => fetch('/api/admin/categories').then(res => res.json()),
   });
+
+  // Helper function to get unique asset types for a category
+  const getAssetTypesForCategory = (assets: any[]) => {
+    const types = Array.from(new Set(assets.map(asset => asset.type)));
+    return types.sort();
+  };
+
+  // Helper function to filter assets by type within a category
+  const filterAssetsByType = (assets: any[], selectedFilter: string) => {
+    if (selectedFilter === "all") return assets;
+    return assets.filter(asset => asset.type === selectedFilter);
+  };
+
+  // Helper function to set category filter
+  const setCategoryFilter = (categoryName: string, filter: string) => {
+    setCategoryFilters(prev => ({
+      ...prev,
+      [categoryName]: filter
+    }));
+  };
 
   const getAssetsInSelectedLanguage = (assets: any[]) => {
     // Filter assets to show only the selected language
@@ -275,8 +296,44 @@ export default function ClientDashboard({ client }: ClientDashboardProps) {
               </div>
             </div>
 
+            {/* Asset Type Filter Buttons */}
+            <div className="mb-4 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-red-200">
+              <div className="flex flex-wrap gap-2">
+                {(() => {
+                  const availableTypes = getAssetTypesForCategory(launchAssets);
+                  const currentFilter = categoryFilters["launch"] || "all";
+                  return (
+                    <>
+                      <Button
+                        variant={currentFilter === "all" ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => setCategoryFilter("launch", "all")}
+                        className="text-xs"
+                      >
+                        All ({launchAssets.length})
+                      </Button>
+                      {availableTypes.map(type => {
+                        const count = launchAssets.filter(asset => asset.type === type).length;
+                        return (
+                          <Button
+                            key={type}
+                            variant={currentFilter === type ? "default" : "outline"}
+                            size="sm"
+                            onClick={() => setCategoryFilter("launch", type)}
+                            className="text-xs capitalize"
+                          >
+                            {type} ({count})
+                          </Button>
+                        );
+                      })}
+                    </>
+                  );
+                })()}
+              </div>
+            </div>
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {launchAssets.map((asset) => (
+              {filterAssetsByType(launchAssets, categoryFilters["launch"] || "all").map((asset) => (
                 <AssetCard key={asset.id} asset={asset} client={client} categories={categoriesData || []} />
               ))}
             </div>
@@ -326,6 +383,42 @@ export default function ClientDashboard({ client }: ClientDashboardProps) {
                     <p className="text-gray-600 dark:text-muted-foreground">
                       {getCategoryDescription("videos")}
                     </p>
+                  </div>
+                </div>
+
+                {/* Asset Type Filter Buttons */}
+                <div className="mb-4 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-red-200">
+                  <div className="flex flex-wrap gap-2">
+                    {(() => {
+                      const availableTypes = getAssetTypesForCategory(videoAssets);
+                      const currentFilter = categoryFilters["videos"] || "all";
+                      return (
+                        <>
+                          <Button
+                            variant={currentFilter === "all" ? "default" : "outline"}
+                            size="sm"
+                            onClick={() => setCategoryFilter("videos", "all")}
+                            className="text-xs"
+                          >
+                            All ({videoAssets.length})
+                          </Button>
+                          {availableTypes.map(type => {
+                            const count = videoAssets.filter(asset => asset.type === type).length;
+                            return (
+                              <Button
+                                key={type}
+                                variant={currentFilter === type ? "default" : "outline"}
+                                size="sm"
+                                onClick={() => setCategoryFilter("videos", type)}
+                                className="text-xs capitalize"
+                              >
+                                {type} ({count})
+                              </Button>
+                            );
+                          })}
+                        </>
+                      );
+                    })()}
                   </div>
                 </div>
 
