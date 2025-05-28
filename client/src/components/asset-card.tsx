@@ -37,6 +37,14 @@ export default function AssetCard({ asset, client }: AssetCardProps) {
         return "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200";
       case "email":
         return "https://images.unsplash.com/photo-1586953208448-b95a79798f07?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200";
+      case "presentation":
+        return "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200";
+      case "webinar":
+        return "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200";
+      case "newsletter":
+        return "https://images.unsplash.com/photo-1504711434969-e33886168f5c?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200";
+      case "virtual-display":
+        return "https://images.unsplash.com/photo-1560472355-536de3962603?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200";
       default:
         return "https://images.unsplash.com/photo-1586953208448-b95a79798f07?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200";
     }
@@ -95,6 +103,14 @@ export default function AssetCard({ asset, client }: AssetCardProps) {
         return { text: "Download Template", icon: Download };
       case "document":
         return { text: "Download Document", icon: FileText };
+      case "presentation":
+        return { text: "Download Presentation", icon: Download };
+      case "webinar":
+        return { text: "Download Webinar", icon: Download };
+      case "newsletter":
+        return { text: "Download Newsletter", icon: Download };
+      case "virtual-display":
+        return { text: "Download Display", icon: Download };
       default:
         return { text: "Download", icon: Download };
     }
