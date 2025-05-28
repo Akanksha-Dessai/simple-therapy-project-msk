@@ -149,6 +149,32 @@ export default function ClientDashboard({ client }: ClientDashboardProps) {
         </CardContent>
       </Card>
 
+      {/* Communications Toolkit Description */}
+      <Card className="mb-8">
+        <CardContent className="p-8">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-foreground mb-4">
+            Communications Toolkit
+          </h2>
+          <div className="text-gray-700 dark:text-muted-foreground space-y-4">
+            <p>
+              Consistent and positive messaging is an important component of a successful promotional strategy for employee assistance programs (EAP), member assistance programs (MAP), student support programs, and behavioral health initiatives. In order to maximize the visibility of your program, providers must make it appealing to everyone, whether they have an acute concern or just need support with everyday challenges.
+            </p>
+            <p>
+              With that in mind, the SimpleTherapy Care Marketing Toolkit includes a variety of flyers, posters, brochures, and digital displays that maximize awareness of your program. The tools below are customized specifically for <strong>{client.name}</strong> and can be downloaded by selecting your program type and clicking the "Download" button on any asset.
+            </p>
+            <p>
+              These materials represent a portion of your program's comprehensive engagement strategy, designed to reach your audience effectively across multiple touchpoints.
+            </p>
+            <p className="text-sm italic">
+              For more information, or to discuss a specific promotional initiative, contact your account manager or reach out to our support team at{" "}
+              <a href="mailto:account.support@simpletherapy.com" className="text-primary hover:underline">
+                account.support@simpletherapy.com
+              </a>
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Program Selection */}
       <ProgramSelector 
         client={client} 
