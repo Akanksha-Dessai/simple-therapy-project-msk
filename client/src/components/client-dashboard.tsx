@@ -306,6 +306,33 @@ export default function ClientDashboard({ client }: ClientDashboardProps) {
             </Card>
           )}
 
+          {/* Videos */}
+          {videoAssets.length > 0 && (
+            <Card>
+              <CardContent className="p-6">
+                <div className="flex items-center mb-6">
+                  <div className={`w-10 h-10 ${getCategoryColor("videos")} rounded-lg flex items-center justify-center mr-3`}>
+                    {getCategoryIcon("videos")}
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-semibold text-gray-900 dark:text-foreground">
+                      {getCategoryTitle("videos")}
+                    </h3>
+                    <p className="text-gray-600 dark:text-muted-foreground">
+                      {getCategoryDescription("videos")}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                  {videoAssets.map((asset) => (
+                    <AssetCard key={asset.id} asset={asset} client={client} />
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
           {/* Intro Materials */}
           {introAssets.length > 0 && (
             <Card>
