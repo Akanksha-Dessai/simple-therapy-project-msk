@@ -297,20 +297,11 @@ export default function AdminPanel() {
                         <Input id="contactEmail" name="contactEmail" type="email" required />
                       </div>
                       <div>
-                        <Label htmlFor="clientFileType">Client File Type</Label>
-                        <Select name="clientFileType" required>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select file type preference" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="pdf">PDF Documents</SelectItem>
-                            <SelectItem value="ppt">PowerPoint Presentations</SelectItem>
-                            <SelectItem value="docx">Word Documents</SelectItem>
-                            <SelectItem value="png">PNG Images</SelectItem>
-                            <SelectItem value="jpg">JPEG Images</SelectItem>
-                            <SelectItem value="all">All File Types</SelectItem>
-                          </SelectContent>
-                        </Select>
+                        <Label htmlFor="clientCode">Client Code</Label>
+                        <Input id="clientCode" name="clientCode" required />
+                        <p className="text-xs text-gray-500 mt-1">
+                          Unique code from SimpleTherapy's client list
+                        </p>
                       </div>
                       <div>
                         <Label htmlFor="landingPageUrl">Landing Page URL</Label>
