@@ -498,4 +498,201 @@ export class MemStorage implements IStorage {
   }
 }
 
+// DatabaseStorage implementation for PostgreSQL
+export class DatabaseStorage implements IStorage {
+  // Import the database connection
+  private db = require('./db').db;
+
+  // Client operations
+  async createClient(client: InsertClient): Promise<Client> {
+    const { clients } = await import('../shared/schema.js');
+    const [newClient] = await this.db.insert(clients).values(client).returning();
+    return newClient;
+  }
+
+  async getClient(id: number): Promise<Client | undefined> {
+    const { clients } = await import('../shared/schema.js');
+    const { eq } = await import('drizzle-orm');
+    const [client] = await this.db.select().from(clients).where(eq(clients.id, id));
+    return client || undefined;
+  }
+
+  async getClientByAccessCode(accessCode: string): Promise<Client | undefined> {
+    const { clients } = await import('../shared/schema.js');
+    const { eq } = await import('drizzle-orm');
+    const [client] = await this.db.select().from(clients).where(eq(clients.accessCode, accessCode));
+    return client || undefined;
+  }
+
+  async getAllClients(): Promise<Client[]> {
+    const { clients } = await import('../shared/schema.js');
+    return await this.db.select().from(clients);
+  }
+
+  async updateClient(id: number, updates: Partial<InsertClient>): Promise<Client | undefined> {
+    const { clients } = await import('../shared/schema.js');
+    const { eq } = await import('drizzle-orm');
+    const [updatedClient] = await this.db
+      .update(clients)
+      .set(updates)
+      .where(eq(clients.id, id))
+      .returning();
+    return updatedClient || undefined;
+  }
+
+  async deleteClient(id: number): Promise<boolean> {
+    const { clients } = await import('../shared/schema.js');
+    const { eq } = await import('drizzle-orm');
+    const result = await this.db.delete(clients).where(eq(clients.id, id));
+    return result.rowCount > 0;
+  }
+
+  // Asset category operations
+  async createAssetCategory(category: InsertAssetCategory): Promise<AssetCategory> {
+    const { assetCategories } = await import('../shared/schema.js');
+    const [newCategory] = await this.db.insert(assetCategories).values(category).returning();
+    return newCategory;
+  }
+
+  async getAssetCategory(id: number): Promise<AssetCategory | undefined> {
+    const { assetCategories } = await import('../shared/schema.js');
+    const { eq } = await import('drizzle-orm');
+    const [category] = await this.db.select().from(assetCategories).where(eq(assetCategories.id, id));
+    return category || undefined;
+  }
+
+  async getAllAssetCategories(): Promise<AssetCategory[]> {
+    const { assetCategories } = await import('../shared/schema.js');
+    return await this.db.select().from(assetCategories).orderBy(assetCategories.displayOrder);
+  }
+
+  async getAssetCategoriesByProgram(programType: string): Promise<AssetCategory[]> {
+    const { assetCategories } = await import('../shared/schema.js');
+    const { sql } = await import('drizzle-orm');
+    return await this.db
+      .select()
+      .from(assetCategories)
+      .where(sql`${assetCategories.programTypes} @> ARRAY[${programType}]`)
+      .orderBy(assetCategories.displayOrder);
+  }
+
+  async updateAssetCategory(id: number, updates: Partial<InsertAssetCategory>): Promise<AssetCategory | undefined> {
+    const { assetCategories } = await import('../shared/schema.js');
+    const { eq } = await import('drizzle-orm');
+    const [updatedCategory] = await this.db
+      .update(assetCategories)
+      .set(updates)
+      .where(eq(assetCategories.id, id))
+      .returning();
+    return updatedCategory || undefined;
+  }
+
+  async deleteAssetCategory(id: number): Promise<boolean> {
+    const { assetCategories } = await import('../shared/schema.js');
+    const { eq } = await import('drizzle-orm');
+    const result = await this.db.delete(assetCategories).where(eq(assetCategories.id, id));
+    return result.rowCount > 0;
+  }
+
+  // Asset template operations
+  async createAssetTemplate(template: InsertAssetTemplate): Promise<AssetTemplate> {
+    const { assetTemplates } = await import('../shared/schema.js');
+    const [newTemplate] = await this.db.insert(assetTemplates).values(template).returning();
+    return newTemplate;
+  }
+
+  async getAssetTemplate(id: number): Promise<AssetTemplate | undefined> {
+    const { assetTemplates } = await import('../shared/schema.js');
+    const { eq } = await import('drizzle-orm');
+    const [template] = await this.db.select().from(assetTemplates).where(eq(assetTemplates.id, id));
+    return template || undefined;
+  }
+
+  async getAllAssetTemplates(): Promise<AssetTemplate[]> {
+    const { assetTemplates } = await import('../shared/schema.js');
+    return await this.db.select().from(assetTemplates);
+  }
+
+  async getAssetTemplatesByCategory(categoryId: number): Promise<AssetTemplate[]> {
+    const { assetTemplates } = await import('../shared/schema.js');
+    const { eq } = await import('drizzle-orm');
+    return await this.db.select().from(assetTemplates).where(eq(assetTemplates.categoryId, categoryId));
+  }
+
+  async updateAssetTemplate(id: number, updates: Partial<InsertAssetTemplate>): Promise<AssetTemplate | undefined> {
+    const { assetTemplates } = await import('../shared/schema.js');
+    const { eq } = await import('drizzle-orm');
+    const [updatedTemplate] = await this.db
+      .update(assetTemplates)
+      .set(updates)
+      .where(eq(assetTemplates.id, id))
+      .returning();
+    return updatedTemplate || undefined;
+  }
+
+  async deleteAssetTemplate(id: number): Promise<boolean> {
+    const { assetTemplates } = await import('../shared/schema.js');
+    const { eq } = await import('drizzle-orm');
+    const result = await this.db.delete(assetTemplates).where(eq(assetTemplates.id, id));
+    return result.rowCount > 0;
+  }
+
+  // Client asset operations
+  async createClientAsset(clientAsset: InsertClientAsset): Promise<ClientAsset> {
+    const { clientAssets } = await import('../shared/schema.js');
+    const [newAsset] = await this.db.insert(clientAssets).values(clientAsset).returning();
+    return newAsset;
+  }
+
+  async getClientAssets(clientId: number): Promise<ClientAsset[]> {
+    const { clientAssets } = await import('../shared/schema.js');
+    const { eq } = await import('drizzle-orm');
+    return await this.db.select().from(clientAssets).where(eq(clientAssets.clientId, clientId));
+  }
+
+  async getClientAssetsByTemplate(templateId: number): Promise<ClientAsset[]> {
+    const { clientAssets } = await import('../shared/schema.js');
+    const { eq } = await import('drizzle-orm');
+    return await this.db.select().from(clientAssets).where(eq(clientAssets.templateId, templateId));
+  }
+
+  async updateClientAssetDownload(id: number): Promise<ClientAsset | undefined> {
+    const { clientAssets } = await import('../shared/schema.js');
+    const { eq, sql } = await import('drizzle-orm');
+    const [updatedAsset] = await this.db
+      .update(clientAssets)
+      .set({
+        downloadCount: sql`${clientAssets.downloadCount} + 1`,
+        lastDownloaded: new Date()
+      })
+      .where(eq(clientAssets.id, id))
+      .returning();
+    return updatedAsset || undefined;
+  }
+
+  // User operations
+  async createUser(user: InsertUser): Promise<User> {
+    const { users } = await import('../shared/schema.js');
+    const [newUser] = await this.db.insert(users).values(user).returning();
+    return newUser;
+  }
+
+  async getUser(id: number): Promise<User | undefined> {
+    const { users } = await import('../shared/schema.js');
+    const { eq } = await import('drizzle-orm');
+    const [user] = await this.db.select().from(users).where(eq(users.id, id));
+    return user || undefined;
+  }
+
+  async getUserByUsername(username: string): Promise<User | undefined> {
+    const { users } = await import('../shared/schema.js');
+    const { eq } = await import('drizzle-orm');
+    const [user] = await this.db.select().from(users).where(eq(users.username, username));
+    return user || undefined;
+  }
+}
+
+// Use MemStorage by default for development, change to DatabaseStorage for production
 export const storage = new MemStorage();
+// To use PostgreSQL database, uncomment the line below and comment the line above:
+// export const storage = new DatabaseStorage();
