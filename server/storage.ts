@@ -347,13 +347,14 @@ export class MemStorage implements IStorage {
       {
         id: this.currentTemplateId++,
         name: "Mental Health Webinar Recording",
-        category: "ongoing",
+        categoryId: 5, // videos category
         type: "webinar",
         originalFileName: "mental-health-webinar.mp4",
         fileUrl: "/templates/mental-health-webinar.mp4",
         fileType: "mp4",
         version: "v1.0",
         description: "Expert-led webinar on mental health best practices",
+        vimeoUrl: "https://vimeo.com/456789012",
         language: "English",
         languageVariants: ["English", "Spanish"],
         createdAt: new Date(),

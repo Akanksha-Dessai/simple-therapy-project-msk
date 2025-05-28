@@ -89,7 +89,7 @@ export default function AssetCard({ asset, client }: AssetCardProps) {
     }
   };
 
-  const isVideo = asset.type === "video";
+  const isVideo = asset.type === "video" || asset.type === "webinar";
 
   const getAssetCTA = (type: string) => {
     switch (type) {
