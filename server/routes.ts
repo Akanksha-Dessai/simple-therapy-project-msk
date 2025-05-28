@@ -90,7 +90,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       templates.forEach(template => {
         const clientAsset = clientAssets.find(ca => ca.templateId === template.id);
         
-        // English version
+        // English version  
         assetsWithClientData.push({
           ...template,
           language: "English",
