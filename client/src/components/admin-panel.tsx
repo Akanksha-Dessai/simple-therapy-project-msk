@@ -35,6 +35,7 @@ export default function AdminPanel() {
   const [showCategoryDialog, setShowCategoryDialog] = useState(false);
   const [editingClient, setEditingClient] = useState<any>(null);
   const [editingCategory, setEditingCategory] = useState<any>(null);
+  const [selectedAssetType, setSelectedAssetType] = useState<string>("");
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -527,6 +528,9 @@ export default function AdminPanel() {
                   <DialogContent className="sm:max-w-[425px]">
                     <DialogHeader>
                       <DialogTitle>Upload New Asset Template</DialogTitle>
+                      <p className="text-sm text-gray-600 dark:text-muted-foreground">
+                        Create a template asset that will be customized with client branding and made available in both English and Spanish
+                      </p>
                     </DialogHeader>
                     <form onSubmit={handleTemplateSubmit} className="space-y-4">
                       <div>
@@ -562,17 +566,21 @@ export default function AdminPanel() {
                       </div>
                       <div>
                         <Label htmlFor="type">Asset Type</Label>
-                        <Select name="type" required>
+                        <Select name="type" required onValueChange={setSelectedAssetType}>
                           <SelectTrigger>
-                            <SelectValue placeholder="Select type" />
+                            <SelectValue placeholder="Select asset type" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="flyer">Flyer</SelectItem>
-                            <SelectItem value="poster">Poster</SelectItem>
-                            <SelectItem value="banner">Banner</SelectItem>
-                            <SelectItem value="email">Email Template</SelectItem>
-                            <SelectItem value="video">Video</SelectItem>
-                            <SelectItem value="presentation">Presentation</SelectItem>
+                            <SelectItem value="flyer">📄 Flyer</SelectItem>
+                            <SelectItem value="poster">🖼️ Poster</SelectItem>
+                            <SelectItem value="banner">🏷️ Banner</SelectItem>
+                            <SelectItem value="email">📧 Email Template</SelectItem>
+                            <SelectItem value="document">📋 Document</SelectItem>
+                            <SelectItem value="presentation">📊 Presentation</SelectItem>
+                            <SelectItem value="newsletter">📰 Newsletter</SelectItem>
+                            <SelectItem value="virtual-display">🖥️ Virtual Display (VDM)</SelectItem>
+                            <SelectItem value="video">🎥 Video</SelectItem>
+                            <SelectItem value="webinar">📹 Webinar</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
@@ -584,14 +592,18 @@ export default function AdminPanel() {
                         <Label htmlFor="fileType">File Type</Label>
                         <Select name="fileType" required>
                           <SelectTrigger>
-                            <SelectValue placeholder="Select file type" />
+                            <SelectValue placeholder="Select file format" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="pdf">PDF</SelectItem>
-                            <SelectItem value="ppt">PowerPoint</SelectItem>
-                            <SelectItem value="docx">Word Document</SelectItem>
-                            <SelectItem value="png">PNG Image</SelectItem>
-                            <SelectItem value="jpg">JPEG Image</SelectItem>
+                            <SelectItem value="pdf">📄 PDF Document</SelectItem>
+                            <SelectItem value="ppt">📊 PowerPoint (.ppt/.pptx)</SelectItem>
+                            <SelectItem value="docx">📝 Word Document (.docx)</SelectItem>
+                            <SelectItem value="png">🖼️ PNG Image</SelectItem>
+                            <SelectItem value="jpg">📸 JPEG Image</SelectItem>
+                            <SelectItem value="mp4">🎥 MP4 Video</SelectItem>
+                            <SelectItem value="mov">🎬 MOV Video</SelectItem>
+                            <SelectItem value="avi">📹 AVI Video</SelectItem>
+                            <SelectItem value="html">🌐 HTML Display</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
@@ -603,8 +615,28 @@ export default function AdminPanel() {
                         <Label htmlFor="description">Description</Label>
                         <Textarea id="description" name="description" rows={3} />
                       </div>
+                      
+                      {/* Conditional Vimeo URL field for videos and webinars */}
+                      {(selectedAssetType === "video" || selectedAssetType === "webinar") && (
+                        <div>
+                          <Label htmlFor="vimeoUrl">Vimeo URL (Optional)</Label>
+                          <Input 
+                            id="vimeoUrl" 
+                            name="vimeoUrl" 
+                            placeholder="https://vimeo.com/..." 
+                            type="url"
+                          />
+                          <p className="text-sm text-gray-500 mt-1">
+                            Add a Vimeo link for clients to watch online in addition to downloading
+                          </p>
+                        </div>
+                      )}
+                      
                       <div className="flex justify-end space-x-2">
-                        <Button type="button" variant="outline" onClick={() => setShowTemplateDialog(false)}>
+                        <Button type="button" variant="outline" onClick={() => {
+                          setShowTemplateDialog(false);
+                          setSelectedAssetType("");
+                        }}>
                           Cancel
                         </Button>
                         <Button type="submit" disabled={createTemplateMutation.isPending}>
