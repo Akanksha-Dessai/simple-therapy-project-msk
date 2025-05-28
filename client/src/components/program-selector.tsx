@@ -50,19 +50,12 @@ export default function ProgramSelector({ client, onProgramSelect, selectedProgr
     }
   };
 
-  const getProgramColor = (program: string) => {
-    switch (program) {
-      case "SimpleMSK":
-        return "bg-blue-600 hover:bg-blue-700";
-      case "SimpleEAP":
-        return "bg-purple-600 hover:bg-purple-700";
-      case "SimpleBehavioural":
-        return "bg-green-600 hover:bg-green-700";
-      case "SimpleWellbeing":
-        return "bg-orange-600 hover:bg-orange-700";
-      default:
-        return "bg-gray-600 hover:bg-gray-700";
-    }
+  const getButtonStyle = (program: string, isSelected: boolean) => {
+    const baseStyle = "bg-white dark:bg-card border-2 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-200";
+    const selectedStyle = isSelected 
+      ? "border-primary shadow-lg shadow-primary/25 scale-105" 
+      : "border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 hover:shadow-md";
+    return `${baseStyle} ${selectedStyle}`;
   };
 
   // Always show program selection for multiple programs
@@ -83,11 +76,7 @@ export default function ProgramSelector({ client, onProgramSelect, selectedProgr
             <Button
               key={program}
               onClick={() => onProgramSelect(program)}
-              className={`h-24 flex flex-col items-center justify-center text-white ${
-                selectedProgram === program 
-                  ? getProgramColor(program) + " ring-2 ring-offset-2 ring-primary" 
-                  : getProgramColor(program)
-              }`}
+              className={`h-24 flex flex-col items-center justify-center ${getButtonStyle(program, selectedProgram === program)}`}
             >
               <span className="text-2xl mb-2">{getProgramLogo(program)}</span>
             </Button>
