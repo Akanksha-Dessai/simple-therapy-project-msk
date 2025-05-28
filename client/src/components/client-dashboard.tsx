@@ -23,12 +23,39 @@ export default function ClientDashboard({ client }: ClientDashboardProps) {
     queryFn: () => clientApi.getAssets(client.id),
   });
 
+  const getAssetsInSelectedLanguage = (assets: any[]) => {
+    // Group assets by their base name (without language indicator)
+    const assetGroups = new Map();
+    
+    assets.forEach(asset => {
+      // Create a base key by removing language-specific parts from the name
+      const baseKey = `${asset.type}-${asset.category}-${asset.version}`;
+      
+      if (!assetGroups.has(baseKey)) {
+        assetGroups.set(baseKey, {});
+      }
+      
+      assetGroups.get(baseKey)[asset.language] = asset;
+    });
+    
+    // Return assets in the selected language, falling back to available language if needed
+    const result = [];
+    assetGroups.forEach(group => {
+      const assetInSelectedLanguage = group[selectedLanguage] || group['English'] || group['Spanish'];
+      if (assetInSelectedLanguage) {
+        result.push(assetInSelectedLanguage);
+      }
+    });
+    
+    return result;
+  };
+
   const filterAssets = (assets: any[]) => {
-    return assets.filter((asset) => {
+    const assetsInLanguage = getAssetsInSelectedLanguage(assets);
+    return assetsInLanguage.filter((asset) => {
       const categoryMatch = selectedCategory === "all" || asset.category === selectedCategory;
       const typeMatch = selectedType === "all" || asset.type === selectedType;
-      const languageMatch = asset.language === selectedLanguage;
-      return categoryMatch && typeMatch && languageMatch;
+      return categoryMatch && typeMatch;
     });
   };
 
