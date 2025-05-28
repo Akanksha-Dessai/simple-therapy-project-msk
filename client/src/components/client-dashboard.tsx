@@ -38,7 +38,18 @@ export default function ClientDashboard({ client }: ClientDashboardProps) {
   const filterAssets = (assets: any[]) => {
     const assetsInLanguage = getAssetsInSelectedLanguage(assets);
     return assetsInLanguage.filter((asset) => {
-      const categoryMatch = selectedCategory === "all" || asset.category === selectedCategory;
+      // Map categoryId to category names for filtering
+      let categoryName = "all";
+      if (asset.categoryId) {
+        switch (asset.categoryId) {
+          case 1: case 5: case 9: case 13: categoryName = "intro"; break;
+          case 2: case 6: case 10: case 14: categoryName = "launch"; break;
+          case 3: case 7: case 11: case 15: categoryName = "ongoing"; break;
+          case 4: case 8: case 12: case 16: categoryName = "videos"; break;
+        }
+      }
+      
+      const categoryMatch = selectedCategory === "all" || categoryName === selectedCategory;
       const typeMatch = selectedType === "all" || asset.type === selectedType;
       return categoryMatch && typeMatch;
     });
@@ -46,12 +57,12 @@ export default function ClientDashboard({ client }: ClientDashboardProps) {
 
   const getCategoryIcon = (category: string) => {
     switch (category) {
+      case "intro":
+        return <Clock className="text-white h-5 w-5" />;
       case "launch":
         return <Rocket className="text-white h-5 w-5" />;
       case "ongoing":
         return <RotateCcw className="text-white h-5 w-5" />;
-      case "future":
-        return <Clock className="text-white h-5 w-5" />;
       case "videos":
         return <Video className="text-white h-5 w-5" />;
       default:
@@ -61,12 +72,12 @@ export default function ClientDashboard({ client }: ClientDashboardProps) {
 
   const getCategoryColor = (category: string) => {
     switch (category) {
+      case "intro":
+        return "bg-green-600";
       case "launch":
         return "bg-secondary";
       case "ongoing":
         return "bg-blue-600";
-      case "future":
-        return "bg-orange-500";
       case "videos":
         return "bg-purple-600";
       default:
@@ -76,6 +87,8 @@ export default function ClientDashboard({ client }: ClientDashboardProps) {
 
   const getCategoryTitle = (category: string) => {
     switch (category) {
+      case "intro":
+        return "Introduction Materials";
       case "launch":
         return "Program Launch Materials";
       case "ongoing":
@@ -91,12 +104,12 @@ export default function ClientDashboard({ client }: ClientDashboardProps) {
 
   const getCategoryDescription = (category: string) => {
     switch (category) {
+      case "intro":
+        return "Overview materials to get started with the program";
       case "launch":
         return "Essential materials to introduce the program to your organization";
       case "ongoing":
         return "Regularly updated materials to maintain engagement";
-      case "future":
-        return "Upcoming materials and enhancements";
       case "videos":
         return "Educational and promotional video content";
       default:
@@ -126,10 +139,22 @@ export default function ClientDashboard({ client }: ClientDashboardProps) {
 
   const { assets } = assetsData;
   const filteredAssets = filterAssets(assets);
-  const launchAssets = filteredAssets.filter((asset) => asset.category === "launch");
-  const ongoingAssets = filteredAssets.filter((asset) => asset.category === "ongoing");
-  const futureAssets = filteredAssets.filter((asset) => asset.category === "future");
-  const videoAssets = filteredAssets.filter((asset) => asset.category === "videos");
+  
+  // Helper function to get category name from categoryId
+  const getCategoryName = (categoryId: number) => {
+    switch (categoryId) {
+      case 1: case 5: case 9: case 13: return "intro";
+      case 2: case 6: case 10: case 14: return "launch";
+      case 3: case 7: case 11: case 15: return "ongoing";
+      case 4: case 8: case 12: case 16: return "videos";
+      default: return "other";
+    }
+  };
+  
+  const introAssets = filteredAssets.filter((asset) => getCategoryName(asset.categoryId) === "intro");
+  const launchAssets = filteredAssets.filter((asset) => getCategoryName(asset.categoryId) === "launch");
+  const ongoingAssets = filteredAssets.filter((asset) => getCategoryName(asset.categoryId) === "ongoing");
+  const videoAssets = filteredAssets.filter((asset) => getCategoryName(asset.categoryId) === "videos");
 
   return (
     <div className="space-y-8">
@@ -281,26 +306,26 @@ export default function ClientDashboard({ client }: ClientDashboardProps) {
             </Card>
           )}
 
-          {/* Future Phase Materials */}
-          {futureAssets.length > 0 && (
+          {/* Intro Materials */}
+          {introAssets.length > 0 && (
             <Card>
               <CardContent className="p-6">
                 <div className="flex items-center mb-6">
-                  <div className={`w-10 h-10 ${getCategoryColor("future")} rounded-lg flex items-center justify-center mr-3`}>
-                    {getCategoryIcon("future")}
+                  <div className={`w-10 h-10 ${getCategoryColor("intro")} rounded-lg flex items-center justify-center mr-3`}>
+                    {getCategoryIcon("intro")}
                   </div>
                   <div>
                     <h3 className="text-xl font-semibold text-gray-900 dark:text-foreground">
-                      {getCategoryTitle("future")}
+                      {getCategoryTitle("intro")}
                     </h3>
                     <p className="text-gray-600 dark:text-muted-foreground">
-                      {getCategoryDescription("future")}
+                      {getCategoryDescription("intro")}
                     </p>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {futureAssets.map((asset) => (
+                  {introAssets.map((asset) => (
                     <AssetCard key={asset.id} asset={asset} client={client} />
                   ))}
                 </div>
