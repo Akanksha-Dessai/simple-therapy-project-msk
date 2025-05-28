@@ -200,9 +200,30 @@ export default function ClientDashboard({ client }: ClientDashboardProps) {
                 <h1 className="text-2xl font-semibold text-gray-900 dark:text-foreground">
                   {client.name}
                 </h1>
-                <p className="text-gray-600 dark:text-muted-foreground">
+                <p className="text-gray-600 dark:text-muted-foreground mb-2">
                   {client.eligibilityLanguage}
                 </p>
+                <div className="flex flex-col space-y-1">
+                  <div className="flex items-center space-x-2">
+                    <span className="text-sm text-gray-500 dark:text-muted-foreground">Client Code:</span>
+                    <code className="bg-purple-50 dark:bg-purple-900 px-2 py-1 rounded text-sm text-purple-700 dark:text-purple-300">
+                      {client.clientCode || 'ACME-MSK-2024'}
+                    </code>
+                  </div>
+                  {(client.landingPageUrl || 'https://acme-corp.com/wellness') && (
+                    <div className="flex items-center space-x-2">
+                      <Globe className="h-4 w-4 text-gray-500 dark:text-muted-foreground" />
+                      <a 
+                        href={client.landingPageUrl || 'https://acme-corp.com/wellness'} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 text-sm hover:underline"
+                      >
+                        {(client.landingPageUrl || 'https://acme-corp.com/wellness').replace('https://', '').replace('http://', '')}
+                      </a>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
             <div className="text-right">
