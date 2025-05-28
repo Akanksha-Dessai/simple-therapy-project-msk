@@ -178,6 +178,25 @@ export default function AdminPanel() {
     createTemplateMutation.mutate(templateData);
   };
 
+  const handleCategorySubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const categoryData = {
+      name: formData.get("name") as string,
+      slug: formData.get("slug") as string,
+      description: formData.get("description") as string || null,
+      programType: formData.get("programType") as string,
+      displayOrder: parseInt(formData.get("displayOrder") as string) || 0,
+      status: formData.get("status") as string,
+    };
+
+    if (editingCategory) {
+      updateCategoryMutation.mutate({ id: editingCategory.id, data: categoryData });
+    } else {
+      createCategoryMutation.mutate(categoryData);
+    }
+  };
+
   const filteredClients = clients.filter((client: any) =>
     client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     client.contactEmail.toLowerCase().includes(searchTerm.toLowerCase())
@@ -404,8 +423,9 @@ export default function AdminPanel() {
 
       {/* Admin Navigation Tabs */}
       <Tabs defaultValue="clients" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="clients">Client Management</TabsTrigger>
+          <TabsTrigger value="categories">Categories</TabsTrigger>
           <TabsTrigger value="templates">Asset Templates</TabsTrigger>
           <TabsTrigger value="settings">System Settings</TabsTrigger>
         </TabsList>
@@ -514,6 +534,180 @@ export default function AdminPanel() {
                   </Table>
                 )}
               </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="categories" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle>Program Categories</CardTitle>
+                  <p className="text-gray-600 dark:text-muted-foreground">
+                    Create and manage categories for each program. Categories will only appear in their assigned program.
+                  </p>
+                </div>
+                <Dialog open={showCategoryDialog} onOpenChange={setShowCategoryDialog}>
+                  <DialogTrigger asChild>
+                    <Button className="bg-secondary hover:bg-green-600 text-white">
+                      <Plus className="mr-2 h-4 w-4" /> Add Category
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-[425px]">
+                    <DialogHeader>
+                      <DialogTitle>
+                        {editingCategory ? "Edit Category" : "Add New Category"}
+                      </DialogTitle>
+                    </DialogHeader>
+                    <form onSubmit={handleCategorySubmit} className="space-y-4">
+                      <div>
+                        <Label htmlFor="categoryName">Category Name</Label>
+                        <Input
+                          id="categoryName"
+                          name="name"
+                          defaultValue={editingCategory?.name || ""}
+                          placeholder="e.g., Launch Materials"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="categorySlug">Category Slug</Label>
+                        <Input
+                          id="categorySlug"
+                          name="slug"
+                          defaultValue={editingCategory?.slug || ""}
+                          placeholder="e.g., launch-materials"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="programType">Assign to Program</Label>
+                        <Select name="programType" defaultValue={editingCategory?.programType || ""} required>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select program" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="SimpleMSK">SimpleMSK</SelectItem>
+                            <SelectItem value="SimpleEAP">SimpleEAP</SelectItem>
+                            <SelectItem value="SimpleBehavioural">SimpleBehavioural</SelectItem>
+                            <SelectItem value="SimpleWellbeing">SimpleWellbeing</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div>
+                        <Label htmlFor="categoryDescription">Description</Label>
+                        <Textarea
+                          id="categoryDescription"
+                          name="description"
+                          defaultValue={editingCategory?.description || ""}
+                          placeholder="Optional description..."
+                          rows={3}
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="displayOrder">Display Order</Label>
+                        <Input
+                          id="displayOrder"
+                          name="displayOrder"
+                          type="number"
+                          defaultValue={editingCategory?.displayOrder || 0}
+                          min="0"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="categoryStatus">Status</Label>
+                        <Select name="status" defaultValue={editingCategory?.status || "active"} required>
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="active">Active</SelectItem>
+                            <SelectItem value="inactive">Inactive</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="flex justify-end space-x-2">
+                        <Button type="button" variant="outline" onClick={() => setShowCategoryDialog(false)}>
+                          Cancel
+                        </Button>
+                        <Button type="submit" disabled={createCategoryMutation.isPending || updateCategoryMutation.isPending}>
+                          {editingCategory ? "Update" : "Create"} Category
+                        </Button>
+                      </div>
+                    </form>
+                  </DialogContent>
+                </Dialog>
+              </div>
+            </CardHeader>
+            <CardContent>
+              {categoriesLoading ? (
+                <div className="text-center py-8">Loading categories...</div>
+              ) : (
+                <div className="space-y-4">
+                  {["SimpleMSK", "SimpleEAP", "SimpleBehavioural", "SimpleWellbeing"].map(program => {
+                    const programCategories = categories.filter((cat: any) => cat.programType === program);
+                    return (
+                      <Card key={program} className="border-l-4 border-l-secondary">
+                        <CardHeader className="pb-3">
+                          <div className="flex items-center justify-between">
+                            <h3 className="text-lg font-semibold text-gray-900 dark:text-foreground">{program}</h3>
+                            <Badge variant="outline">{programCategories.length} categories</Badge>
+                          </div>
+                        </CardHeader>
+                        <CardContent className="pt-0">
+                          {programCategories.length === 0 ? (
+                            <p className="text-gray-500 dark:text-muted-foreground italic">No categories assigned to this program</p>
+                          ) : (
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                              {programCategories.map((category: any) => (
+                                <div key={category.id} className="p-3 border rounded-lg bg-gray-50 dark:bg-gray-800">
+                                  <div className="flex items-center justify-between">
+                                    <div>
+                                      <h4 className="font-medium text-gray-900 dark:text-foreground">{category.name}</h4>
+                                      <p className="text-sm text-gray-500 dark:text-muted-foreground">{category.slug}</p>
+                                      {category.description && (
+                                        <p className="text-xs text-gray-400 dark:text-muted-foreground mt-1">{category.description}</p>
+                                      )}
+                                    </div>
+                                    <div className="flex space-x-1">
+                                      <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => {
+                                          setEditingCategory(category);
+                                          setShowCategoryDialog(true);
+                                        }}
+                                      >
+                                        <Edit className="h-3 w-3" />
+                                      </Button>
+                                      <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => deleteCategoryMutation.mutate(category.id)}
+                                      >
+                                        <Trash2 className="h-3 w-3" />
+                                      </Button>
+                                    </div>
+                                  </div>
+                                  <div className="flex items-center justify-between mt-2">
+                                    <Badge className={getStatusColor(category.status)}>
+                                      {category.status}
+                                    </Badge>
+                                    <span className="text-xs text-gray-400 dark:text-muted-foreground">
+                                      Order: {category.displayOrder}
+                                    </span>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </CardContent>
+                      </Card>
+                    );
+                  })}
+                </div>
+              )}
             </CardContent>
           </Card>
         </TabsContent>
