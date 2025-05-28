@@ -36,6 +36,7 @@ export default function AdminPanel() {
   const [editingClient, setEditingClient] = useState<any>(null);
   const [editingCategory, setEditingCategory] = useState<any>(null);
   const [selectedAssetType, setSelectedAssetType] = useState<string>("");
+  const [selectedAssetScope, setSelectedAssetScope] = useState<string>("template");
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -584,6 +585,61 @@ export default function AdminPanel() {
                           </SelectContent>
                         </Select>
                       </div>
+                      
+                      {/* Template vs Client-Specific Selection */}
+                      <div className="space-y-3">
+                        <Label htmlFor="assetScope">Asset Scope</Label>
+                        <Select name="assetScope" required defaultValue="template" onValueChange={setSelectedAssetScope}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Choose asset scope" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="template">
+                              <div className="flex items-center space-x-2">
+                                <span>🔄</span>
+                                <div>
+                                  <div className="font-medium">Template Asset</div>
+                                  <div className="text-xs text-gray-500">Customizable for all clients (logo, URL, eligibility language)</div>
+                                </div>
+                              </div>
+                            </SelectItem>
+                            <SelectItem value="client-specific">
+                              <div className="flex items-center space-x-2">
+                                <span>👤</span>
+                                <div>
+                                  <div className="font-medium">Client-Specific Asset</div>
+                                  <div className="text-xs text-gray-500">Directly assigned to one client without customization</div>
+                                </div>
+                              </div>
+                            </SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      {/* Client Selection - only show for client-specific assets */}
+                      {selectedAssetScope === "client-specific" && (
+                        <div>
+                          <Label htmlFor="clientId">Select Client</Label>
+                          <Select name="clientId" required>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Choose a client" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {clients.map((client: any) => (
+                                <SelectItem key={client.id} value={client.id.toString()}>
+                                  <div className="flex items-center space-x-2">
+                                    <span>👤</span>
+                                    <span>{client.name}</span>
+                                  </div>
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <p className="text-sm text-gray-500 mt-1">
+                            This asset will be directly assigned to the selected client
+                          </p>
+                        </div>
+                      )}
                       <div>
                         <Label htmlFor="originalFileName">File Name</Label>
                         <Input id="originalFileName" name="originalFileName" required />
