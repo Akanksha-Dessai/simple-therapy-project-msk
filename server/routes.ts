@@ -43,10 +43,122 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const templates = await storage.getAllAssetTemplates();
       const clientAssets = await storage.getClientAssets(clientId);
       
-      // Add some sample video assets for testing
+      // Add more sample assets to populate all categories
       const sampleVideoAssets = [
+        // Intro Materials (categoryId: 1)
         {
           id: 999,
+          name: "Welcome to Your MSK Program",
+          categoryId: 1, // SimpleMSK Intro Materials
+          type: "document",
+          originalFileName: "welcome-guide.pdf",
+          fileUrl: "/docs/welcome-guide.pdf",
+          fileType: "pdf",
+          version: "v1.0",
+          description: "Complete introduction guide to get you started",
+          language: "English",
+          languageVariants: ["English", "Spanish"],
+          vimeoUrl: null,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          clientSpecific: null,
+          downloadUrl: null
+        },
+        {
+          id: 998,
+          name: "Program Quick Start Guide",
+          categoryId: 1, // SimpleMSK Intro Materials
+          type: "flyer",
+          originalFileName: "quick-start.pdf",
+          fileUrl: "/docs/quick-start.pdf",
+          fileType: "pdf",
+          version: "v1.2",
+          description: "Quick reference guide for immediate program benefits",
+          language: "English",
+          languageVariants: ["English", "Spanish"],
+          vimeoUrl: null,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          clientSpecific: null,
+          downloadUrl: null
+        },
+        // Launch Campaign (categoryId: 2)
+        {
+          id: 997,
+          name: "Launch Announcement Email",
+          categoryId: 2, // SimpleMSK Launch Campaign
+          type: "email",
+          originalFileName: "launch-email.html",
+          fileUrl: "/templates/launch-email.html",
+          fileType: "html",
+          version: "v2.0",
+          description: "Professional email template for program launch",
+          language: "English",
+          languageVariants: ["English", "Spanish"],
+          vimeoUrl: null,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          clientSpecific: null,
+          downloadUrl: null
+        },
+        {
+          id: 996,
+          name: "Launch Day Poster",
+          categoryId: 2, // SimpleMSK Launch Campaign
+          type: "poster",
+          originalFileName: "launch-poster.jpg",
+          fileUrl: "/images/launch-poster.jpg",
+          fileType: "jpg",
+          version: "v1.5",
+          description: "Eye-catching poster for program launch day",
+          language: "English",
+          languageVariants: ["English", "Spanish"],
+          vimeoUrl: null,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          clientSpecific: null,
+          downloadUrl: null
+        },
+        // Ongoing Promotion (categoryId: 3)
+        {
+          id: 995,
+          name: "Monthly Wellness Tips",
+          categoryId: 3, // SimpleMSK Ongoing Promotion
+          type: "newsletter",
+          originalFileName: "wellness-tips.pdf",
+          fileUrl: "/newsletters/wellness-tips.pdf",
+          fileType: "pdf",
+          version: "v3.1",
+          description: "Monthly tips for maintaining workplace wellness",
+          language: "English",
+          languageVariants: ["English", "Spanish"],
+          vimeoUrl: null,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          clientSpecific: null,
+          downloadUrl: null
+        },
+        {
+          id: 994,
+          name: "Success Stories Showcase",
+          categoryId: 3, // SimpleMSK Ongoing Promotion
+          type: "flyer",
+          originalFileName: "success-stories.pdf",
+          fileUrl: "/docs/success-stories.pdf",
+          fileType: "pdf",
+          version: "v1.8",
+          description: "Real employee success stories and testimonials",
+          language: "English",
+          languageVariants: ["English", "Spanish"],
+          vimeoUrl: null,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          clientSpecific: null,
+          downloadUrl: null
+        },
+        // Videos (categoryId: 4)
+        {
+          id: 993,
           name: "Program Introduction Video",
           categoryId: 4, // SimpleMSK Videos
           type: "video",
@@ -64,16 +176,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
           downloadUrl: null
         },
         {
-          id: 998,
-          name: "Video de Introducción del Programa",
+          id: 992,
+          name: "Exercise Tutorial Series",
           categoryId: 4, // SimpleMSK Videos
           type: "video",
-          originalFileName: "programa-intro.mp4",
-          fileUrl: "/videos/programa-intro.mp4",
+          originalFileName: "exercise-tutorials.mp4",
+          fileUrl: "/videos/exercise-tutorials.mp4",
           fileType: "mp4",
-          version: "v1.0",
-          description: "Video introductorio que explica los beneficios del programa",
-          language: "Spanish",
+          version: "v2.0",
+          description: "Professional exercise demonstrations for workplace wellness",
+          language: "English",
           languageVariants: ["English", "Spanish"],
           vimeoUrl: "https://vimeo.com/123456790",
           createdAt: new Date(),
