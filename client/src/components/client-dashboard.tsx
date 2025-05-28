@@ -55,8 +55,80 @@ export default function ClientDashboard({ client }: ClientDashboardProps) {
     return assets.filter((asset: any) => {
       const categoryMatch = selectedCategory === "all" || asset.category === selectedCategory;
       const typeMatch = selectedType === "all" || asset.type === selectedType;
-      return categoryMatch && typeMatch;
+      
+      // Language filtering logic
+      const languageMatch = (() => {
+        if (selectedLanguage === "English") {
+          return asset.language === "English" || asset.language === "english" || !asset.language;
+        } else if (selectedLanguage === "Spanish") {
+          return asset.language === "Spanish" || asset.language === "spanish";
+        }
+        return true;
+      })();
+      
+      return categoryMatch && typeMatch && languageMatch;
     });
+  };
+
+  // Helper function to get category name from categoryId
+  const getCategoryName = (categoryId: number) => {
+    switch (categoryId) {
+      case 1: case 5: case 9: case 13: return "intro";
+      case 2: case 6: case 10: case 14: return "launch";
+      case 3: case 7: case 11: case 15: return "ongoing";
+      case 4: case 8: case 12: case 16: return "videos";
+      default: return "other";
+    }
+  };
+
+  const getCategoryIcon = (category: string) => {
+    switch (category) {
+      case "intro":
+        return <Clock className="text-white h-5 w-5" />;
+      case "launch":
+        return <Rocket className="text-white h-5 w-5" />;
+      case "ongoing":
+        return <RotateCcw className="text-white h-5 w-5" />;
+      case "videos":
+        return <Video className="text-white h-5 w-5" />;
+      default:
+        return <Rocket className="text-white h-5 w-5" />;
+    }
+  };
+
+  const getCategoryColor = (category: string) => {
+    switch (category) {
+      case "intro":
+        return "bg-green-600";
+      case "launch":
+        return "bg-secondary";
+      case "ongoing":
+        return "bg-blue-600";
+      case "videos":
+        return "bg-purple-600";
+      default:
+        return "bg-secondary";
+    }
+  };
+
+  const getCategoryTitle = (category: string) => {
+    const categoryObj = categoriesData?.find((cat: any) => cat.slug === category);
+    return categoryObj?.name || "Assets";
+  };
+
+  const getCategoryDescription = (category: string) => {
+    switch (category) {
+      case "intro":
+        return "Overview materials to get started with the program";
+      case "launch":
+        return "Essential materials to introduce the program to your organization";
+      case "ongoing":
+        return "Regularly updated materials to maintain engagement";
+      case "videos":
+        return "Educational and promotional video content";
+      default:
+        return "";
+    }
   };
 
   if (isLoading) {
@@ -210,17 +282,270 @@ export default function ClientDashboard({ client }: ClientDashboardProps) {
                 </CardContent>
               </Card>
 
-              {/* Simple asset grid for other programs */}
-              <Card>
-                <CardContent className="p-6">
-                  <h3 className="text-xl font-semibold mb-4">Assets for {selectedProgram}</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {filteredAssets.map((asset: any) => (
-                      <AssetCard key={asset.id} asset={asset} client={client} categories={categoriesData || []} />
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
+              {/* Asset Categories with Language Filtering */}
+              {(() => {
+                // Group assets by category
+                const introAssets = filteredAssets.filter((asset) => getCategoryName(asset.categoryId) === "intro");
+                const launchAssets = filteredAssets.filter((asset) => getCategoryName(asset.categoryId) === "launch");
+                const ongoingAssets = filteredAssets.filter((asset) => getCategoryName(asset.categoryId) === "ongoing");
+                const videoAssets = filteredAssets.filter((asset) => getCategoryName(asset.categoryId) === "videos");
+
+                return (
+                  <>
+                    {/* Launch Materials */}
+                    {launchAssets.length > 0 && (
+                      <Card>
+                        <CardContent className="p-6">
+                          <div className="flex items-center mb-6">
+                            <div className={`w-10 h-10 ${getCategoryColor("launch")} rounded-lg flex items-center justify-center mr-3`}>
+                              {getCategoryIcon("launch")}
+                            </div>
+                            <div>
+                              <h3 className="text-xl font-semibold text-gray-900 dark:text-foreground">
+                                {getCategoryTitle("launch")}
+                              </h3>
+                              <p className="text-gray-600 dark:text-muted-foreground">
+                                {getCategoryDescription("launch")}
+                              </p>
+                            </div>
+                          </div>
+
+                          {/* Asset Type Filter Buttons */}
+                          <div className="mb-4 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-red-200">
+                            <div className="flex flex-wrap gap-2">
+                              {(() => {
+                                const availableTypes = getAssetTypesForCategory(launchAssets);
+                                const currentFilter = categoryFilters["launch"] || "all";
+                                return (
+                                  <>
+                                    <Button
+                                      variant={currentFilter === "all" ? "default" : "outline"}
+                                      size="sm"
+                                      onClick={() => setCategoryFilter("launch", "all")}
+                                      className="text-xs"
+                                    >
+                                      All ({launchAssets.length})
+                                    </Button>
+                                    {availableTypes.map((type) => {
+                                      const count = launchAssets.filter(asset => asset.type === type).length;
+                                      return (
+                                        <Button
+                                          key={type}
+                                          variant={currentFilter === type ? "default" : "outline"}
+                                          size="sm"
+                                          onClick={() => setCategoryFilter("launch", type)}
+                                          className="text-xs"
+                                        >
+                                          {type} ({count})
+                                        </Button>
+                                      );
+                                    })}
+                                  </>
+                                );
+                              })()}
+                            </div>
+                          </div>
+
+                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {filterAssetsByType(launchAssets, categoryFilters["launch"] || "all").map((asset: any) => (
+                              <AssetCard key={asset.id} asset={asset} client={client} categories={categoriesData || []} />
+                            ))}
+                          </div>
+                        </CardContent>
+                      </Card>
+                    )}
+
+                    {/* Intro Materials */}
+                    {introAssets.length > 0 && (
+                      <Card>
+                        <CardContent className="p-6">
+                          <div className="flex items-center mb-6">
+                            <div className={`w-10 h-10 ${getCategoryColor("intro")} rounded-lg flex items-center justify-center mr-3`}>
+                              {getCategoryIcon("intro")}
+                            </div>
+                            <div>
+                              <h3 className="text-xl font-semibold text-gray-900 dark:text-foreground">
+                                {getCategoryTitle("intro")}
+                              </h3>
+                              <p className="text-gray-600 dark:text-muted-foreground">
+                                {getCategoryDescription("intro")}
+                              </p>
+                            </div>
+                          </div>
+
+                          {/* Asset Type Filter Buttons */}
+                          <div className="mb-4 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-green-200">
+                            <div className="flex flex-wrap gap-2">
+                              {(() => {
+                                const availableTypes = getAssetTypesForCategory(introAssets);
+                                const currentFilter = categoryFilters["intro"] || "all";
+                                return (
+                                  <>
+                                    <Button
+                                      variant={currentFilter === "all" ? "default" : "outline"}
+                                      size="sm"
+                                      onClick={() => setCategoryFilter("intro", "all")}
+                                      className="text-xs"
+                                    >
+                                      All ({introAssets.length})
+                                    </Button>
+                                    {availableTypes.map((type) => {
+                                      const count = introAssets.filter(asset => asset.type === type).length;
+                                      return (
+                                        <Button
+                                          key={type}
+                                          variant={currentFilter === type ? "default" : "outline"}
+                                          size="sm"
+                                          onClick={() => setCategoryFilter("intro", type)}
+                                          className="text-xs"
+                                        >
+                                          {type} ({count})
+                                        </Button>
+                                      );
+                                    })}
+                                  </>
+                                );
+                              })()}
+                            </div>
+                          </div>
+
+                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {filterAssetsByType(introAssets, categoryFilters["intro"] || "all").map((asset: any) => (
+                              <AssetCard key={asset.id} asset={asset} client={client} categories={categoriesData || []} />
+                            ))}
+                          </div>
+                        </CardContent>
+                      </Card>
+                    )}
+
+                    {/* Ongoing Materials */}
+                    {ongoingAssets.length > 0 && (
+                      <Card>
+                        <CardContent className="p-6">
+                          <div className="flex items-center mb-6">
+                            <div className={`w-10 h-10 ${getCategoryColor("ongoing")} rounded-lg flex items-center justify-center mr-3`}>
+                              {getCategoryIcon("ongoing")}
+                            </div>
+                            <div>
+                              <h3 className="text-xl font-semibold text-gray-900 dark:text-foreground">
+                                {getCategoryTitle("ongoing")}
+                              </h3>
+                              <p className="text-gray-600 dark:text-muted-foreground">
+                                {getCategoryDescription("ongoing")}
+                              </p>
+                            </div>
+                          </div>
+
+                          {/* Asset Type Filter Buttons */}
+                          <div className="mb-4 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-blue-200">
+                            <div className="flex flex-wrap gap-2">
+                              {(() => {
+                                const availableTypes = getAssetTypesForCategory(ongoingAssets);
+                                const currentFilter = categoryFilters["ongoing"] || "all";
+                                return (
+                                  <>
+                                    <Button
+                                      variant={currentFilter === "all" ? "default" : "outline"}
+                                      size="sm"
+                                      onClick={() => setCategoryFilter("ongoing", "all")}
+                                      className="text-xs"
+                                    >
+                                      All ({ongoingAssets.length})
+                                    </Button>
+                                    {availableTypes.map((type) => {
+                                      const count = ongoingAssets.filter(asset => asset.type === type).length;
+                                      return (
+                                        <Button
+                                          key={type}
+                                          variant={currentFilter === type ? "default" : "outline"}
+                                          size="sm"
+                                          onClick={() => setCategoryFilter("ongoing", type)}
+                                          className="text-xs"
+                                        >
+                                          {type} ({count})
+                                        </Button>
+                                      );
+                                    })}
+                                  </>
+                                );
+                              })()}
+                            </div>
+                          </div>
+
+                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {filterAssetsByType(ongoingAssets, categoryFilters["ongoing"] || "all").map((asset: any) => (
+                              <AssetCard key={asset.id} asset={asset} client={client} categories={categoriesData || []} />
+                            ))}
+                          </div>
+                        </CardContent>
+                      </Card>
+                    )}
+
+                    {/* Video Assets */}
+                    {videoAssets.length > 0 && (
+                      <Card>
+                        <CardContent className="p-6">
+                          <div className="flex items-center mb-6">
+                            <div className={`w-10 h-10 ${getCategoryColor("videos")} rounded-lg flex items-center justify-center mr-3`}>
+                              {getCategoryIcon("videos")}
+                            </div>
+                            <div>
+                              <h3 className="text-xl font-semibold text-gray-900 dark:text-foreground">
+                                {getCategoryTitle("videos")}
+                              </h3>
+                              <p className="text-gray-600 dark:text-muted-foreground">
+                                {getCategoryDescription("videos")}
+                              </p>
+                            </div>
+                          </div>
+
+                          {/* Asset Type Filter Buttons */}
+                          <div className="mb-4 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-purple-200">
+                            <div className="flex flex-wrap gap-2">
+                              {(() => {
+                                const availableTypes = getAssetTypesForCategory(videoAssets);
+                                const currentFilter = categoryFilters["videos"] || "all";
+                                return (
+                                  <>
+                                    <Button
+                                      variant={currentFilter === "all" ? "default" : "outline"}
+                                      size="sm"
+                                      onClick={() => setCategoryFilter("videos", "all")}
+                                      className="text-xs"
+                                    >
+                                      All ({videoAssets.length})
+                                    </Button>
+                                    {availableTypes.map((type) => {
+                                      const count = videoAssets.filter(asset => asset.type === type).length;
+                                      return (
+                                        <Button
+                                          key={type}
+                                          variant={currentFilter === type ? "default" : "outline"}
+                                          size="sm"
+                                          onClick={() => setCategoryFilter("videos", type)}
+                                          className="text-xs"
+                                        >
+                                          {type} ({count})
+                                        </Button>
+                                      );
+                                    })}
+                                  </>
+                                );
+                              })()}
+                            </div>
+                          </div>
+
+                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {filterAssetsByType(videoAssets, categoryFilters["videos"] || "all").map((asset: any) => (
+                              <AssetCard key={asset.id} asset={asset} client={client} categories={categoriesData || []} />
+                            ))}
+                          </div>
+                        </CardContent>
+                      </Card>
+                    )}
+                  </>
+                );
+              })()}
             </>
           )}
         </>
