@@ -85,14 +85,47 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       ];
 
-      // Combine templates with client-specific data
-      const assetsWithClientData = templates.map(template => {
+      // Create bilingual versions of each template
+      const assetsWithClientData = [];
+      templates.forEach(template => {
         const clientAsset = clientAssets.find(ca => ca.templateId === template.id);
-        return {
+        
+        // English version
+        assetsWithClientData.push({
           ...template,
+          language: "English",
+          languageVariants: ["English", "Spanish"],
           clientSpecific: clientAsset || null,
           downloadUrl: clientAsset ? clientAsset.personalizedFileUrl : null
+        });
+        
+        // Spanish version
+        const spanishNames = {
+          "Executive Leader Email": "Correo Electrónico del Líder Ejecutivo",
+          "Program Overview Flyer": "Folleto de Descripción del Programa", 
+          "Mental Health Awareness": "Conciencia sobre Salud Mental",
+          "Stress Management Tips": "Consejos para Manejo del Estrés",
+          "Employee Wellness Week": "Semana de Bienestar del Empleado"
         };
+        
+        const spanishDescriptions = {
+          "Ready-to-send email template for leadership announcement": "Plantilla de correo electrónico lista para enviar para anuncio de liderazgo",
+          "Visual overview flyer highlighting key benefits": "Folleto visual que destaca los beneficios clave",
+          "Mental health awareness campaign flyer": "Folleto de campaña de conciencia sobre salud mental",
+          "Poster with stress management tips and techniques": "Póster con consejos y técnicas para el manejo del estrés",
+          "Digital banner for employee wellness week promotion": "Banner digital para promoción de semana de bienestar del empleado"
+        };
+        
+        assetsWithClientData.push({
+          ...template,
+          id: template.id + 1000, // Unique ID for Spanish version
+          name: spanishNames[template.name] || template.name,
+          description: spanishDescriptions[template.description] || template.description,
+          language: "Spanish",
+          languageVariants: ["English", "Spanish"],
+          clientSpecific: clientAsset || null,
+          downloadUrl: clientAsset ? clientAsset.personalizedFileUrl : null
+        });
       });
 
       // Add sample video assets
