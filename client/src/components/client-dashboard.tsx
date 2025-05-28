@@ -50,98 +50,13 @@ export default function ClientDashboard({ client }: ClientDashboardProps) {
     }));
   };
 
-  const getAssetsInSelectedLanguage = (assets: any[]) => {
-    // Filter assets to show only the selected language
-    return assets.filter(asset => {
-      // If asset has a language property, match it to selected language
-      if (asset.language) {
-        return asset.language === selectedLanguage;
-      }
-      // If no language property, show the asset (backward compatibility)
-      return true;
-    });
-  };
-
+  // Helper function to filter assets by category, type, and language
   const filterAssets = (assets: any[]) => {
-    const assetsInLanguage = getAssetsInSelectedLanguage(assets);
-    return assetsInLanguage.filter((asset) => {
-      // Map categoryId to category names for filtering
-      let categoryName = "all";
-      if (asset.categoryId) {
-        switch (asset.categoryId) {
-          case 1: case 5: case 9: case 13: categoryName = "intro"; break;
-          case 2: case 6: case 10: case 14: categoryName = "launch"; break;
-          case 3: case 7: case 11: case 15: categoryName = "ongoing"; break;
-          case 4: case 8: case 12: case 16: categoryName = "videos"; break;
-        }
-      }
-      
-      const categoryMatch = selectedCategory === "all" || categoryName === selectedCategory;
+    return assets.filter((asset: any) => {
+      const categoryMatch = selectedCategory === "all" || asset.category === selectedCategory;
       const typeMatch = selectedType === "all" || asset.type === selectedType;
       return categoryMatch && typeMatch;
     });
-  };
-
-  const getCategoryIcon = (category: string) => {
-    switch (category) {
-      case "intro":
-        return <Clock className="text-white h-5 w-5" />;
-      case "launch":
-        return <Rocket className="text-white h-5 w-5" />;
-      case "ongoing":
-        return <RotateCcw className="text-white h-5 w-5" />;
-      case "videos":
-        return <Video className="text-white h-5 w-5" />;
-      default:
-        return <Rocket className="text-white h-5 w-5" />;
-    }
-  };
-
-  const getCategoryColor = (category: string) => {
-    switch (category) {
-      case "intro":
-        return "bg-green-600";
-      case "launch":
-        return "bg-secondary";
-      case "ongoing":
-        return "bg-blue-600";
-      case "videos":
-        return "bg-purple-600";
-      default:
-        return "bg-secondary";
-    }
-  };
-
-  const getCategoryTitle = (category: string) => {
-    switch (category) {
-      case "intro":
-        return "Introduction Materials";
-      case "launch":
-        return "Program Launch Materials";
-      case "ongoing":
-        return "Ongoing Campaign Assets";
-      case "future":
-        return "Future Phase Materials";
-      case "videos":
-        return "Video Resources";
-      default:
-        return "Assets";
-    }
-  };
-
-  const getCategoryDescription = (category: string) => {
-    switch (category) {
-      case "intro":
-        return "Overview materials to get started with the program";
-      case "launch":
-        return "Essential materials to introduce the program to your organization";
-      case "ongoing":
-        return "Regularly updated materials to maintain engagement";
-      case "videos":
-        return "Educational and promotional video content";
-      default:
-        return "";
-    }
   };
 
   if (isLoading) {
@@ -149,7 +64,8 @@ export default function ClientDashboard({ client }: ClientDashboardProps) {
       <div className="space-y-8">
         <div className="animate-pulse">
           <div className="bg-white dark:bg-card rounded-xl shadow-sm p-6 mb-8">
-            <div className="h-16 bg-gray-200 dark:bg-muted rounded"></div>
+            <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-1/4 mb-4"></div>
+            <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4"></div>
           </div>
         </div>
       </div>
@@ -166,22 +82,6 @@ export default function ClientDashboard({ client }: ClientDashboardProps) {
 
   const { assets } = assetsData;
   const filteredAssets = filterAssets(assets);
-  
-  // Helper function to get category name from categoryId
-  const getCategoryName = (categoryId: number) => {
-    switch (categoryId) {
-      case 1: case 5: case 9: case 13: return "intro";
-      case 2: case 6: case 10: case 14: return "launch";
-      case 3: case 7: case 11: case 15: return "ongoing";
-      case 4: case 8: case 12: case 16: return "videos";
-      default: return "other";
-    }
-  };
-  
-  const introAssets = filteredAssets.filter((asset) => getCategoryName(asset.categoryId) === "intro");
-  const launchAssets = filteredAssets.filter((asset) => getCategoryName(asset.categoryId) === "launch");
-  const ongoingAssets = filteredAssets.filter((asset) => getCategoryName(asset.categoryId) === "ongoing");
-  const videoAssets = filteredAssets.filter((asset) => getCategoryName(asset.categoryId) === "videos");
 
   return (
     <div className="space-y-8">
@@ -247,7 +147,6 @@ export default function ClientDashboard({ client }: ClientDashboardProps) {
         </CardContent>
       </Card>
 
-
       {/* Communications Toolkit Description */}
       <Card className="mb-8">
         <CardContent className="p-8">
@@ -271,12 +170,14 @@ export default function ClientDashboard({ client }: ClientDashboardProps) {
           </div>
         </CardContent>
       </Card>
+
       {/* Program Selection */}
       <ProgramSelector 
         client={client} 
         onProgramSelect={setSelectedProgram}
         selectedProgram={selectedProgram}
       />
+
       {/* Only show assets after a program is selected */}
       {selectedProgram && (
         <>
@@ -320,206 +221,6 @@ export default function ClientDashboard({ client }: ClientDashboardProps) {
                   </div>
                 </CardContent>
               </Card>
-            </>
-          )}
-
-            {/* Asset Type Filter Buttons */}
-            <div className="mb-4 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-red-200">
-              <div className="flex flex-wrap gap-2">
-                {(() => {
-                  const availableTypes = getAssetTypesForCategory(launchAssets);
-                  const currentFilter = categoryFilters["launch"] || "all";
-                  return (
-                    <>
-                      <Button
-                        variant={currentFilter === "all" ? "default" : "outline"}
-                        size="sm"
-                        onClick={() => setCategoryFilter("launch", "all")}
-                        className="text-xs"
-                      >
-                        All ({launchAssets.length})
-                      </Button>
-                      {availableTypes.map(type => {
-                        const count = launchAssets.filter(asset => asset.type === type).length;
-                        return (
-                          <Button
-                            key={type}
-                            variant={currentFilter === type ? "default" : "outline"}
-                            size="sm"
-                            onClick={() => setCategoryFilter("launch", type)}
-                            className="text-xs capitalize"
-                          >
-                            {type} ({count})
-                          </Button>
-                        );
-                      })}
-                    </>
-                  );
-                })()}
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {filterAssetsByType(launchAssets, categoryFilters["launch"] || "all").map((asset) => (
-                <AssetCard key={asset.id} asset={asset} client={client} categories={categoriesData || []} />
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
-          {/* Ongoing Assets */}
-          {ongoingAssets.length > 0 && (
-            <Card>
-              <CardContent className="p-6">
-                <div className="flex items-center mb-6">
-                  <div className={`w-10 h-10 ${getCategoryColor("ongoing")} rounded-lg flex items-center justify-center mr-3`}>
-                    {getCategoryIcon("ongoing")}
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-semibold text-gray-900 dark:text-foreground">
-                      {getCategoryTitle("ongoing")}
-                    </h3>
-                    <p className="text-gray-600 dark:text-muted-foreground">
-                      {getCategoryDescription("ongoing")}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                  {ongoingAssets.map((asset) => (
-                    <AssetCard key={asset.id} asset={asset} client={client} categories={categoriesData || []} />
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          )}
-
-          {/* Videos */}
-          {videoAssets.length > 0 && (
-            <Card>
-              <CardContent className="p-6">
-                <div className="flex items-center mb-6">
-                  <div className={`w-10 h-10 ${getCategoryColor("videos")} rounded-lg flex items-center justify-center mr-3`}>
-                    {getCategoryIcon("videos")}
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-semibold text-gray-900 dark:text-foreground">
-                      {getCategoryTitle("videos")}
-                    </h3>
-                    <p className="text-gray-600 dark:text-muted-foreground">
-                      {getCategoryDescription("videos")}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Asset Type Filter Buttons */}
-                <div className="mb-4 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-red-200">
-                  <div className="flex flex-wrap gap-2">
-                    {(() => {
-                      const availableTypes = getAssetTypesForCategory(videoAssets);
-                      const currentFilter = categoryFilters["videos"] || "all";
-                      return (
-                        <>
-                          <Button
-                            variant={currentFilter === "all" ? "default" : "outline"}
-                            size="sm"
-                            onClick={() => setCategoryFilter("videos", "all")}
-                            className="text-xs"
-                          >
-                            All ({videoAssets.length})
-                          </Button>
-                          {availableTypes.map(type => {
-                            const count = videoAssets.filter(asset => asset.type === type).length;
-                            return (
-                              <Button
-                                key={type}
-                                variant={currentFilter === type ? "default" : "outline"}
-                                size="sm"
-                                onClick={() => setCategoryFilter("videos", type)}
-                                className="text-xs capitalize"
-                              >
-                                {type} ({count})
-                              </Button>
-                            );
-                          })}
-                        </>
-                      );
-                    })()}
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                  {filterAssetsByType(videoAssets, categoryFilters["videos"] || "all").map((asset) => (
-                    <AssetCard key={asset.id} asset={asset} client={client} categories={categoriesData || []} />
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          )}
-
-          {/* Intro Materials */}
-          {introAssets.length > 0 && (
-            <Card>
-              <CardContent className="p-6">
-                <div className="flex items-center mb-6">
-                  <div className={`w-10 h-10 ${getCategoryColor("intro")} rounded-lg flex items-center justify-center mr-3`}>
-                    {getCategoryIcon("intro")}
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-semibold text-gray-900 dark:text-foreground">
-                      {getCategoryTitle("intro")}
-                    </h3>
-                    <p className="text-gray-600 dark:text-muted-foreground">
-                      {getCategoryDescription("intro")}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Asset Type Filter Buttons */}
-                <div className="mb-4 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-red-200">
-                  <div className="flex flex-wrap gap-2">
-                    {(() => {
-                      const availableTypes = getAssetTypesForCategory(introAssets);
-                      const currentFilter = categoryFilters["intro"] || "all";
-                      return (
-                        <>
-                          <Button
-                            variant={currentFilter === "all" ? "default" : "outline"}
-                            size="sm"
-                            onClick={() => setCategoryFilter("intro", "all")}
-                            className="text-xs"
-                          >
-                            All ({introAssets.length})
-                          </Button>
-                          {availableTypes.map(type => {
-                            const count = introAssets.filter(asset => asset.type === type).length;
-                            return (
-                              <Button
-                                key={type}
-                                variant={currentFilter === type ? "default" : "outline"}
-                                size="sm"
-                                onClick={() => setCategoryFilter("intro", type)}
-                                className="text-xs capitalize"
-                              >
-                                {type} ({count})
-                              </Button>
-                            );
-                          })}
-                        </>
-                      );
-                    })()}
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {filterAssetsByType(introAssets, categoryFilters["intro"] || "all").map((asset) => (
-                    <AssetCard key={asset.id} asset={asset} client={client} categories={categoriesData || []} />
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-              )}
             </>
           )}
         </>
