@@ -24,32 +24,15 @@ export default function ClientDashboard({ client }: ClientDashboardProps) {
   });
 
   const getAssetsInSelectedLanguage = (assets: any[]) => {
-    // Group assets by their base name (without language indicator)
-    const assetGroups = new Map();
-    
-    assets.forEach(asset => {
-      // Create a base key by removing language-specific parts from the name
-      const baseKey = `${asset.type}-${asset.category}-${asset.version}`;
-      
-      if (!assetGroups.has(baseKey)) {
-        assetGroups.set(baseKey, {});
+    // Filter assets to show only the selected language
+    return assets.filter(asset => {
+      // If asset has a language property, match it to selected language
+      if (asset.language) {
+        return asset.language === selectedLanguage;
       }
-      
-      // Treat assets without language as available in both languages
-      const assetLanguage = asset.language || selectedLanguage;
-      assetGroups.get(baseKey)[assetLanguage] = asset;
+      // If no language property, show the asset (backward compatibility)
+      return true;
     });
-    
-    // Return assets in the selected language, falling back to available language if needed
-    const result = [];
-    assetGroups.forEach(group => {
-      const assetInSelectedLanguage = group[selectedLanguage] || group['English'] || group['Spanish'] || Object.values(group)[0];
-      if (assetInSelectedLanguage) {
-        result.push(assetInSelectedLanguage);
-      }
-    });
-    
-    return result;
   };
 
   const filterAssets = (assets: any[]) => {
