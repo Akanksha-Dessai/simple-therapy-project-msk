@@ -192,6 +192,97 @@ export async function registerRoutes(app: Express): Promise<Server> {
           updatedAt: new Date(),
           clientSpecific: null,
           downloadUrl: null
+        },
+        // Additional diverse asset types
+        {
+          id: 991,
+          name: "Program Launch Banner",
+          categoryId: 2, // Launch Campaign
+          type: "banner",
+          originalFileName: "launch-banner.jpg",
+          fileUrl: "/banners/launch-banner.jpg",
+          fileType: "jpg",
+          version: "v1.0",
+          description: "Eye-catching web banner for program announcement",
+          language: "English",
+          languageVariants: ["English", "Spanish"],
+          vimeoUrl: null,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          clientSpecific: null,
+          downloadUrl: null
+        },
+        {
+          id: 990,
+          name: "Employee Wellness Presentation",
+          categoryId: 1, // Intro Materials
+          type: "presentation",
+          originalFileName: "wellness-presentation.pptx",
+          fileUrl: "/presentations/wellness-presentation.pptx",
+          fileType: "pptx",
+          version: "v2.5",
+          description: "Comprehensive presentation on workplace wellness benefits",
+          language: "English",
+          languageVariants: ["English", "Spanish"],
+          vimeoUrl: null,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          clientSpecific: null,
+          downloadUrl: null
+        },
+        {
+          id: 989,
+          name: "Stress Management Webinar",
+          categoryId: 4, // Videos
+          type: "webinar",
+          originalFileName: "stress-webinar.mp4",
+          fileUrl: "/webinars/stress-webinar.mp4",
+          fileType: "mp4",
+          version: "v1.3",
+          description: "Interactive webinar on effective stress management techniques",
+          language: "English",
+          languageVariants: ["English", "Spanish"],
+          vimeoUrl: "https://vimeo.com/987654321",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          clientSpecific: null,
+          downloadUrl: null
+        },
+        {
+          id: 988,
+          name: "Wellness Program Virtual Display",
+          categoryId: 3, // Ongoing Promotion
+          type: "virtual_display",
+          originalFileName: "wellness-vdm.jpg",
+          fileUrl: "/displays/wellness-vdm.jpg",
+          fileType: "jpg",
+          version: "v1.7",
+          description: "Digital display for lobby screens and virtual environments",
+          language: "English",
+          languageVariants: ["English", "Spanish"],
+          vimeoUrl: null,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          clientSpecific: null,
+          downloadUrl: null
+        },
+        {
+          id: 987,
+          name: "Health Tips Information Flyer",
+          categoryId: 3, // Ongoing Promotion
+          type: "flyer",
+          originalFileName: "health-tips-flyer.pdf",
+          fileUrl: "/flyers/health-tips-flyer.pdf",
+          fileType: "pdf",
+          version: "v1.4",
+          description: "Colorful flyer with daily health and wellness tips",
+          language: "English",
+          languageVariants: ["English", "Spanish"],
+          vimeoUrl: null,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          clientSpecific: null,
+          downloadUrl: null
         }
       ];
 
