@@ -81,5 +81,24 @@ export const adminApi = {
 
   deleteTemplate: async (id: number) => {
     await apiRequest("DELETE", `/api/admin/templates/${id}`);
+  },
+
+  getCategories: async () => {
+    const response = await apiRequest("GET", "/api/admin/categories");
+    return response.json();
+  },
+
+  createCategory: async (categoryData: any) => {
+    const response = await apiRequest("POST", "/api/admin/categories", categoryData);
+    return response.json();
+  },
+
+  updateCategory: async (id: number, updates: any) => {
+    const response = await apiRequest("PUT", `/api/admin/categories/${id}`, updates);
+    return response.json();
+  },
+
+  deleteCategory: async (id: number) => {
+    await apiRequest("DELETE", `/api/admin/categories/${id}`);
   }
 };

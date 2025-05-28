@@ -32,7 +32,9 @@ export default function AdminPanel() {
   const [searchTerm, setSearchTerm] = useState("");
   const [showClientDialog, setShowClientDialog] = useState(false);
   const [showTemplateDialog, setShowTemplateDialog] = useState(false);
+  const [showCategoryDialog, setShowCategoryDialog] = useState(false);
   const [editingClient, setEditingClient] = useState<any>(null);
+  const [editingCategory, setEditingCategory] = useState<any>(null);
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -46,6 +48,12 @@ export default function AdminPanel() {
   const { data: templates = [], isLoading: templatesLoading } = useQuery({
     queryKey: ["/api/admin/templates"],
     queryFn: () => adminApi.getTemplates(),
+  });
+
+  // Category management
+  const { data: categories = [], isLoading: categoriesLoading } = useQuery({
+    queryKey: ["/api/admin/categories"],
+    queryFn: () => adminApi.getCategories(),
   });
 
   const createClientMutation = useMutation({
@@ -93,6 +101,43 @@ export default function AdminPanel() {
     },
     onError: () => {
       toast({ title: "Error", description: "Failed to create template", variant: "destructive" });
+    },
+  });
+
+  const createCategoryMutation = useMutation({
+    mutationFn: adminApi.createCategory,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/categories"] });
+      setShowCategoryDialog(false);
+      setEditingCategory(null);
+      toast({ title: "Success", description: "Category created successfully" });
+    },
+    onError: () => {
+      toast({ title: "Error", description: "Failed to create category", variant: "destructive" });
+    },
+  });
+
+  const updateCategoryMutation = useMutation({
+    mutationFn: ({ id, data }: { id: number; data: any }) => adminApi.updateCategory(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/categories"] });
+      setShowCategoryDialog(false);
+      setEditingCategory(null);
+      toast({ title: "Success", description: "Category updated successfully" });
+    },
+    onError: () => {
+      toast({ title: "Error", description: "Failed to update category", variant: "destructive" });
+    },
+  });
+
+  const deleteCategoryMutation = useMutation({
+    mutationFn: adminApi.deleteCategory,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/categories"] });
+      toast({ title: "Success", description: "Category deleted successfully" });
+    },
+    onError: () => {
+      toast({ title: "Error", description: "Failed to delete category", variant: "destructive" });
     },
   });
 

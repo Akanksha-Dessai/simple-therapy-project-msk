@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertClientSchema, insertAssetTemplateSchema } from "@shared/schema";
+import { insertClientSchema, insertAssetTemplateSchema, insertAssetCategorySchema } from "@shared/schema";
 import { z } from "zod";
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -238,6 +238,68 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       if (!deleted) {
         return res.status(404).json({ message: "Template not found" });
+      }
+      
+      res.status(204).send();
+    } catch (error) {
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Category management routes
+
+  // Get all categories
+  app.get("/api/admin/categories", async (req, res) => {
+    try {
+      const categories = await storage.getAllAssetCategories();
+      res.json(categories);
+    } catch (error) {
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Create category
+  app.post("/api/admin/categories", async (req, res) => {
+    try {
+      const validatedData = insertAssetCategorySchema.parse(req.body);
+      const category = await storage.createAssetCategory(validatedData);
+      res.status(201).json(category);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Validation error", errors: error.errors });
+      }
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Update category
+  app.put("/api/admin/categories/:id", async (req, res) => {
+    try {
+      const categoryId = parseInt(req.params.id);
+      const updates = insertAssetCategorySchema.partial().parse(req.body);
+      
+      const updatedCategory = await storage.updateAssetCategory(categoryId, updates);
+      if (!updatedCategory) {
+        return res.status(404).json({ message: "Category not found" });
+      }
+      
+      res.json(updatedCategory);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Validation error", errors: error.errors });
+      }
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Delete category
+  app.delete("/api/admin/categories/:id", async (req, res) => {
+    try {
+      const categoryId = parseInt(req.params.id);
+      const deleted = await storage.deleteAssetCategory(categoryId);
+      
+      if (!deleted) {
+        return res.status(404).json({ message: "Category not found" });
       }
       
       res.status(204).send();
