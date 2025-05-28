@@ -14,6 +14,178 @@ A comprehensive web-based communications toolkit platform that empowers organiza
 
 ---
 
+## 🚀 **Developer Setup Guide**
+
+### Prerequisites
+- Node.js 18+ 
+- PostgreSQL database
+- npm or yarn package manager
+
+### Local Development Setup
+
+**1. Clone and Install Dependencies:**
+```bash
+git clone [repository-url]
+cd simpletherapy-toolkit
+npm install
+```
+
+**2. Database Setup:**
+```bash
+# Execute the comprehensive database setup script
+psql -h localhost -U your_username -d your_database -f database-setup.sql
+
+# Or connect to your PostgreSQL instance and run the script
+```
+
+**3. Environment Variables:**
+Create a `.env` file in the root directory:
+```env
+DATABASE_URL=postgresql://username:password@localhost:5432/database_name
+PGHOST=localhost
+PGPORT=5432
+PGUSER=your_username
+PGPASSWORD=your_password
+PGDATABASE=your_database_name
+NODE_ENV=development
+```
+
+**4. Database Migration (Alternative to SQL script):**
+If using Drizzle migrations instead of the SQL script:
+```bash
+npm run db:push
+```
+
+**5. Start Development Server:**
+```bash
+npm run dev
+```
+
+The application will start with:
+- Frontend: http://localhost:5173
+- Backend API: Same port (integrated)
+
+### Project Structure
+```
+├── client/                 # React frontend
+│   ├── src/
+│   │   ├── components/     # Reusable UI components
+│   │   ├── pages/          # Route pages
+│   │   ├── lib/           # Utilities and API client
+│   │   └── hooks/         # Custom React hooks
+├── server/                # Express backend
+│   ├── routes.ts          # API route definitions
+│   ├── storage.ts         # Database interface (MemStorage/DatabaseStorage)
+│   ├── db.ts             # Database connection
+│   └── index.ts          # Server entry point
+├── shared/               # Shared TypeScript types
+│   └── schema.ts         # Drizzle database schema & types
+├── database-setup.sql    # Complete database setup script
+└── package.json          # Dependencies and scripts
+```
+
+### Available Scripts
+```bash
+npm run dev          # Start development server
+npm run build        # Build for production
+npm run preview      # Preview production build
+npm run db:push      # Push schema changes to database
+npm run db:generate  # Generate migration files
+```
+
+### Database Architecture Notes
+
+**Current Storage Implementation:**
+- Uses `MemStorage` class for in-memory data (default for development)
+- Located in `server/storage.ts`
+- Includes comprehensive seed data matching production requirements
+
+**Switching to PostgreSQL:**
+1. Update `server/storage.ts` to use `DatabaseStorage` instead of `MemStorage`
+2. Ensure `DATABASE_URL` environment variable is set
+3. Run the `database-setup.sql` script to create tables and seed data
+4. The `DatabaseStorage` class interface is already defined and ready to implement
+
+**Database Migration Strategy:**
+- Option 1: Use the provided `database-setup.sql` script (recommended for initial setup)
+- Option 2: Use Drizzle migrations with `npm run db:push`
+- Both approaches create identical schema and seed data
+
+### Key Implementation Files for Developers
+
+**Frontend Core Files:**
+- `client/src/App.tsx` - Main routing and app structure
+- `client/src/pages/home.tsx` - Client access page
+- `client/src/components/client-dashboard.tsx` - Main client interface
+- `client/src/components/admin-panel.tsx` - Administrative interface
+- `client/src/lib/api.ts` - API client configuration
+
+**Backend Core Files:**
+- `server/routes.ts` - All API endpoints and business logic
+- `server/storage.ts` - Data access layer (switch MemStorage → DatabaseStorage)
+- `shared/schema.ts` - Complete database schema and TypeScript types
+
+**Configuration Files:**
+- `vite.config.ts` - Frontend build configuration (do not modify)
+- `tailwind.config.ts` - Styling configuration
+- `drizzle.config.ts` - Database ORM configuration
+
+### Important Development Notes
+
+**Testing the Application:**
+1. Start with access code `ACME2024` for Acme Corporation (full program access)
+2. Try `TECH2024` for TechStart Inc (SimpleWellbeing + SimpleBehavioural)
+3. Test `GHS2024` for Global Health Systems (all programs)
+4. Admin panel access: Navigate to `/admin` route
+
+**Database Storage Toggle:**
+The app currently uses in-memory storage (`MemStorage`) which includes realistic seed data. To switch to PostgreSQL:
+
+```typescript
+// In server/storage.ts, change this line:
+export const storage = new MemStorage();
+
+// To this:
+export const storage = new DatabaseStorage();
+```
+
+**Critical Dependencies:**
+- All UI components are from shadcn/ui (Radix UI)
+- Routing uses wouter (not React Router)
+- Forms use React Hook Form + Zod validation
+- API calls use TanStack Query with custom fetcher
+- Database uses Drizzle ORM (not Prisma)
+
+### Production Deployment
+
+**Environment Setup:**
+- Set `NODE_ENV=production`
+- Configure production PostgreSQL database
+- Update `DATABASE_URL` for production database
+- Run `database-setup.sql` on production database
+
+**Build Process:**
+```bash
+npm run build
+npm run preview  # Test production build locally
+```
+
+**Production Considerations:**
+- Images and file uploads will need cloud storage integration
+- Vimeo URLs require Vimeo API integration for video management
+- Email notifications need email service configuration
+- SSL certificates required for HTTPS
+- Consider CDN for static assets
+
+**Security for Production:**
+- Change default admin credentials
+- Implement proper password hashing
+- Add rate limiting for API endpoints
+- Validate and sanitize all file uploads
+- Set up proper CORS policies
+
+---
+
 ## 🔐 **Client Access System**
 
 ### Access Page Logic
