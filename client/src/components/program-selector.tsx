@@ -22,11 +22,23 @@ export default function ProgramSelector({ client, onProgramSelect, selectedProgr
           />
         );
       case "SimpleEAP":
-        return "🧠"; // Brain/mental health icon
+        return (
+          <img 
+            src="https://www.simpletherapy.com/images/site/SimpleEAP/st-logo_brands.svg" 
+            alt="SimpleEAP Logo" 
+            className="h-8 w-auto"
+          />
+        );
       case "SimpleBehavioural":
         return "💭"; // Thought bubble icon
       case "SimpleWellbeing":
-        return "🌿"; // Wellness icon
+        return (
+          <img 
+            src="https://www.simpletherapy.com/images/site/SimpleWellbeing/st-logo_brands.svg" 
+            alt="SimpleWellbeing Logo" 
+            className="h-8 w-auto"
+          />
+        );
       default:
         return "📋";
     }
@@ -72,7 +84,6 @@ export default function ProgramSelector({ client, onProgramSelect, selectedProgr
               }`}
             >
               <span className="text-2xl mb-2">{getProgramLogo(program)}</span>
-              <span className="text-sm font-medium">{program}</span>
             </Button>
           ))}
         </div>

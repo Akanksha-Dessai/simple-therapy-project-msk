@@ -148,7 +148,6 @@ export default function ClientDashboard({ client }: ClientDashboardProps) {
           </div>
         </CardContent>
       </Card>
-
       {/* Communications Toolkit Description */}
       <Card className="mb-8">
         <CardContent className="p-8">
@@ -156,9 +155,7 @@ export default function ClientDashboard({ client }: ClientDashboardProps) {
             Communications Toolkit
           </h2>
           <div className="text-gray-700 dark:text-muted-foreground space-y-4">
-            <p>
-              Consistent and positive messaging is an important component of a successful promotional strategy for employee assistance programs (EAP), member assistance programs (MAP), student support programs, and behavioral health initiatives. In order to maximize the visibility of your program, providers must make it appealing to everyone, whether they have an acute concern or just need support with everyday challenges.
-            </p>
+            <p>Consistent and positive messaging is an important component of a successful promotional strategy for SimpleTherapy Programs. In order to maximize the visibility of your program, providers must make it appealing to everyone, whether they have an acute concern or just need support with everyday challenges.</p>
             <p>
               With that in mind, the SimpleTherapy Care Marketing Toolkit includes a variety of flyers, posters, brochures, and digital displays that maximize awareness of your program. The tools below are customized specifically for <strong>{client.name}</strong> and can be downloaded by selecting your program type and clicking the "Download" button on any asset.
             </p>
@@ -174,14 +171,12 @@ export default function ClientDashboard({ client }: ClientDashboardProps) {
           </div>
         </CardContent>
       </Card>
-
       {/* Program Selection */}
       <ProgramSelector 
         client={client} 
         onProgramSelect={setSelectedProgram}
         selectedProgram={selectedProgram}
       />
-
       {/* Only show assets after a program is selected */}
       {selectedProgram && (
         <>
