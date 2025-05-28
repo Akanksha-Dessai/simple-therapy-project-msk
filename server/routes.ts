@@ -329,8 +329,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       });
 
-      // Add sample video assets
-      const allAssets = [...assetsWithClientData, ...sampleVideoAssets];
+      // Add sample assets with bilingual versions
+      const sampleAssetsWithLanguages = [];
+      sampleVideoAssets.forEach(asset => {
+        // English version
+        sampleAssetsWithLanguages.push({
+          ...asset,
+          language: "English"
+        });
+        
+        // Spanish version
+        sampleAssetsWithLanguages.push({
+          ...asset,
+          id: asset.id + 2000, // Unique ID for Spanish version
+          language: "Spanish"
+        });
+      });
+      
+      const allAssets = [...assetsWithClientData, ...sampleAssetsWithLanguages];
 
       res.json({
         client,
