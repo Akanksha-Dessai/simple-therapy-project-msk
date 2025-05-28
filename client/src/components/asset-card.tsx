@@ -170,14 +170,19 @@ export default function AssetCard({ asset, client }: AssetCardProps) {
         </div>
       ) : (
         <div className="flex space-x-1">
-          <Button
-            className="flex-1 bg-primary hover:bg-primary-dark text-white"
-            size="sm"
-            onClick={() => handleDownload(asset.fileType)}
-          >
-            <Download className="mr-1 h-3 w-3" />
-            {asset.fileType.toUpperCase()}
-          </Button>
+          {(() => {
+            const { text, icon: Icon } = getAssetCTA(asset.type);
+            return (
+              <Button
+                className="flex-1 bg-primary hover:bg-primary-dark text-white"
+                size="sm"
+                onClick={() => handleDownload(asset.fileType)}
+              >
+                <Icon className="mr-1 h-3 w-3" />
+                {text}
+              </Button>
+            );
+          })()}
           
           {asset.fileType !== "png" && asset.fileType !== "jpg" && (
             <Button
