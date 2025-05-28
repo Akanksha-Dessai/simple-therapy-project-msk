@@ -217,21 +217,6 @@ export default function AdminPanel() {
     }
   };
 
-  const getCategoryStats = () => {
-    const stats = templates.reduce((acc: any, template: any) => {
-      acc[template.category] = (acc[template.category] || 0) + 1;
-      return acc;
-    }, {});
-    
-    return {
-      launch: stats.launch || 0,
-      ongoing: stats.ongoing || 0,
-      future: stats.future || 0,
-    };
-  };
-
-  const categoryStats = getCategoryStats();
-
   return (
     <div className="space-y-8">
       {/* Admin Dashboard Header */}
@@ -243,195 +228,8 @@ export default function AdminPanel() {
                 Admin Dashboard
               </h1>
               <p className="text-gray-600 dark:text-muted-foreground mt-1">
-                Manage clients, assets, and toolkit configurations
+                Manage clients, categories, and multi-language asset templates
               </p>
-            </div>
-            <div className="flex space-x-3">
-              <Dialog open={showClientDialog} onOpenChange={setShowClientDialog}>
-                <DialogTrigger asChild>
-                  <Button className="bg-secondary hover:bg-green-600 text-white">
-                    <Plus className="mr-2 h-4 w-4" /> Add Client
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="sm:max-w-[425px]">
-                  <DialogHeader>
-                    <DialogTitle>
-                      {editingClient ? "Edit Client" : "Add New Client"}
-                    </DialogTitle>
-                  </DialogHeader>
-                  <form onSubmit={handleClientSubmit} className="space-y-4">
-                    <div>
-                      <Label htmlFor="name">Company Name</Label>
-                      <Input
-                        id="name"
-                        name="name"
-                        defaultValue={editingClient?.name || ""}
-                        required
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="accessCode">Access Code</Label>
-                      <Input
-                        id="accessCode"
-                        name="accessCode"
-                        defaultValue={editingClient?.accessCode || ""}
-                        required
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="contactEmail">Contact Email</Label>
-                      <Input
-                        id="contactEmail"
-                        name="contactEmail"
-                        type="email"
-                        defaultValue={editingClient?.contactEmail || ""}
-                        required
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="eligibilityLanguage">Eligibility Language</Label>
-                      <Textarea
-                        id="eligibilityLanguage"
-                        name="eligibilityLanguage"
-                        defaultValue={editingClient?.eligibilityLanguage || ""}
-                        required
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="logoUrl">Logo URL</Label>
-                      <Input
-                        id="logoUrl"
-                        name="logoUrl"
-                        defaultValue={editingClient?.logoUrl || ""}
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="qrCodeUrl">QR Code URL</Label>
-                      <Input
-                        id="qrCodeUrl"
-                        name="qrCodeUrl"
-                        defaultValue={editingClient?.qrCodeUrl || ""}
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="status">Status</Label>
-                      <Select name="status" defaultValue={editingClient?.status || "active"}>
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="active">Active</SelectItem>
-                          <SelectItem value="pending">Pending</SelectItem>
-                          <SelectItem value="inactive">Inactive</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <Button
-                      type="submit"
-                      className="w-full"
-                      disabled={createClientMutation.isPending || updateClientMutation.isPending}
-                    >
-                      {editingClient ? "Update Client" : "Create Client"}
-                    </Button>
-                  </form>
-                </DialogContent>
-              </Dialog>
-
-              <Dialog open={showTemplateDialog} onOpenChange={setShowTemplateDialog}>
-                <DialogTrigger asChild>
-                  <Button className="bg-primary hover:bg-primary-dark text-white">
-                    <Upload className="mr-2 h-4 w-4" /> Upload Assets
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="sm:max-w-[425px]">
-                  <DialogHeader>
-                    <DialogTitle>Upload New Template</DialogTitle>
-                  </DialogHeader>
-                  <form onSubmit={handleTemplateSubmit} className="space-y-4">
-                    <div>
-                      <Label htmlFor="templateName">Template Name</Label>
-                      <Input id="templateName" name="name" required />
-                    </div>
-                    <div>
-                      <Label htmlFor="category">Category</Label>
-                      <Select name="categoryId" required>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select category" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {categories.map((category: any) => (
-                            <SelectItem key={category.id} value={category.id.toString()}>
-                              {category.name} ({category.programType})
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div>
-                      <Label htmlFor="language">Language Version</Label>
-                      <Select name="language" defaultValue="English" required>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select language" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="English">English</SelectItem>
-                          <SelectItem value="Spanish">Spanish (Español)</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div>
-                      <Label htmlFor="type">Asset Type</Label>
-                      <Select name="type" required>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select type" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="flyer">Flyer</SelectItem>
-                          <SelectItem value="poster">Poster</SelectItem>
-                          <SelectItem value="banner">Banner</SelectItem>
-                          <SelectItem value="email">Email Template</SelectItem>
-                          <SelectItem value="video">Video</SelectItem>
-                          <SelectItem value="presentation">Presentation</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div>
-                      <Label htmlFor="originalFileName">File Name</Label>
-                      <Input id="originalFileName" name="originalFileName" required />
-                    </div>
-                    <div>
-                      <Label htmlFor="fileType">File Type</Label>
-                      <Select name="fileType" required>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select file type" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="pdf">PDF</SelectItem>
-                          <SelectItem value="ppt">PowerPoint</SelectItem>
-                          <SelectItem value="docx">Word Document</SelectItem>
-                          <SelectItem value="png">PNG Image</SelectItem>
-                          <SelectItem value="jpg">JPG Image</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div>
-                      <Label htmlFor="version">Version</Label>
-                      <Input id="version" name="version" placeholder="e.g., v1.0" required />
-                    </div>
-                    <div>
-                      <Label htmlFor="templateDescription">Description</Label>
-                      <Textarea id="templateDescription" name="description" />
-                    </div>
-                    <Button
-                      type="submit"
-                      className="w-full"
-                      disabled={createTemplateMutation.isPending}
-                    >
-                      Create Template
-                    </Button>
-                  </form>
-                </DialogContent>
-              </Dialog>
             </div>
           </div>
         </CardContent>
@@ -449,7 +247,6 @@ export default function AdminPanel() {
         <TabsContent value="clients" className="space-y-6">
           <Card>
             <CardContent className="p-6">
-              {/* Search and Filters */}
               <div className="flex flex-col sm:flex-row gap-4 mb-6">
                 <div className="flex-1">
                   <Input
@@ -458,22 +255,8 @@ export default function AdminPanel() {
                     onChange={(e) => setSearchTerm(e.target.value)}
                   />
                 </div>
-                <div className="flex space-x-2">
-                  <Select defaultValue="all">
-                    <SelectTrigger className="w-40">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">All Statuses</SelectItem>
-                      <SelectItem value="active">Active</SelectItem>
-                      <SelectItem value="pending">Pending</SelectItem>
-                      <SelectItem value="inactive">Inactive</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
               </div>
 
-              {/* Clients Table */}
               <div className="overflow-x-auto">
                 {clientsLoading ? (
                   <div className="text-center py-8">Loading clients...</div>
@@ -483,7 +266,6 @@ export default function AdminPanel() {
                       <TableRow>
                         <TableHead>Client</TableHead>
                         <TableHead>Access Code</TableHead>
-                        <TableHead>Assets Generated</TableHead>
                         <TableHead>Status</TableHead>
                         <TableHead>Actions</TableHead>
                       </TableRow>
@@ -491,32 +273,11 @@ export default function AdminPanel() {
                     <TableBody>
                       {filteredClients.map((client: any) => (
                         <TableRow key={client.id}>
+                          <TableCell>{client.name}</TableCell>
                           <TableCell>
-                            <div className="flex items-center">
-                              {client.logoUrl && (
-                                <img
-                                  src={client.logoUrl}
-                                  alt={`${client.name} Logo`}
-                                  className="w-10 h-10 rounded-lg object-cover mr-3"
-                                />
-                              )}
-                              <div>
-                                <div className="text-sm font-medium text-gray-900 dark:text-foreground">
-                                  {client.name}
-                                </div>
-                                <div className="text-sm text-gray-500 dark:text-muted-foreground">
-                                  {client.contactEmail}
-                                </div>
-                              </div>
-                            </div>
-                          </TableCell>
-                          <TableCell>
-                            <Badge variant="outline" className="font-mono">
+                            <code className="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded text-sm">
                               {client.accessCode}
-                            </Badge>
-                          </TableCell>
-                          <TableCell>
-                            <span>{client.assetCount} assets</span>
+                            </code>
                           </TableCell>
                           <TableCell>
                             <Badge className={getStatusColor(client.status)}>
@@ -525,14 +286,7 @@ export default function AdminPanel() {
                           </TableCell>
                           <TableCell>
                             <div className="flex space-x-2">
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => {
-                                  setEditingClient(client);
-                                  setShowClientDialog(true);
-                                }}
-                              >
+                              <Button variant="outline" size="sm">
                                 <Edit className="h-3 w-3" />
                               </Button>
                               <Button
@@ -588,7 +342,6 @@ export default function AdminPanel() {
                             const nameValue = e.target.value;
                             const slugInput = document.getElementById('categorySlug') as HTMLInputElement;
                             if (slugInput && !editingCategory) {
-                              // Auto-generate slug from name
                               const baseSlug = nameValue
                                 .toLowerCase()
                                 .replace(/[^a-z0-9\s-]/g, '')
@@ -597,7 +350,6 @@ export default function AdminPanel() {
                                 .trim()
                                 .replace(/^-|-$/g, '');
                               
-                              // Check for duplicates and add number if needed
                               const existingSlugs = categories.map((cat: any) => cat.slug);
                               let finalSlug = baseSlug;
                               let counter = 1;
@@ -758,183 +510,178 @@ export default function AdminPanel() {
         <TabsContent value="templates" className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>Master Asset Templates</CardTitle>
+              <CardTitle>Multi-Language Asset Templates</CardTitle>
               <p className="text-gray-600 dark:text-muted-foreground">
-                Upload and manage template assets that will be customized for each client
+                Upload and manage asset templates with English and Spanish language support
               </p>
             </CardHeader>
             <CardContent>
-              <UploadZone onUpload={(file) => console.log("Uploaded:", file)} />
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-foreground">Asset Templates</h3>
+                <Dialog open={showTemplateDialog} onOpenChange={setShowTemplateDialog}>
+                  <DialogTrigger asChild>
+                    <Button className="bg-secondary hover:bg-green-600 text-white">
+                      <Plus className="mr-2 h-4 w-4" /> Add Template
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-[425px]">
+                    <DialogHeader>
+                      <DialogTitle>Upload New Asset Template</DialogTitle>
+                    </DialogHeader>
+                    <form onSubmit={handleTemplateSubmit} className="space-y-4">
+                      <div>
+                        <Label htmlFor="templateName">Template Name</Label>
+                        <Input id="templateName" name="name" required />
+                      </div>
+                      <div>
+                        <Label htmlFor="category">Category</Label>
+                        <Select name="categoryId" required>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select category" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {categories.map((category: any) => (
+                              <SelectItem key={category.id} value={category.id.toString()}>
+                                {category.name} ({category.programType})
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div>
+                        <Label htmlFor="language">Language Version</Label>
+                        <Select name="language" defaultValue="English" required>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select language" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="English">English</SelectItem>
+                            <SelectItem value="Spanish">Spanish (Español)</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div>
+                        <Label htmlFor="type">Asset Type</Label>
+                        <Select name="type" required>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select type" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="flyer">Flyer</SelectItem>
+                            <SelectItem value="poster">Poster</SelectItem>
+                            <SelectItem value="banner">Banner</SelectItem>
+                            <SelectItem value="email">Email Template</SelectItem>
+                            <SelectItem value="video">Video</SelectItem>
+                            <SelectItem value="presentation">Presentation</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div>
+                        <Label htmlFor="originalFileName">File Name</Label>
+                        <Input id="originalFileName" name="originalFileName" required />
+                      </div>
+                      <div>
+                        <Label htmlFor="fileType">File Type</Label>
+                        <Select name="fileType" required>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select file type" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="pdf">PDF</SelectItem>
+                            <SelectItem value="ppt">PowerPoint</SelectItem>
+                            <SelectItem value="docx">Word Document</SelectItem>
+                            <SelectItem value="png">PNG Image</SelectItem>
+                            <SelectItem value="jpg">JPEG Image</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div>
+                        <Label htmlFor="version">Version</Label>
+                        <Input id="version" name="version" defaultValue="1.0" required />
+                      </div>
+                      <div>
+                        <Label htmlFor="description">Description</Label>
+                        <Textarea id="description" name="description" rows={3} />
+                      </div>
+                      <div className="flex justify-end space-x-2">
+                        <Button type="button" variant="outline" onClick={() => setShowTemplateDialog(false)}>
+                          Cancel
+                        </Button>
+                        <Button type="submit" disabled={createTemplateMutation.isPending}>
+                          Upload Template
+                        </Button>
+                      </div>
+                    </form>
+                  </DialogContent>
+                </Dialog>
+              </div>
 
-              {/* Asset Templates with Language Versions */}
-              <div className="mt-8">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-foreground">Asset Templates</h3>
-                  <Dialog open={showTemplateDialog} onOpenChange={setShowTemplateDialog}>
-                    <DialogTrigger asChild>
-                      <Button className="bg-secondary hover:bg-green-600 text-white">
-                        <Plus className="mr-2 h-4 w-4" /> Add Template
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent className="sm:max-w-[425px]">
-                      <DialogHeader>
-                        <DialogTitle>Upload New Asset Template</DialogTitle>
-                      </DialogHeader>
-                      <form onSubmit={handleTemplateSubmit} className="space-y-4">
-                        <div>
-                          <Label htmlFor="templateName">Template Name</Label>
-                          <Input id="templateName" name="name" required />
+              {templatesLoading ? (
+                <div className="text-center py-8">Loading templates...</div>
+              ) : (
+                <div className="space-y-4">
+                  {templates.map((template: any) => (
+                    <Card key={template.id} className="p-4">
+                      <div className="flex items-center justify-between">
+                        <div className="flex-1">
+                          <div className="flex items-center space-x-3">
+                            <h4 className="font-medium text-gray-900 dark:text-foreground">{template.name}</h4>
+                            <Badge variant="outline">{template.type}</Badge>
+                            <Badge className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300">
+                              {template.language}
+                            </Badge>
+                          </div>
+                          <p className="text-sm text-gray-500 dark:text-muted-foreground mt-1">
+                            Version {template.version} • {template.fileType?.toUpperCase()}
+                          </p>
+                          {template.description && (
+                            <p className="text-sm text-gray-600 dark:text-muted-foreground mt-1">{template.description}</p>
+                          )}
                         </div>
-                        <div>
-                          <Label htmlFor="category">Category</Label>
-                          <Select name="categoryId" required>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select category" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {categories.map((category: any) => (
-                                <SelectItem key={category.id} value={category.id.toString()}>
-                                  {category.name} ({category.programType})
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </div>
-                        <div>
-                          <Label htmlFor="language">Language Version</Label>
-                          <Select name="language" defaultValue="English" required>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select language" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="English">English</SelectItem>
-                              <SelectItem value="Spanish">Spanish (Español)</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-                        <div>
-                          <Label htmlFor="type">Asset Type</Label>
-                          <Select name="type" required>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select type" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="flyer">Flyer</SelectItem>
-                              <SelectItem value="poster">Poster</SelectItem>
-                              <SelectItem value="banner">Banner</SelectItem>
-                              <SelectItem value="email">Email Template</SelectItem>
-                              <SelectItem value="video">Video</SelectItem>
-                              <SelectItem value="presentation">Presentation</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-                        <div>
-                          <Label htmlFor="originalFileName">File Name</Label>
-                          <Input id="originalFileName" name="originalFileName" required />
-                        </div>
-                        <div>
-                          <Label htmlFor="fileType">File Type</Label>
-                          <Select name="fileType" required>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select file type" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="pdf">PDF</SelectItem>
-                              <SelectItem value="ppt">PowerPoint</SelectItem>
-                              <SelectItem value="docx">Word Document</SelectItem>
-                              <SelectItem value="png">PNG Image</SelectItem>
-                              <SelectItem value="jpg">JPEG Image</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-                        <div>
-                          <Label htmlFor="version">Version</Label>
-                          <Input id="version" name="version" defaultValue="1.0" required />
-                        </div>
-                        <div>
-                          <Label htmlFor="description">Description</Label>
-                          <Textarea id="description" name="description" rows={3} />
-                        </div>
-                        <div className="flex justify-end space-x-2">
-                          <Button type="button" variant="outline" onClick={() => setShowTemplateDialog(false)}>
-                            Cancel
+                        <div className="flex items-center space-x-2">
+                          <Button variant="outline" size="sm">
+                            <Download className="h-3 w-3" />
                           </Button>
-                          <Button type="submit" disabled={createTemplateMutation.isPending}>
-                            Upload Template
+                          <Button variant="outline" size="sm">
+                            <Edit className="h-3 w-3" />
+                          </Button>
+                          <Button variant="outline" size="sm">
+                            <Trash2 className="h-3 w-3" />
                           </Button>
                         </div>
-                      </form>
-                    </DialogContent>
-                  </Dialog>
-                </div>
-
-                {templatesLoading ? (
-                  <div className="text-center py-8">Loading templates...</div>
-                ) : (
-                  <div className="space-y-4">
-                    {templates.map((template: any) => (
-                      <Card key={template.id} className="p-4">
+                      </div>
+                      
+                      {/* Language Versions Indicator */}
+                      <div className="mt-3 pt-3 border-t">
                         <div className="flex items-center justify-between">
-                          <div className="flex-1">
-                            <div className="flex items-center space-x-3">
-                              <h4 className="font-medium text-gray-900 dark:text-foreground">{template.name}</h4>
-                              <Badge variant="outline">{template.type}</Badge>
-                              <Badge className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300">
-                                {template.language}
-                              </Badge>
+                          <div className="flex items-center space-x-2">
+                            <span className="text-xs text-gray-500 dark:text-muted-foreground">Available Languages:</span>
+                            <div className="flex space-x-1">
+                              {template.languageVariants?.map((lang: string) => (
+                                <Badge key={lang} variant="secondary" className="text-xs">
+                                  {lang === "English" ? "EN" : "ES"}
+                                </Badge>
+                              ))}
                             </div>
-                            <p className="text-sm text-gray-500 dark:text-muted-foreground mt-1">
-                              Version {template.version} • {template.fileType.toUpperCase()}
-                            </p>
-                            {template.description && (
-                              <p className="text-sm text-gray-600 dark:text-muted-foreground mt-1">{template.description}</p>
+                          </div>
+                          <div className="flex space-x-1">
+                            {!template.languageVariants?.includes("English") && (
+                              <Button variant="outline" size="sm" className="text-xs">
+                                + Add English
+                              </Button>
+                            )}
+                            {!template.languageVariants?.includes("Spanish") && (
+                              <Button variant="outline" size="sm" className="text-xs">
+                                + Add Spanish
+                              </Button>
                             )}
                           </div>
-                          <div className="flex items-center space-x-2">
-                            <Button variant="outline" size="sm">
-                              <Download className="h-3 w-3" />
-                            </Button>
-                            <Button variant="outline" size="sm">
-                              <Edit className="h-3 w-3" />
-                            </Button>
-                            <Button variant="outline" size="sm">
-                              <Trash2 className="h-3 w-3" />
-                            </Button>
-                          </div>
                         </div>
-                        
-                        {/* Language Versions Indicator */}
-                        <div className="mt-3 pt-3 border-t">
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center space-x-2">
-                              <span className="text-xs text-gray-500 dark:text-muted-foreground">Available Languages:</span>
-                              <div className="flex space-x-1">
-                                {template.languageVariants?.map((lang: string) => (
-                                  <Badge key={lang} variant="secondary" className="text-xs">
-                                    {lang === "English" ? "EN" : "ES"}
-                                  </Badge>
-                                ))}
-                              </div>
-                            </div>
-                            <div className="flex space-x-1">
-                              {!template.languageVariants?.includes("English") && (
-                                <Button variant="outline" size="sm" className="text-xs">
-                                  + Add English
-                                </Button>
-                              )}
-                              {!template.languageVariants?.includes("Spanish") && (
-                                <Button variant="outline" size="sm" className="text-xs">
-                                  + Add Spanish
-                                </Button>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      </Card>
-                    ))}
-                  </div>
-                )}
-              </div>
+                      </div>
+                    </Card>
+                  ))}
+                </div>
+              )}
             </CardContent>
           </Card>
         </TabsContent>
@@ -944,144 +691,11 @@ export default function AdminPanel() {
             <CardHeader>
               <CardTitle>System Settings</CardTitle>
               <p className="text-gray-600 dark:text-muted-foreground">
-                Configure platform settings and preferences
+                Configure platform settings and multi-language preferences
               </p>
             </CardHeader>
             <CardContent>
               <p className="text-gray-500 dark:text-muted-foreground">Settings panel coming soon...</p>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
-    </div>
-  );
-}
-                      </h4>
-                    </div>
-                    <p className="text-sm text-gray-600 dark:text-muted-foreground mb-3">
-                      {categoryStats.ongoing} templates
-                    </p>
-                    <div className="space-y-2 text-sm">
-                      {templates
-                        .filter((t: any) => t.category === "ongoing")
-                        .slice(0, 3)
-                        .map((template: any) => (
-                          <div
-                            key={template.id}
-                            className="flex items-center justify-between"
-                          >
-                            <span>{template.name}</span>
-                            <span className="text-gray-500 dark:text-muted-foreground">
-                              {template.version}
-                            </span>
-                          </div>
-                        ))}
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardContent className="p-4">
-                    <div className="flex items-center mb-3">
-                      <div className="w-8 h-8 bg-orange-500 rounded flex items-center justify-center mr-2">
-                        <span className="text-white text-sm font-bold">F</span>
-                      </div>
-                      <h4 className="font-medium text-gray-900 dark:text-foreground">
-                        Future Phase
-                      </h4>
-                    </div>
-                    <p className="text-sm text-gray-600 dark:text-muted-foreground mb-3">
-                      {categoryStats.future} templates
-                    </p>
-                    <div className="space-y-2 text-sm">
-                      {templates
-                        .filter((t: any) => t.category === "future")
-                        .slice(0, 3)
-                        .map((template: any) => (
-                          <div
-                            key={template.id}
-                            className="flex items-center justify-between"
-                          >
-                            <span>{template.name}</span>
-                            <span className="text-gray-500 dark:text-muted-foreground">
-                              {template.version}
-                            </span>
-                          </div>
-                        ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="settings" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>System Settings</CardTitle>
-              <p className="text-gray-600 dark:text-muted-foreground">
-                Configure global platform settings and preferences
-              </p>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-6">
-                <div>
-                  <h4 className="text-lg font-medium mb-2">Branding Configuration</h4>
-                  <p className="text-sm text-gray-600 dark:text-muted-foreground mb-4">
-                    Configure how client logos and branding are displayed across all materials
-                  </p>
-                  <div className="space-y-4">
-                    <div>
-                      <Label>Logo Placement</Label>
-                      <Select defaultValue="top">
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="top">SimpleMSK + Client at top, ST at bottom</SelectItem>
-                          <SelectItem value="header">All logos in header</SelectItem>
-                          <SelectItem value="footer">All logos in footer</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div>
-                      <Label>QR Code Type</Label>
-                      <Select defaultValue="app">
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="app">App Download Link</SelectItem>
-                          <SelectItem value="registration">Registration Flow</SelectItem>
-                          <SelectItem value="custom">Custom URL</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-                </div>
-
-                <div>
-                  <h4 className="text-lg font-medium mb-2">Asset Management</h4>
-                  <p className="text-sm text-gray-600 dark:text-muted-foreground mb-4">
-                    Control how assets are versioned and updated
-                  </p>
-                  <div className="space-y-4">
-                    <div className="flex items-center space-x-2">
-                      <input type="checkbox" id="autoVersion" defaultChecked />
-                      <Label htmlFor="autoVersion">Automatically version assets on upload</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <input type="checkbox" id="autoGenerate" defaultChecked />
-                      <Label htmlFor="autoGenerate">Auto-generate client assets from templates</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <input type="checkbox" id="spanishSupport" />
-                      <Label htmlFor="spanishSupport">Enable Spanish language support</Label>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </CardContent>
           </Card>
         </TabsContent>
