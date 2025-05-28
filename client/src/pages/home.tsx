@@ -18,7 +18,7 @@ export default function Home() {
                   <span className="text-white font-bold text-lg">ST</span>
                 </div>
                 <span className="ml-2 text-xl font-semibold text-gray-900 dark:text-foreground">
-                  SimpleTherapy MSK Toolkit
+                  SimpleTherapy Care Marketing Toolkit
                 </span>
               </div>
             </div>
@@ -85,7 +85,7 @@ export default function Home() {
                 <span className="text-white font-bold text-sm">ST</span>
               </div>
               <span className="text-sm text-gray-600 dark:text-muted-foreground">
-                SimpleTherapy MSK Toolkit Platform
+                SimpleTherapy Care Marketing Toolkit Platform
               </span>
             </div>
             <div className="text-sm text-gray-500 dark:text-muted-foreground">
