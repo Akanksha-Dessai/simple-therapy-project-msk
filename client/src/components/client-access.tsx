@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -44,6 +44,28 @@ export default function ClientAccess() {
       handleAccess();
     }
   };
+
+  // Update header logo when client is authenticated
+  useEffect(() => {
+    const headerLogoContainer = document.getElementById('client-header-logo');
+    if (headerLogoContainer && authenticatedClient) {
+      headerLogoContainer.innerHTML = `
+        <div class="flex items-center space-x-3">
+          <span class="text-sm text-gray-600 dark:text-muted-foreground">${authenticatedClient.name}</span>
+          <div class="w-12 h-8 bg-gray-50 dark:bg-gray-800 rounded border flex items-center justify-center overflow-hidden">
+            ${authenticatedClient.logoUrl 
+              ? `<img src="${authenticatedClient.logoUrl}" alt="${authenticatedClient.name} logo" class="w-full h-full object-contain">` 
+              : `<div class="w-8 h-8 bg-primary rounded flex items-center justify-center">
+                   <span class="text-white font-bold text-xs">${authenticatedClient.name.charAt(0)}</span>
+                 </div>`
+            }
+          </div>
+        </div>
+      `;
+    } else if (headerLogoContainer) {
+      headerLogoContainer.innerHTML = '';
+    }
+  }, [authenticatedClient]);
 
   if (authenticatedClient) {
     return <ClientDashboard client={authenticatedClient} />;

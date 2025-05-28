@@ -22,6 +22,11 @@ export default function Home() {
                 </span>
               </div>
             </div>
+            
+            {/* Client Logo in Header - will be populated when client is authenticated */}
+            <div id="client-header-logo" className="flex items-center">
+              {/* This will be dynamically populated by the ClientAccess component */}
+            </div>
 
           </div>
         </div>
