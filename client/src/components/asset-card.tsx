@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { clientApi } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
-import { FileText, FileImage, Video, Download, Link, Copy } from "lucide-react";
+import { FileText, FileImage, Video, Download, Link, Copy, Play } from "lucide-react";
 
 interface AssetCardProps {
   asset: any;
@@ -24,6 +24,8 @@ export default function AssetCard({ asset, client }: AssetCardProps) {
 
   const getPreviewImage = (type: string) => {
     switch (type) {
+      case "video":
+        return "https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200";
       case "flyer":
         if (asset.name.toLowerCase().includes("mental health")) {
           return "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200";
@@ -81,15 +83,40 @@ export default function AssetCard({ asset, client }: AssetCardProps) {
 
   const isVideo = asset.type === "video";
 
+  const getAssetCTA = (type: string) => {
+    switch (type) {
+      case "flyer":
+        return { text: "Download Flyer", icon: Download };
+      case "poster":
+        return { text: "Download Poster", icon: Download };
+      case "banner":
+        return { text: "Download Banner", icon: Download };
+      case "email":
+        return { text: "Download Template", icon: Download };
+      case "document":
+        return { text: "Download Document", icon: FileText };
+      default:
+        return { text: "Download", icon: Download };
+    }
+  };
+
   return (
     <div className="border border-gray-200 dark:border-border rounded-lg p-4 hover:shadow-md transition-shadow">
-      {!isVideo && (
+      {/* Preview Image with Play Icon for Videos */}
+      <div className="relative mb-3">
         <img
           src={getPreviewImage(asset.type)}
           alt={`${asset.name} Preview`}
-          className="w-full h-32 object-cover rounded mb-3"
+          className="w-full h-32 object-cover rounded"
         />
-      )}
+        {isVideo && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30 rounded">
+            <div className="bg-white bg-opacity-90 rounded-full p-2 hover:bg-opacity-100 transition-all">
+              <Play className="h-6 w-6 text-purple-600 ml-0.5" />
+            </div>
+          </div>
+        )}
+      </div>
       
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center">
