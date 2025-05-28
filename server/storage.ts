@@ -86,6 +86,7 @@ export class MemStorage implements IStorage {
       logoUrl: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100",
       eligibilityLanguage: "Available to all full-time employees and their families",
       qrCodeUrl: null,
+      programTypes: ["SimpleMSK", "SimpleEAP"],
       status: "active",
       createdAt: new Date(),
       updatedAt: new Date()
@@ -320,5 +321,5 @@ export class MemStorage implements IStorage {
   }
 }
 
-// Import new storage implementation
-export { storage } from "./storage-new";
+// Use the working storage for now
+export const storage = new MemStorage();

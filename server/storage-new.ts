@@ -339,6 +339,7 @@ export class MemStorage implements IStorage {
       ...category,
       id: this.currentCategoryId++,
       description: category.description || null,
+      displayOrder: category.displayOrder || 0,
       status: category.status || "active",
       createdAt: new Date(),
       updatedAt: new Date()

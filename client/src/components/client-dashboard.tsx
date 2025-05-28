@@ -3,6 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { clientApi } from "@/lib/api";
 import AssetCard from "./asset-card";
+import ProgramSelector from "./program-selector";
 import { useState } from "react";
 import { Rocket, RotateCcw, Clock, QrCode } from "lucide-react";
 
@@ -13,6 +14,7 @@ interface ClientDashboardProps {
 export default function ClientDashboard({ client }: ClientDashboardProps) {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedType, setSelectedType] = useState("all");
+  const [selectedProgram, setSelectedProgram] = useState<string | null>(null);
 
   const { data: assetsData, isLoading } = useQuery({
     queryKey: [`/api/client/${client.id}/assets`],
@@ -106,6 +108,13 @@ export default function ClientDashboard({ client }: ClientDashboardProps) {
 
   return (
     <div className="space-y-8">
+      {/* Program Selection */}
+      <ProgramSelector 
+        client={client} 
+        onProgramSelect={setSelectedProgram}
+        selectedProgram={selectedProgram}
+      />
+
       {/* Client Branding Header */}
       <Card>
         <CardContent className="p-6">
