@@ -568,16 +568,43 @@ export default function AdminPanel() {
                           name="name"
                           defaultValue={editingCategory?.name || ""}
                           placeholder="e.g., Launch Materials"
+                          onChange={(e) => {
+                            const nameValue = e.target.value;
+                            const slugInput = document.getElementById('categorySlug') as HTMLInputElement;
+                            if (slugInput && !editingCategory) {
+                              // Auto-generate slug from name
+                              const baseSlug = nameValue
+                                .toLowerCase()
+                                .replace(/[^a-z0-9\s-]/g, '')
+                                .replace(/\s+/g, '-')
+                                .replace(/-+/g, '-')
+                                .trim()
+                                .replace(/^-|-$/g, '');
+                              
+                              // Check for duplicates and add number if needed
+                              const existingSlugs = categories.map((cat: any) => cat.slug);
+                              let finalSlug = baseSlug;
+                              let counter = 1;
+                              while (existingSlugs.includes(finalSlug)) {
+                                finalSlug = `${baseSlug}-${counter}`;
+                                counter++;
+                              }
+                              
+                              slugInput.value = finalSlug;
+                            }
+                          }}
                           required
                         />
                       </div>
                       <div>
-                        <Label htmlFor="categorySlug">Category Slug</Label>
+                        <Label htmlFor="categorySlug">Category Slug (Auto-generated)</Label>
                         <Input
                           id="categorySlug"
                           name="slug"
                           defaultValue={editingCategory?.slug || ""}
-                          placeholder="e.g., launch-materials"
+                          placeholder="auto-generated-from-name"
+                          readOnly={!editingCategory}
+                          className={!editingCategory ? "bg-gray-50 dark:bg-gray-800" : ""}
                           required
                         />
                       </div>
