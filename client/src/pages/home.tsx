@@ -22,20 +22,7 @@ export default function Home() {
                 </span>
               </div>
             </div>
-            <div className="flex items-center space-x-4">
-              <button className="text-gray-500 hover:text-gray-700 dark:text-muted-foreground dark:hover:text-foreground">
-                <i className="fas fa-bell text-lg"></i>
-              </button>
-              <div className="relative">
-                <button className="flex items-center space-x-2 text-gray-700 hover:text-gray-900 dark:text-foreground dark:hover:text-primary">
-                  <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
-                    <span className="text-white text-sm font-medium">A</span>
-                  </div>
-                  <span className="hidden md:block">Admin</span>
-                  <i className="fas fa-chevron-down text-xs"></i>
-                </button>
-              </div>
-            </div>
+
           </div>
         </div>
       </header>
