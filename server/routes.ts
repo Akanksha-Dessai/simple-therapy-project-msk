@@ -43,6 +43,46 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const templates = await storage.getAllAssetTemplates();
       const clientAssets = await storage.getClientAssets(clientId);
       
+      // Add some sample video assets for testing
+      const sampleVideoAssets = [
+        {
+          id: 999,
+          name: "Program Introduction Video",
+          category: "launch",
+          type: "video",
+          originalFileName: "program-intro.mp4",
+          fileUrl: "/videos/program-intro.mp4",
+          fileType: "mp4",
+          version: "v1.0",
+          description: "Engaging introduction video explaining program benefits",
+          language: "English",
+          languageVariants: ["English", "Spanish"],
+          vimeoUrl: "https://vimeo.com/123456789",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          clientSpecific: null,
+          downloadUrl: null
+        },
+        {
+          id: 998,
+          name: "Video de Introducción del Programa",
+          category: "launch", 
+          type: "video",
+          originalFileName: "programa-intro.mp4",
+          fileUrl: "/videos/programa-intro.mp4",
+          fileType: "mp4",
+          version: "v1.0",
+          description: "Video introductorio que explica los beneficios del programa",
+          language: "Spanish",
+          languageVariants: ["English", "Spanish"],
+          vimeoUrl: "https://vimeo.com/123456790",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          clientSpecific: null,
+          downloadUrl: null
+        }
+      ];
+
       // Combine templates with client-specific data
       const assetsWithClientData = templates.map(template => {
         const clientAsset = clientAssets.find(ca => ca.templateId === template.id);
@@ -53,9 +93,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
         };
       });
 
+      // Add sample video assets
+      const allAssets = [...assetsWithClientData, ...sampleVideoAssets];
+
       res.json({
         client,
-        assets: assetsWithClientData
+        assets: allAssets
       });
     } catch (error) {
       res.status(500).json({ message: "Internal server error" });

@@ -140,9 +140,11 @@ export default function ClientDashboard({ client }: ClientDashboardProps) {
   }
 
   const { assets } = assetsData;
-  const launchAssets = assets.filter((asset) => asset.category === "launch");
-  const ongoingAssets = assets.filter((asset) => asset.category === "ongoing");
-  const futureAssets = assets.filter((asset) => asset.category === "future");
+  const filteredAssets = filterAssets(assets);
+  const launchAssets = filteredAssets.filter((asset) => asset.category === "launch");
+  const ongoingAssets = filteredAssets.filter((asset) => asset.category === "ongoing");
+  const futureAssets = filteredAssets.filter((asset) => asset.category === "future");
+  const videoAssets = filteredAssets.filter((asset) => asset.category === "videos");
 
   return (
     <div className="space-y-8">
