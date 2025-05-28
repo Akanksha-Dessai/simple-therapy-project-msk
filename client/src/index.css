@@ -1,0 +1,63 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 210 11% 98%; /* #F5F5F5 */
+  --foreground: 210 11% 15%; /* #424242 */
+  --muted: 210 11% 96%; /* #F5F5F5 */
+  --muted-foreground: 210 11% 45%; /* #737373 */
+  --popover: 0 0% 100%;
+  --popover-foreground: 210 11% 15%;
+  --card: 0 0% 100%;
+  --card-foreground: 210 11% 15%;
+  --border: 210 11% 90%; /* #E5E5E5 */
+  --input: 210 11% 90%;
+  --primary: 207 90% 54%; /* #1976D2 */
+  --primary-foreground: 0 0% 100%;
+  --secondary: 122 39% 49%; /* #4CAF50 */
+  --secondary-foreground: 0 0% 100%;
+  --accent: 14 100% 57%; /* #FF5722 */
+  --accent-foreground: 0 0% 100%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 60 9.1% 97.8%;
+  --ring: 207 90% 54%;
+  --radius: 0.5rem;
+  --neutral-dark: 210 11% 26%; /* #424242 */
+  --primary-dark: 207 100% 29%; /* #0D47A1 */
+}
+
+.dark {
+  --background: 210 11% 4%;
+  --foreground: 0 0% 98%;
+  --muted: 210 11% 8%;
+  --muted-foreground: 210 11% 65%;
+  --popover: 210 11% 4%;
+  --popover-foreground: 0 0% 98%;
+  --card: 210 11% 4%;
+  --card-foreground: 0 0% 98%;
+  --border: 210 11% 16%;
+  --input: 210 11% 16%;
+  --primary: 207 90% 54%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 122 39% 49%;
+  --secondary-foreground: 0 0% 100%;
+  --accent: 14 100% 57%;
+  --accent-foreground: 0 0% 100%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 0 0% 98%;
+  --ring: 207 90% 54%;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');

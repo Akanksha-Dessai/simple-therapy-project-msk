@@ -1,0 +1,312 @@
+import { 
+  clients, 
+  assetTemplates, 
+  clientAssets, 
+  users,
+  type Client, 
+  type InsertClient,
+  type AssetTemplate,
+  type InsertAssetTemplate,
+  type ClientAsset,
+  type InsertClientAsset,
+  type User,
+  type InsertUser
+} from "@shared/schema";
+
+export interface IStorage {
+  // Client operations
+  createClient(client: InsertClient): Promise<Client>;
+  getClient(id: number): Promise<Client | undefined>;
+  getClientByAccessCode(accessCode: string): Promise<Client | undefined>;
+  getAllClients(): Promise<Client[]>;
+  updateClient(id: number, updates: Partial<InsertClient>): Promise<Client | undefined>;
+  deleteClient(id: number): Promise<boolean>;
+
+  // Asset template operations
+  createAssetTemplate(template: InsertAssetTemplate): Promise<AssetTemplate>;
+  getAssetTemplate(id: number): Promise<AssetTemplate | undefined>;
+  getAllAssetTemplates(): Promise<AssetTemplate[]>;
+  getAssetTemplatesByCategory(category: string): Promise<AssetTemplate[]>;
+  updateAssetTemplate(id: number, updates: Partial<InsertAssetTemplate>): Promise<AssetTemplate | undefined>;
+  deleteAssetTemplate(id: number): Promise<boolean>;
+
+  // Client asset operations
+  createClientAsset(clientAsset: InsertClientAsset): Promise<ClientAsset>;
+  getClientAssets(clientId: number): Promise<ClientAsset[]>;
+  getClientAssetsByTemplate(templateId: number): Promise<ClientAsset[]>;
+  updateClientAssetDownload(id: number): Promise<ClientAsset | undefined>;
+
+  // User operations
+  createUser(user: InsertUser): Promise<User>;
+  getUser(id: number): Promise<User | undefined>;
+  getUserByUsername(username: string): Promise<User | undefined>;
+}
+
+export class MemStorage implements IStorage {
+  private clients: Map<number, Client> = new Map();
+  private assetTemplates: Map<number, AssetTemplate> = new Map();
+  private clientAssets: Map<number, ClientAsset> = new Map();
+  private users: Map<number, User> = new Map();
+  private currentClientId = 1;
+  private currentTemplateId = 1;
+  private currentAssetId = 1;
+  private currentUserId = 1;
+
+  constructor() {
+    this.seedData();
+  }
+
+  private seedData() {
+    // Create admin user
+    const adminUser: User = {
+      id: this.currentUserId++,
+      username: "admin",
+      password: "admin123", // In production, this should be hashed
+      role: "admin"
+    };
+    this.users.set(adminUser.id, adminUser);
+
+    // Create sample clients
+    const client1: Client = {
+      id: this.currentClientId++,
+      name: "Acme Corporation",
+      accessCode: "ACME2024",
+      contactEmail: "john.doe@acme.com",
+      logoUrl: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100",
+      eligibilityLanguage: "Available to all full-time employees and their families",
+      qrCodeUrl: null,
+      status: "active",
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+
+    const client2: Client = {
+      id: this.currentClientId++,
+      name: "TechStart Inc",
+      accessCode: "TECH2024",
+      contactEmail: "sarah.wilson@techstart.com",
+      logoUrl: "https://images.unsplash.com/photo-1497366216548-37526070297c?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100",
+      eligibilityLanguage: "Available to all employees working 20+ hours per week",
+      qrCodeUrl: null,
+      status: "active",
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+
+    const client3: Client = {
+      id: this.currentClientId++,
+      name: "HealthCare Plus",
+      accessCode: "HEALTH24",
+      contactEmail: "admin@healthcareplus.com",
+      logoUrl: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100",
+      eligibilityLanguage: "Available to all staff members and immediate family",
+      qrCodeUrl: null,
+      status: "pending",
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+
+    this.clients.set(client1.id, client1);
+    this.clients.set(client2.id, client2);
+    this.clients.set(client3.id, client3);
+
+    // Create sample asset templates
+    const templates: AssetTemplate[] = [
+      {
+        id: this.currentTemplateId++,
+        name: "Executive Leader Email",
+        category: "launch",
+        type: "email",
+        originalFileName: "executive-email-template.docx",
+        fileUrl: "/templates/executive-email.docx",
+        fileType: "docx",
+        version: "v2.1",
+        description: "Ready-to-send email template for leadership announcement",
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        id: this.currentTemplateId++,
+        name: "Program Overview Flyer",
+        category: "launch",
+        type: "flyer",
+        originalFileName: "program-overview-flyer.pdf",
+        fileUrl: "/templates/program-overview.pdf",
+        fileType: "pdf",
+        version: "v1.8",
+        description: "Visual overview flyer highlighting key benefits",
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        id: this.currentTemplateId++,
+        name: "Mental Health Awareness",
+        category: "ongoing",
+        type: "flyer",
+        originalFileName: "mental-health-flyer.pdf",
+        fileUrl: "/templates/mental-health.pdf",
+        fileType: "pdf",
+        version: "v3.2",
+        description: "Mental health awareness campaign flyer",
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        id: this.currentTemplateId++,
+        name: "Stress Management Tips",
+        category: "ongoing",
+        type: "poster",
+        originalFileName: "stress-management-poster.png",
+        fileUrl: "/templates/stress-management.png",
+        fileType: "png",
+        version: "v2.5",
+        description: "Poster with stress management tips and techniques",
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        id: this.currentTemplateId++,
+        name: "Employee Wellness Week",
+        category: "ongoing",
+        type: "banner",
+        originalFileName: "wellness-week-banner.jpg",
+        fileUrl: "/templates/wellness-week.jpg",
+        fileType: "jpg",
+        version: "v1.0",
+        description: "Digital banner for employee wellness week promotion",
+        createdAt: new Date(),
+        updatedAt: new Date()
+      }
+    ];
+
+    templates.forEach(template => {
+      this.assetTemplates.set(template.id, template);
+    });
+  }
+
+  // Client operations
+  async createClient(client: InsertClient): Promise<Client> {
+    const newClient: Client = {
+      ...client,
+      id: this.currentClientId++,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+    this.clients.set(newClient.id, newClient);
+    return newClient;
+  }
+
+  async getClient(id: number): Promise<Client | undefined> {
+    return this.clients.get(id);
+  }
+
+  async getClientByAccessCode(accessCode: string): Promise<Client | undefined> {
+    return Array.from(this.clients.values()).find(client => client.accessCode === accessCode);
+  }
+
+  async getAllClients(): Promise<Client[]> {
+    return Array.from(this.clients.values());
+  }
+
+  async updateClient(id: number, updates: Partial<InsertClient>): Promise<Client | undefined> {
+    const client = this.clients.get(id);
+    if (!client) return undefined;
+    
+    const updatedClient = { ...client, ...updates, updatedAt: new Date() };
+    this.clients.set(id, updatedClient);
+    return updatedClient;
+  }
+
+  async deleteClient(id: number): Promise<boolean> {
+    return this.clients.delete(id);
+  }
+
+  // Asset template operations
+  async createAssetTemplate(template: InsertAssetTemplate): Promise<AssetTemplate> {
+    const newTemplate: AssetTemplate = {
+      ...template,
+      id: this.currentTemplateId++,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+    this.assetTemplates.set(newTemplate.id, newTemplate);
+    return newTemplate;
+  }
+
+  async getAssetTemplate(id: number): Promise<AssetTemplate | undefined> {
+    return this.assetTemplates.get(id);
+  }
+
+  async getAllAssetTemplates(): Promise<AssetTemplate[]> {
+    return Array.from(this.assetTemplates.values());
+  }
+
+  async getAssetTemplatesByCategory(category: string): Promise<AssetTemplate[]> {
+    return Array.from(this.assetTemplates.values()).filter(template => template.category === category);
+  }
+
+  async updateAssetTemplate(id: number, updates: Partial<InsertAssetTemplate>): Promise<AssetTemplate | undefined> {
+    const template = this.assetTemplates.get(id);
+    if (!template) return undefined;
+    
+    const updatedTemplate = { ...template, ...updates, updatedAt: new Date() };
+    this.assetTemplates.set(id, updatedTemplate);
+    return updatedTemplate;
+  }
+
+  async deleteAssetTemplate(id: number): Promise<boolean> {
+    return this.assetTemplates.delete(id);
+  }
+
+  // Client asset operations
+  async createClientAsset(clientAsset: InsertClientAsset): Promise<ClientAsset> {
+    const newAsset: ClientAsset = {
+      ...clientAsset,
+      id: this.currentAssetId++,
+      createdAt: new Date()
+    };
+    this.clientAssets.set(newAsset.id, newAsset);
+    return newAsset;
+  }
+
+  async getClientAssets(clientId: number): Promise<ClientAsset[]> {
+    return Array.from(this.clientAssets.values()).filter(asset => asset.clientId === clientId);
+  }
+
+  async getClientAssetsByTemplate(templateId: number): Promise<ClientAsset[]> {
+    return Array.from(this.clientAssets.values()).filter(asset => asset.templateId === templateId);
+  }
+
+  async updateClientAssetDownload(id: number): Promise<ClientAsset | undefined> {
+    const asset = this.clientAssets.get(id);
+    if (!asset) return undefined;
+    
+    const updatedAsset = { 
+      ...asset, 
+      downloadCount: (asset.downloadCount || 0) + 1,
+      lastDownloaded: new Date()
+    };
+    this.clientAssets.set(id, updatedAsset);
+    return updatedAsset;
+  }
+
+  // User operations
+  async createUser(user: InsertUser): Promise<User> {
+    const newUser: User = {
+      ...user,
+      id: this.currentUserId++
+    };
+    this.users.set(newUser.id, newUser);
+    return newUser;
+  }
+
+  async getUser(id: number): Promise<User | undefined> {
+    return this.users.get(id);
+  }
+
+  async getUserByUsername(username: string): Promise<User | undefined> {
+    return Array.from(this.users.values()).find(user => user.username === username);
+  }
+}
+
+export const storage = new MemStorage();
