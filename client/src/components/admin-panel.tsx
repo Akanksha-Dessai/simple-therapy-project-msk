@@ -39,6 +39,7 @@ export default function AdminPanel() {
   const [selectedAssetScope, setSelectedAssetScope] = useState<string>("template");
   const [showLanguageDialog, setShowLanguageDialog] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState<any>(null);
+  const [showVersionDialog, setShowVersionDialog] = useState(false);
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -801,6 +802,78 @@ export default function AdminPanel() {
                     </form>
                   </DialogContent>
                 </Dialog>
+
+                {/* Upload New Version Dialog */}
+                <Dialog open={showVersionDialog} onOpenChange={setShowVersionDialog}>
+                  <DialogContent className="sm:max-w-[500px] max-h-[85vh] overflow-y-auto">
+                    <DialogHeader>
+                      <DialogTitle>Upload New Version</DialogTitle>
+                      <p className="text-sm text-gray-600 dark:text-muted-foreground">
+                        Upload a new version of "{selectedTemplate?.name}" (Current: v{selectedTemplate?.version})
+                      </p>
+                    </DialogHeader>
+                    <form onSubmit={(e) => {
+                      e.preventDefault();
+                      const nextVersion = parseFloat(selectedTemplate?.version || "1.0") + 0.1;
+                      setShowVersionDialog(false);
+                      toast({
+                        title: "New version uploaded!",
+                        description: `Version ${nextVersion.toFixed(1)} of "${selectedTemplate?.name}" uploaded successfully.`,
+                      });
+                    }} className="space-y-4">
+                      <div>
+                        <Label htmlFor="newVersion">New Version Number</Label>
+                        <Input 
+                          id="newVersion" 
+                          name="version" 
+                          defaultValue={(parseFloat(selectedTemplate?.version || "1.0") + 0.1).toFixed(1)}
+                          required 
+                        />
+                        <p className="text-xs text-gray-500 mt-1">
+                          Version will auto-increment from {selectedTemplate?.version} to {(parseFloat(selectedTemplate?.version || "1.0") + 0.1).toFixed(1)}
+                        </p>
+                      </div>
+                      
+                      <div>
+                        <Label htmlFor="versionFileName">File Name</Label>
+                        <Input 
+                          id="versionFileName" 
+                          name="originalFileName" 
+                          defaultValue={selectedTemplate?.originalFileName || ""}
+                          required 
+                        />
+                      </div>
+                      
+                      <div>
+                        <Label>Upload New Version File</Label>
+                        <UploadZone onUpload={(file) => {
+                          const fileNameInput = document.getElementById('versionFileName') as HTMLInputElement;
+                          if (fileNameInput && !fileNameInput.value) {
+                            fileNameInput.value = file.name;
+                          }
+                        }} />
+                        <p className="text-sm text-gray-500 mt-1">
+                          This will replace the current file for this language version ({selectedTemplate?.language})
+                        </p>
+                      </div>
+                      
+                      <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
+                        <p className="text-sm text-yellow-800">
+                          <strong>Note:</strong> This will update the {selectedTemplate?.language} version and maintain all existing language variants.
+                        </p>
+                      </div>
+                      
+                      <div className="flex justify-end space-x-2">
+                        <Button type="button" variant="outline" onClick={() => setShowVersionDialog(false)}>
+                          Cancel
+                        </Button>
+                        <Button type="submit">
+                          Upload Version {(parseFloat(selectedTemplate?.version || "1.0") + 0.1).toFixed(1)}
+                        </Button>
+                      </div>
+                    </form>
+                  </DialogContent>
+                </Dialog>
               </div>
 
               {templatesLoading ? (
@@ -823,6 +896,18 @@ export default function AdminPanel() {
                           )}
                         </div>
                         <div className="flex items-center space-x-2">
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="bg-blue-50 hover:bg-blue-100 text-blue-700 border-blue-200"
+                            onClick={() => {
+                              setSelectedTemplate(template);
+                              setShowVersionDialog(true);
+                            }}
+                          >
+                            <Plus className="h-3 w-3 mr-1" />
+                            New Version
+                          </Button>
                           <Button 
                             variant="outline" 
                             size="sm" 
