@@ -35,13 +35,15 @@ export default function ClientDashboard({ client }: ClientDashboardProps) {
         assetGroups.set(baseKey, {});
       }
       
-      assetGroups.get(baseKey)[asset.language] = asset;
+      // Treat assets without language as available in both languages
+      const assetLanguage = asset.language || selectedLanguage;
+      assetGroups.get(baseKey)[assetLanguage] = asset;
     });
     
     // Return assets in the selected language, falling back to available language if needed
     const result = [];
     assetGroups.forEach(group => {
-      const assetInSelectedLanguage = group[selectedLanguage] || group['English'] || group['Spanish'];
+      const assetInSelectedLanguage = group[selectedLanguage] || group['English'] || group['Spanish'] || Object.values(group)[0];
       if (assetInSelectedLanguage) {
         result.push(assetInSelectedLanguage);
       }
