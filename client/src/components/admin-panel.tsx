@@ -714,7 +714,10 @@ export default function AdminPanel() {
                       </div>
                       <div>
                         <Label htmlFor="version">Version</Label>
-                        <Input id="version" name="version" defaultValue="1.0" required />
+                        <Input id="version" name="version" value="1.0" readOnly className="bg-gray-50 dark:bg-gray-800 text-gray-600 cursor-not-allowed" />
+                        <p className="text-xs text-gray-500 mt-1">
+                          New templates always start at version 1.0
+                        </p>
                       </div>
                       <div>
                         <Label htmlFor="description">Description</Label>
