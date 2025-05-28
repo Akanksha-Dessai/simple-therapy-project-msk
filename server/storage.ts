@@ -100,6 +100,7 @@ export class MemStorage implements IStorage {
       logoUrl: "https://images.unsplash.com/photo-1497366216548-37526070297c?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100",
       eligibilityLanguage: "Available to all employees working 20+ hours per week",
       qrCodeUrl: null,
+      programTypes: ["SimpleEAP", "SimpleWellbeing"],
       status: "active",
       createdAt: new Date(),
       updatedAt: new Date()
@@ -113,6 +114,7 @@ export class MemStorage implements IStorage {
       logoUrl: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100",
       eligibilityLanguage: "Available to all staff members and immediate family",
       qrCodeUrl: null,
+      programTypes: ["SimpleMSK", "SimpleBehavioural"],
       status: "pending",
       createdAt: new Date(),
       updatedAt: new Date()

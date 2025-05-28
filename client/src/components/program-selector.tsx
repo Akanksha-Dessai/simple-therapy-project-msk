@@ -40,11 +40,12 @@ export default function ProgramSelector({ client, onProgramSelect, selectedProgr
     }
   };
 
+  // Auto-select if only one program available
+  if (programTypes.length === 1 && !selectedProgram) {
+    setTimeout(() => onProgramSelect(programTypes[0]), 0);
+  }
+
   if (programTypes.length === 1) {
-    // Auto-select if only one program
-    if (!selectedProgram) {
-      onProgramSelect(programTypes[0]);
-    }
     return null;
   }
 
