@@ -532,9 +532,20 @@ export default function AdminPanel() {
                   <DialogContent className="sm:max-w-[700px] max-h-[85vh] overflow-y-auto">
                     <DialogHeader>
                       <DialogTitle>Upload New Asset Template</DialogTitle>
-                      <p className="text-sm text-gray-600 dark:text-muted-foreground">
-                        Create a template asset that will be customized with client branding and made available in both English and Spanish
-                      </p>
+                      <div className="space-y-2">
+                        <p className="text-sm text-gray-600 dark:text-muted-foreground">
+                          Create a template asset that will be customized with client branding and made available in both English and Spanish
+                        </p>
+                        <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 rounded-lg p-3">
+                          <p className="text-sm font-medium text-blue-900 dark:text-blue-100 mb-2">📋 Upload Workflow:</p>
+                          <ol className="text-xs text-blue-800 dark:text-blue-200 space-y-1 list-decimal list-inside">
+                            <li><strong>Start here:</strong> Upload your first language version (English or Spanish)</li>
+                            <li><strong>Add language:</strong> Use the green "Add Language" button to upload the other language</li>
+                            <li><strong>Update versions:</strong> Use the blue "New Version" button to upload newer versions</li>
+                            <li><strong>Version sync:</strong> All language versions share the same version number</li>
+                          </ol>
+                        </div>
+                      </div>
                     </DialogHeader>
                     <form onSubmit={handleTemplateSubmit} className="space-y-4">
                       <div>
@@ -808,9 +819,20 @@ export default function AdminPanel() {
                   <DialogContent className="sm:max-w-[500px] max-h-[85vh] overflow-y-auto">
                     <DialogHeader>
                       <DialogTitle>Upload New Version</DialogTitle>
-                      <p className="text-sm text-gray-600 dark:text-muted-foreground">
-                        Upload a new version of "{selectedTemplate?.name}" (Current: v{selectedTemplate?.version})
-                      </p>
+                      <div className="space-y-2">
+                        <p className="text-sm text-gray-600 dark:text-muted-foreground">
+                          Upload a new version of "{selectedTemplate?.name}" (Current: v{selectedTemplate?.version})
+                        </p>
+                        <div className="bg-gray-50 dark:bg-gray-800 border rounded-lg p-3">
+                          <p className="text-sm font-medium text-gray-900 dark:text-foreground mb-2">📋 Upload Instructions:</p>
+                          <ol className="text-xs text-gray-600 dark:text-muted-foreground space-y-1 list-decimal list-inside">
+                            <li>Upload the updated file for this language ({selectedTemplate?.language})</li>
+                            <li>Version will auto-increment to v{(parseFloat(selectedTemplate?.version || "1.0") + 0.1).toFixed(1)} for both EN and ES</li>
+                            <li>If you have both languages, remember to upload the other language version separately</li>
+                            <li>Clients will see the updated version across all their selected languages</li>
+                          </ol>
+                        </div>
+                      </div>
                     </DialogHeader>
                     <form onSubmit={(e) => {
                       e.preventDefault();
@@ -857,9 +879,9 @@ export default function AdminPanel() {
                         </p>
                       </div>
                       
-                      <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
-                        <p className="text-sm text-yellow-800">
-                          <strong>Note:</strong> This will update the {selectedTemplate?.language} version and maintain all existing language variants.
+                      <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                        <p className="text-sm text-blue-800">
+                          <strong>Shared Version System:</strong> Both English and Spanish versions will be updated to v{(parseFloat(selectedTemplate?.version || "1.0") + 0.1).toFixed(1)}. This keeps all language variants synchronized.
                         </p>
                       </div>
                       
