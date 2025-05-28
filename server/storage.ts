@@ -544,8 +544,8 @@ export class MemStorage implements IStorage {
     return Array.from(this.assetTemplates.values());
   }
 
-  async getAssetTemplatesByCategory(category: string): Promise<AssetTemplate[]> {
-    return Array.from(this.assetTemplates.values()).filter(template => template.category === category);
+  async getAssetTemplatesByCategory(categoryId: number): Promise<AssetTemplate[]> {
+    return Array.from(this.assetTemplates.values()).filter(template => template.categoryId === categoryId);
   }
 
   async updateAssetTemplate(id: number, updates: Partial<InsertAssetTemplate>): Promise<AssetTemplate | undefined> {
