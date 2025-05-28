@@ -816,7 +816,7 @@ export default function AdminPanel() {
                             <Badge variant="outline">{template.type}</Badge>
                           </div>
                           <p className="text-sm text-gray-500 dark:text-muted-foreground mt-1">
-                            Version {template.version} • {template.fileType?.toUpperCase()}
+                            Version {template.version} • {template.fileType?.toUpperCase()} • Uploaded {new Date(template.createdAt || Date.now()).toLocaleDateString()}
                           </p>
                           {template.description && (
                             <p className="text-sm text-gray-600 dark:text-muted-foreground mt-1">{template.description}</p>
