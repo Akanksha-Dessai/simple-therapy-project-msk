@@ -108,13 +108,6 @@ export default function ClientDashboard({ client }: ClientDashboardProps) {
 
   return (
     <div className="space-y-8">
-      {/* Program Selection */}
-      <ProgramSelector 
-        client={client} 
-        onProgramSelect={setSelectedProgram}
-        selectedProgram={selectedProgram}
-      />
-
       {/* Client Branding Header */}
       <Card>
         <CardContent className="p-6">
@@ -156,9 +149,19 @@ export default function ClientDashboard({ client }: ClientDashboardProps) {
         </CardContent>
       </Card>
 
-      {/* Launch Materials */}
-      {launchAssets.length > 0 && (
-        <Card>
+      {/* Program Selection */}
+      <ProgramSelector 
+        client={client} 
+        onProgramSelect={setSelectedProgram}
+        selectedProgram={selectedProgram}
+      />
+
+      {/* Only show assets after a program is selected */}
+      {selectedProgram && (
+        <>
+          {/* Launch Materials */}
+          {launchAssets.length > 0 && (
+            <Card>
           <CardContent className="p-6">
             <div className="flex items-center mb-6">
               <div className={`w-10 h-10 ${getCategoryColor("launch")} rounded-lg flex items-center justify-center mr-3`}>
@@ -183,102 +186,60 @@ export default function ClientDashboard({ client }: ClientDashboardProps) {
         </Card>
       )}
 
-      {/* Ongoing Assets */}
-      {ongoingAssets.length > 0 && (
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center mb-6">
-              <div className={`w-10 h-10 ${getCategoryColor("ongoing")} rounded-lg flex items-center justify-center mr-3`}>
-                {getCategoryIcon("ongoing")}
-              </div>
-              <div>
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-foreground">
-                  {getCategoryTitle("ongoing")}
-                </h3>
-                <p className="text-gray-600 dark:text-muted-foreground">
-                  {getCategoryDescription("ongoing")}
-                </p>
-              </div>
-            </div>
+          {/* Ongoing Assets */}
+          {ongoingAssets.length > 0 && (
+            <Card>
+              <CardContent className="p-6">
+                <div className="flex items-center mb-6">
+                  <div className={`w-10 h-10 ${getCategoryColor("ongoing")} rounded-lg flex items-center justify-center mr-3`}>
+                    {getCategoryIcon("ongoing")}
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-semibold text-gray-900 dark:text-foreground">
+                      {getCategoryTitle("ongoing")}
+                    </h3>
+                    <p className="text-gray-600 dark:text-muted-foreground">
+                      {getCategoryDescription("ongoing")}
+                    </p>
+                  </div>
+                </div>
 
-            {/* Asset Type Filters */}
-            <div className="flex flex-wrap gap-2 mb-6">
-              <Button
-                variant={selectedType === "all" ? "default" : "outline"}
-                size="sm"
-                onClick={() => setSelectedType("all")}
-                className={selectedType === "all" ? "bg-primary text-white" : ""}
-              >
-                All
-              </Button>
-              <Button
-                variant={selectedType === "flyer" ? "default" : "outline"}
-                size="sm"
-                onClick={() => setSelectedType("flyer")}
-                className={selectedType === "flyer" ? "bg-primary text-white" : ""}
-              >
-                Flyers
-              </Button>
-              <Button
-                variant={selectedType === "poster" ? "default" : "outline"}
-                size="sm"
-                onClick={() => setSelectedType("poster")}
-                className={selectedType === "poster" ? "bg-primary text-white" : ""}
-              >
-                Posters
-              </Button>
-              <Button
-                variant={selectedType === "banner" ? "default" : "outline"}
-                size="sm"
-                onClick={() => setSelectedType("banner")}
-                className={selectedType === "banner" ? "bg-primary text-white" : ""}
-              >
-                Digital Banners
-              </Button>
-              <Button
-                variant={selectedType === "campaign" ? "default" : "outline"}
-                size="sm"
-                onClick={() => setSelectedType("campaign")}
-                className={selectedType === "campaign" ? "bg-primary text-white" : ""}
-              >
-                Campaigns
-              </Button>
-            </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                  {ongoingAssets.map((asset) => (
+                    <AssetCard key={asset.id} asset={asset} client={client} />
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {filterAssets(ongoingAssets).map((asset) => (
-                <AssetCard key={asset.id} asset={asset} client={client} />
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      )}
+          {/* Future Phase Materials */}
+          {futureAssets.length > 0 && (
+            <Card>
+              <CardContent className="p-6">
+                <div className="flex items-center mb-6">
+                  <div className={`w-10 h-10 ${getCategoryColor("future")} rounded-lg flex items-center justify-center mr-3`}>
+                    {getCategoryIcon("future")}
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-semibold text-gray-900 dark:text-foreground">
+                      {getCategoryTitle("future")}
+                    </h3>
+                    <p className="text-gray-600 dark:text-muted-foreground">
+                      {getCategoryDescription("future")}
+                    </p>
+                  </div>
+                </div>
 
-      {/* Future Phase Materials */}
-      {futureAssets.length > 0 && (
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center mb-6">
-              <div className={`w-10 h-10 ${getCategoryColor("future")} rounded-lg flex items-center justify-center mr-3`}>
-                {getCategoryIcon("future")}
-              </div>
-              <div>
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-foreground">
-                  {getCategoryTitle("future")}
-                </h3>
-                <p className="text-gray-600 dark:text-muted-foreground">
-                  {getCategoryDescription("future")}
-                </p>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {futureAssets.map((asset) => (
-                <AssetCard key={asset.id} asset={asset} client={client} />
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {futureAssets.map((asset) => (
+                    <AssetCard key={asset.id} asset={asset} client={client} />
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
+        </>
       )}
     </div>
   );
