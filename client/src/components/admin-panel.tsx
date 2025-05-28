@@ -304,6 +304,20 @@ export default function AdminPanel() {
                         </p>
                       </div>
                       <div>
+                        <Label htmlFor="cualincCode">Cualinc Code</Label>
+                        <Input id="cualincCode" name="cualincCode" required />
+                        <p className="text-xs text-gray-500 mt-1">
+                          Cualinc system identifier code
+                        </p>
+                      </div>
+                      <div>
+                        <Label htmlFor="marqueeCode">Marquee Code</Label>
+                        <Input id="marqueeCode" name="marqueeCode" required />
+                        <p className="text-xs text-gray-500 mt-1">
+                          Marquee display system code
+                        </p>
+                      </div>
+                      <div>
                         <Label htmlFor="landingPageUrl">Landing Page URL</Label>
                         <Input id="landingPageUrl" name="landingPageUrl" type="url" placeholder="https://example.com" />
                         <p className="text-xs text-gray-500 mt-1">
@@ -337,6 +351,8 @@ export default function AdminPanel() {
                         <TableHead>Client</TableHead>
                         <TableHead>Client ID</TableHead>
                         <TableHead>Client Code</TableHead>
+                        <TableHead>Cualinc Code</TableHead>
+                        <TableHead>Marquee Code</TableHead>
                         <TableHead>Access Code</TableHead>
                         <TableHead>Landing Page</TableHead>
                         <TableHead>Status</TableHead>
@@ -355,6 +371,16 @@ export default function AdminPanel() {
                           <TableCell>
                             <code className="bg-purple-50 dark:bg-purple-900 px-2 py-1 rounded text-sm text-purple-700 dark:text-purple-300">
                               {client.clientCode || 'ACME-MSK-2024'}
+                            </code>
+                          </TableCell>
+                          <TableCell>
+                            <code className="bg-orange-50 dark:bg-orange-900 px-2 py-1 rounded text-sm text-orange-700 dark:text-orange-300">
+                              {client.cualincCode || 'CUA-ACME-001'}
+                            </code>
+                          </TableCell>
+                          <TableCell>
+                            <code className="bg-green-50 dark:bg-green-900 px-2 py-1 rounded text-sm text-green-700 dark:text-green-300">
+                              {client.marqueeCode || 'MQ-ACME-2024'}
                             </code>
                           </TableCell>
                           <TableCell>
