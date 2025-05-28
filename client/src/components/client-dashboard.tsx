@@ -1,11 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { clientApi } from "@/lib/api";
 import AssetCard from "./asset-card";
 import ProgramSelector from "./program-selector";
 import { useState } from "react";
-import { Rocket, RotateCcw, Clock, QrCode } from "lucide-react";
+import { Rocket, RotateCcw, Clock, QrCode, Globe } from "lucide-react";
 
 interface ClientDashboardProps {
   client: any;
@@ -15,6 +16,7 @@ export default function ClientDashboard({ client }: ClientDashboardProps) {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedType, setSelectedType] = useState("all");
   const [selectedProgram, setSelectedProgram] = useState<string | null>(null);
+  const [selectedLanguage, setSelectedLanguage] = useState("English");
 
   const { data: assetsData, isLoading } = useQuery({
     queryKey: [`/api/client/${client.id}/assets`],
@@ -25,7 +27,8 @@ export default function ClientDashboard({ client }: ClientDashboardProps) {
     return assets.filter((asset) => {
       const categoryMatch = selectedCategory === "all" || asset.category === selectedCategory;
       const typeMatch = selectedType === "all" || asset.type === selectedType;
-      return categoryMatch && typeMatch;
+      const languageMatch = asset.language === selectedLanguage;
+      return categoryMatch && typeMatch && languageMatch;
     });
   };
 
@@ -145,6 +148,27 @@ export default function ClientDashboard({ client }: ClientDashboardProps) {
                 Your QR Code
               </p>
             </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Language Selector */}
+      <Card>
+        <CardContent className="p-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <Globe className="h-5 w-5 text-gray-600 dark:text-muted-foreground" />
+              <span className="text-sm font-medium text-gray-700 dark:text-foreground">Language / Idioma:</span>
+            </div>
+            <Select value={selectedLanguage} onValueChange={setSelectedLanguage}>
+              <SelectTrigger className="w-48">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="English">🇺🇸 English</SelectItem>
+                <SelectItem value="Spanish">🇪🇸 Español</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </CardContent>
       </Card>
