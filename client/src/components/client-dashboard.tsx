@@ -6,7 +6,7 @@ import { clientApi } from "@/lib/api";
 import AssetCard from "./asset-card";
 import ProgramSelector from "./program-selector";
 import { useState } from "react";
-import { Rocket, RotateCcw, Clock, QrCode, Globe } from "lucide-react";
+import { Rocket, RotateCcw, Clock, QrCode, Globe, Video } from "lucide-react";
 
 interface ClientDashboardProps {
   client: any;
@@ -82,6 +82,8 @@ export default function ClientDashboard({ client }: ClientDashboardProps) {
         return "bg-blue-600";
       case "future":
         return "bg-orange-500";
+      case "videos":
+        return "bg-purple-600";
       default:
         return "bg-secondary";
     }
@@ -95,6 +97,8 @@ export default function ClientDashboard({ client }: ClientDashboardProps) {
         return "Ongoing Campaign Assets";
       case "future":
         return "Future Phase Materials";
+      case "videos":
+        return "Video Resources";
       default:
         return "Assets";
     }
@@ -108,6 +112,8 @@ export default function ClientDashboard({ client }: ClientDashboardProps) {
         return "Regularly updated materials to maintain engagement";
       case "future":
         return "Upcoming materials and enhancements";
+      case "videos":
+        return "Educational and promotional video content";
       default:
         return "";
     }

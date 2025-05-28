@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { clientApi } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
-import { FileText, FileImage, Video, Download } from "lucide-react";
+import { FileText, FileImage, Video, Download, Link, Copy } from "lucide-react";
 
 interface AssetCardProps {
   asset: any;
@@ -61,6 +61,24 @@ export default function AssetCard({ asset, client }: AssetCardProps) {
     }
   };
 
+  const handleCopyVimeoUrl = async () => {
+    if (asset.vimeoUrl) {
+      try {
+        await navigator.clipboard.writeText(asset.vimeoUrl);
+        toast({
+          title: "Vimeo URL Copied",
+          description: "Video URL has been copied to your clipboard",
+        });
+      } catch (error) {
+        toast({
+          title: "Copy Failed",
+          description: "Please try again",
+          variant: "destructive",
+        });
+      }
+    }
+  };
+
   const isVideo = asset.type === "video";
 
   return (
@@ -107,12 +125,22 @@ export default function AssetCard({ asset, client }: AssetCardProps) {
       )}
 
       {isVideo ? (
-        <Button 
-          className="w-full bg-purple-600 hover:bg-purple-700 text-white"
-          size="sm"
-        >
-          <Video className="mr-1 h-3 w-3" /> View Video
-        </Button>
+        <div className="flex space-x-2">
+          <Button 
+            className="flex-1 bg-purple-600 hover:bg-purple-700 text-white"
+            size="sm"
+            onClick={() => handleDownload('mp4')}
+          >
+            <Download className="mr-1 h-3 w-3" /> Download
+          </Button>
+          <Button 
+            className="flex-1 bg-blue-600 hover:bg-blue-700 text-white"
+            size="sm"
+            onClick={handleCopyVimeoUrl}
+          >
+            <Link className="mr-1 h-3 w-3" /> Vimeo URL
+          </Button>
+        </div>
       ) : (
         <div className="flex space-x-1">
           <Button
