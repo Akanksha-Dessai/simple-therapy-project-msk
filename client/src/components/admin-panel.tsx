@@ -260,6 +260,80 @@ export default function AdminPanel() {
                     onChange={(e) => setSearchTerm(e.target.value)}
                   />
                 </div>
+                <Dialog open={showClientDialog} onOpenChange={setShowClientDialog}>
+                  <DialogTrigger asChild>
+                    <Button className="bg-secondary hover:bg-green-600 text-white">
+                      <Plus className="mr-2 h-4 w-4" /> Add New Client
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-[500px] max-h-[85vh] overflow-y-auto">
+                    <DialogHeader>
+                      <DialogTitle>Add New Client</DialogTitle>
+                      <p className="text-sm text-gray-600 dark:text-muted-foreground">
+                        Create a new client with access credentials and configuration
+                      </p>
+                    </DialogHeader>
+                    <form onSubmit={(e) => {
+                      e.preventDefault();
+                      setShowClientDialog(false);
+                      toast({
+                        title: "Client added!",
+                        description: "New client has been created successfully.",
+                      });
+                    }} className="space-y-4">
+                      <div>
+                        <Label htmlFor="clientName">Client Name</Label>
+                        <Input id="clientName" name="name" required />
+                      </div>
+                      <div>
+                        <Label htmlFor="clientId">Client ID</Label>
+                        <Input id="clientId" name="clientId" required />
+                        <p className="text-xs text-gray-500 mt-1">
+                          Unique identifier for this client
+                        </p>
+                      </div>
+                      <div>
+                        <Label htmlFor="contactEmail">Contact Email</Label>
+                        <Input id="contactEmail" name="contactEmail" type="email" required />
+                      </div>
+                      <div>
+                        <Label htmlFor="clientFileType">Client File Type</Label>
+                        <Select name="clientFileType" required>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select file type preference" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="pdf">PDF Documents</SelectItem>
+                            <SelectItem value="ppt">PowerPoint Presentations</SelectItem>
+                            <SelectItem value="docx">Word Documents</SelectItem>
+                            <SelectItem value="png">PNG Images</SelectItem>
+                            <SelectItem value="jpg">JPEG Images</SelectItem>
+                            <SelectItem value="all">All File Types</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div>
+                        <Label htmlFor="landingPageUrl">Landing Page URL</Label>
+                        <Input id="landingPageUrl" name="landingPageUrl" type="url" placeholder="https://example.com" />
+                        <p className="text-xs text-gray-500 mt-1">
+                          URL where clients will be redirected (optional)
+                        </p>
+                      </div>
+                      <div>
+                        <Label htmlFor="eligibilityLanguage">Eligibility Language</Label>
+                        <Textarea id="eligibilityLanguage" name="eligibilityLanguage" rows={3} placeholder="Enter eligibility text..." />
+                      </div>
+                      <div className="flex justify-end space-x-2">
+                        <Button type="button" variant="outline" onClick={() => setShowClientDialog(false)}>
+                          Cancel
+                        </Button>
+                        <Button type="submit">
+                          Add Client
+                        </Button>
+                      </div>
+                    </form>
+                  </DialogContent>
+                </Dialog>
               </div>
 
               <div className="overflow-x-auto">
