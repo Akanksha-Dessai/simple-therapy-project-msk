@@ -60,6 +60,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           vimeoUrl: "https://vimeo.com/123456789",
           createdAt: new Date(),
           updatedAt: new Date(),
+          categoryId: 1,
           clientSpecific: null,
           downloadUrl: null
         },
@@ -78,6 +79,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           vimeoUrl: "https://vimeo.com/123456790",
           createdAt: new Date(),
           updatedAt: new Date(),
+          categoryId: 1,
           clientSpecific: null,
           downloadUrl: null
         }
