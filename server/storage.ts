@@ -190,6 +190,54 @@ export class MemStorage implements IStorage {
         description: "Digital banner for employee wellness week promotion",
         createdAt: new Date(),
         updatedAt: new Date()
+      },
+      {
+        id: this.currentTemplateId++,
+        name: "Program Introduction Video",
+        categoryId: 5, // videos category
+        type: "video",
+        originalFileName: "program-intro-video.mp4",
+        fileUrl: "/templates/program-intro.mp4",
+        fileType: "mp4",
+        version: "v1.0",
+        description: "Engaging introduction video explaining program benefits",
+        vimeoUrl: "https://vimeo.com/123456789",
+        language: "English",
+        languageVariants: ["English", "Spanish"],
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        id: this.currentTemplateId++,
+        name: "Mental Health Awareness Video",
+        categoryId: 5, // videos category
+        type: "video",
+        originalFileName: "mental-health-video.mp4",
+        fileUrl: "/templates/mental-health-video.mp4",
+        fileType: "mp4",
+        version: "v2.0",
+        description: "Educational video on mental health awareness",
+        vimeoUrl: "https://vimeo.com/234567890",
+        language: "English",
+        languageVariants: ["English", "Spanish"],
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        id: this.currentTemplateId++,
+        name: "Employee Testimonials",
+        categoryId: 5, // videos category
+        type: "video",
+        originalFileName: "testimonials-video.mp4",
+        fileUrl: "/templates/testimonials.mp4",
+        fileType: "mp4",
+        version: "v1.5",
+        description: "Real employee stories and testimonials",
+        vimeoUrl: "https://vimeo.com/345678901",
+        language: "English",
+        languageVariants: ["English", "Spanish"],
+        createdAt: new Date(),
+        updatedAt: new Date()
       }
     ];
 

@@ -40,6 +40,7 @@ export const assetTemplates = pgTable("asset_templates", {
   description: text("description"),
   language: text("language").notNull().default("English"), // English, Spanish
   languageVariants: text("language_variants").array().notNull().default(["English"]), // Track all available language versions
+  vimeoUrl: text("vimeo_url"), // For video assets only
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });

@@ -67,6 +67,8 @@ export default function ClientDashboard({ client }: ClientDashboardProps) {
         return <RotateCcw className="text-white h-5 w-5" />;
       case "future":
         return <Clock className="text-white h-5 w-5" />;
+      case "videos":
+        return <Video className="text-white h-5 w-5" />;
       default:
         return <Rocket className="text-white h-5 w-5" />;
     }
