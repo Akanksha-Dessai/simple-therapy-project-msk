@@ -526,7 +526,7 @@ export default function AdminPanel() {
                 <Dialog open={showTemplateDialog} onOpenChange={setShowTemplateDialog}>
                   <DialogTrigger asChild>
                     <Button className="bg-secondary hover:bg-green-600 text-white">
-                      <Plus className="mr-2 h-4 w-4" /> Add Template
+                      <Plus className="mr-2 h-4 w-4" /> Add New Asset
                     </Button>
                   </DialogTrigger>
                   <DialogContent className="sm:max-w-[700px] max-h-[85vh] overflow-y-auto">
