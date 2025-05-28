@@ -40,6 +40,7 @@ export default function AdminPanel() {
   const [showLanguageDialog, setShowLanguageDialog] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState<any>(null);
   const [showVersionDialog, setShowVersionDialog] = useState(false);
+  const [selectedPrograms, setSelectedPrograms] = useState<string[]>([]);
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -303,20 +304,30 @@ export default function AdminPanel() {
                           Unique code from SimpleTherapy's client list
                         </p>
                       </div>
-                      <div>
-                        <Label htmlFor="cualincCode">Cualinc Code</Label>
-                        <Input id="cualincCode" name="cualincCode" required />
-                        <p className="text-xs text-gray-500 mt-1">
-                          Cualinc system identifier code
-                        </p>
-                      </div>
-                      <div>
-                        <Label htmlFor="marqueeCode">Marquee Code</Label>
-                        <Input id="marqueeCode" name="marqueeCode" required />
-                        <p className="text-xs text-gray-500 mt-1">
-                          Marquee display system code
-                        </p>
-                      </div>
+                      {selectedPrograms.includes('SimpleEAP') && (
+                        <div>
+                          <Label htmlFor="cualincCode">
+                            Cualinc Code 
+                            <span className="text-red-500">*</span>
+                          </Label>
+                          <Input id="cualincCode" name="cualincCode" required />
+                          <p className="text-xs text-gray-500 mt-1">
+                            Required for SimpleEAP program
+                          </p>
+                        </div>
+                      )}
+                      {selectedPrograms.includes('SimpleWellbeing') && (
+                        <div>
+                          <Label htmlFor="marqueeCode">
+                            Marquee Code 
+                            <span className="text-red-500">*</span>
+                          </Label>
+                          <Input id="marqueeCode" name="marqueeCode" required />
+                          <p className="text-xs text-gray-500 mt-1">
+                            Required for SimpleWellbeing program
+                          </p>
+                        </div>
+                      )}
                       <div>
                         <Label htmlFor="landingPageUrl">Landing Page URL</Label>
                         <Input id="landingPageUrl" name="landingPageUrl" type="url" placeholder="https://example.com" />
@@ -332,19 +343,71 @@ export default function AdminPanel() {
                           </p>
                           <div className="grid grid-cols-2 gap-2">
                             <div className="flex items-center space-x-2">
-                              <input type="checkbox" id="simpleMSK" name="activePrograms" value="SimpleMSK" className="rounded" />
+                              <input 
+                                type="checkbox" 
+                                id="simpleMSK" 
+                                name="activePrograms" 
+                                value="SimpleMSK" 
+                                className="rounded"
+                                onChange={(e) => {
+                                  if (e.target.checked) {
+                                    setSelectedPrograms(prev => [...prev, 'SimpleMSK']);
+                                  } else {
+                                    setSelectedPrograms(prev => prev.filter(p => p !== 'SimpleMSK'));
+                                  }
+                                }}
+                              />
                               <label htmlFor="simpleMSK" className="text-sm">SimpleMSK</label>
                             </div>
                             <div className="flex items-center space-x-2">
-                              <input type="checkbox" id="simpleEAP" name="activePrograms" value="SimpleEAP" className="rounded" />
+                              <input 
+                                type="checkbox" 
+                                id="simpleEAP" 
+                                name="activePrograms" 
+                                value="SimpleEAP" 
+                                className="rounded"
+                                onChange={(e) => {
+                                  if (e.target.checked) {
+                                    setSelectedPrograms(prev => [...prev, 'SimpleEAP']);
+                                  } else {
+                                    setSelectedPrograms(prev => prev.filter(p => p !== 'SimpleEAP'));
+                                  }
+                                }}
+                              />
                               <label htmlFor="simpleEAP" className="text-sm">SimpleEAP</label>
                             </div>
                             <div className="flex items-center space-x-2">
-                              <input type="checkbox" id="simpleBehavioural" name="activePrograms" value="SimpleBehavioural" className="rounded" />
+                              <input 
+                                type="checkbox" 
+                                id="simpleBehavioural" 
+                                name="activePrograms" 
+                                value="SimpleBehavioural" 
+                                className="rounded"
+                                onChange={(e) => {
+                                  if (e.target.checked) {
+                                    setSelectedPrograms(prev => [...prev, 'SimpleBehavioural']);
+                                  } else {
+                                    setSelectedPrograms(prev => prev.filter(p => p !== 'SimpleBehavioural'));
+                                  }
+                                }}
+                              />
                               <label htmlFor="simpleBehavioural" className="text-sm">SimpleBehavioural</label>
                             </div>
                             <div className="flex items-center space-x-2">
-                              <input type="checkbox" id="simpleWellbeing" name="activePrograms" value="SimpleWellbeing" className="rounded" />
+                              <input 
+                                type="checkbox" 
+                                id="simpleWellbeing" 
+                                name="activePrograms" 
+                                value="SimpleWellbeing" 
+                                className="rounded"
+                                onChange={(e) => {
+                                  if (e.target.checked) {
+                                    setSelectedPrograms(prev => [...prev, 'SimpleWellbeing']);
+                                  } else {
+                                    setSelectedPrograms(prev => prev.filter(p => p !== 'SimpleWellbeing'));
+                                  }
+                                }}
+                              />
                               <label htmlFor="simpleWellbeing" className="text-sm">SimpleWellbeing</label>
                             </div>
                           </div>
