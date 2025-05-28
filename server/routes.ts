@@ -43,6 +43,158 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const templates = await storage.getAllAssetTemplates();
       const clientAssets = await storage.getClientAssets(clientId);
       
+      // Add comprehensive sample assets directly to ensure variety
+      const additionalSampleAssets = [
+        // More Introduction Materials
+        {
+          id: 1001,
+          name: "Welcome to Your MSK Program",
+          categoryId: 1,
+          type: "document",
+          originalFileName: "welcome-guide.pdf",
+          fileUrl: "/docs/welcome-guide.pdf",
+          fileType: "pdf",
+          version: "v1.0",
+          description: "Complete introduction guide to get you started",
+          language: "English",
+          languageVariants: ["English", "Spanish"],
+          vimeoUrl: null,
+          createdAt: new Date(),
+          updatedAt: new Date()
+        },
+        {
+          id: 1002,
+          name: "Employee Wellness Presentation",
+          categoryId: 1,
+          type: "presentation",
+          originalFileName: "wellness-presentation.pptx",
+          fileUrl: "/presentations/wellness-presentation.pptx",
+          fileType: "pptx",
+          version: "v2.5",
+          description: "Comprehensive presentation on workplace wellness benefits",
+          language: "English",
+          languageVariants: ["English", "Spanish"],
+          vimeoUrl: null,
+          createdAt: new Date(),
+          updatedAt: new Date()
+        },
+        // More Launch Campaign Materials
+        {
+          id: 1003,
+          name: "Launch Announcement Email",
+          categoryId: 2,
+          type: "email",
+          originalFileName: "launch-email.html",
+          fileUrl: "/templates/launch-email.html",
+          fileType: "html",
+          version: "v2.0",
+          description: "Professional email template for program launch",
+          language: "English",
+          languageVariants: ["English", "Spanish"],
+          vimeoUrl: null,
+          createdAt: new Date(),
+          updatedAt: new Date()
+        },
+        {
+          id: 1004,
+          name: "Program Launch Banner",
+          categoryId: 2,
+          type: "banner",
+          originalFileName: "launch-banner.jpg",
+          fileUrl: "/banners/launch-banner.jpg",
+          fileType: "jpg",
+          version: "v1.0",
+          description: "Eye-catching web banner for program announcement",
+          language: "English",
+          languageVariants: ["English", "Spanish"],
+          vimeoUrl: null,
+          createdAt: new Date(),
+          updatedAt: new Date()
+        },
+        // More Ongoing Promotion Materials
+        {
+          id: 1005,
+          name: "Monthly Wellness Newsletter",
+          categoryId: 3,
+          type: "newsletter",
+          originalFileName: "wellness-newsletter.pdf",
+          fileUrl: "/newsletters/wellness-newsletter.pdf",
+          fileType: "pdf",
+          version: "v3.1",
+          description: "Monthly tips for maintaining workplace wellness",
+          language: "English",
+          languageVariants: ["English", "Spanish"],
+          vimeoUrl: null,
+          createdAt: new Date(),
+          updatedAt: new Date()
+        },
+        {
+          id: 1006,
+          name: "Health Tips Information Flyer",
+          categoryId: 3,
+          type: "flyer",
+          originalFileName: "health-tips-flyer.pdf",
+          fileUrl: "/flyers/health-tips-flyer.pdf",
+          fileType: "pdf",
+          version: "v1.4",
+          description: "Colorful flyer with daily health and wellness tips",
+          language: "English",
+          languageVariants: ["English", "Spanish"],
+          vimeoUrl: null,
+          createdAt: new Date(),
+          updatedAt: new Date()
+        },
+        {
+          id: 1007,
+          name: "Wellness Program Virtual Display",
+          categoryId: 3,
+          type: "virtual_display",
+          originalFileName: "wellness-vdm.jpg",
+          fileUrl: "/displays/wellness-vdm.jpg",
+          fileType: "jpg",
+          version: "v1.7",
+          description: "Digital display for lobby screens and virtual environments",
+          language: "English",
+          languageVariants: ["English", "Spanish"],
+          vimeoUrl: null,
+          createdAt: new Date(),
+          updatedAt: new Date()
+        },
+        // More Video Content
+        {
+          id: 1008,
+          name: "Program Introduction Video",
+          categoryId: 4,
+          type: "video",
+          originalFileName: "program-intro.mp4",
+          fileUrl: "/videos/program-intro.mp4",
+          fileType: "mp4",
+          version: "v1.0",
+          description: "Engaging introduction video explaining program benefits",
+          language: "English",
+          languageVariants: ["English", "Spanish"],
+          vimeoUrl: "https://vimeo.com/123456789",
+          createdAt: new Date(),
+          updatedAt: new Date()
+        },
+        {
+          id: 1009,
+          name: "Stress Management Webinar",
+          categoryId: 4,
+          type: "webinar",
+          originalFileName: "stress-webinar.mp4",
+          fileUrl: "/webinars/stress-webinar.mp4",
+          fileType: "mp4",
+          version: "v1.3",
+          description: "Interactive webinar on effective stress management techniques",
+          language: "English",
+          languageVariants: ["English", "Spanish"],
+          vimeoUrl: "https://vimeo.com/987654321",
+          createdAt: new Date(),
+          updatedAt: new Date()
+        }
+      ];
+      
       // Add more sample assets to populate all categories
       const sampleVideoAssets = [
         // Intro Materials (categoryId: 1)
@@ -329,20 +481,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       });
 
-      // Add sample assets with bilingual versions
+      // Add bilingual versions for all additional sample assets
+      const allSampleAssets = [...additionalSampleAssets, ...sampleVideoAssets];
       const sampleAssetsWithLanguages = [];
-      sampleVideoAssets.forEach(asset => {
+      
+      allSampleAssets.forEach(asset => {
         // English version
         sampleAssetsWithLanguages.push({
           ...asset,
-          language: "English"
+          language: "English",
+          clientSpecific: null,
+          downloadUrl: null
         });
         
         // Spanish version
         sampleAssetsWithLanguages.push({
           ...asset,
-          id: asset.id + 2000, // Unique ID for Spanish version
-          language: "Spanish"
+          id: asset.id + 3000, // Unique ID for Spanish version
+          language: "Spanish",
+          clientSpecific: null,
+          downloadUrl: null
         });
       });
       
