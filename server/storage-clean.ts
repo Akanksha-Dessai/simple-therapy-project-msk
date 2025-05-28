@@ -4,7 +4,7 @@ import type {
   AssetTemplate, InsertAssetTemplate,
   ClientAsset, InsertClientAsset,
   User, InsertUser 
-} from "../shared/schema";
+} from "../shared/schema.js";
 
 export interface IStorage {
   // Client operations
