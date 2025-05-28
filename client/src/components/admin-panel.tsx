@@ -814,9 +814,6 @@ export default function AdminPanel() {
                           <div className="flex items-center space-x-3">
                             <h4 className="font-medium text-gray-900 dark:text-foreground">{template.name}</h4>
                             <Badge variant="outline">{template.type}</Badge>
-                            <Badge className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300">
-                              {template.language}
-                            </Badge>
                           </div>
                           <p className="text-sm text-gray-500 dark:text-muted-foreground mt-1">
                             Version {template.version} • {template.fileType?.toUpperCase()}
