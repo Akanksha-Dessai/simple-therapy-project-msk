@@ -8,7 +8,8 @@ interface ProgramSelectorProps {
 }
 
 export default function ProgramSelector({ client, onProgramSelect, selectedProgram }: ProgramSelectorProps) {
-  const programTypes = client.programTypes || ["SimpleMSK"];
+  // For now, let's add multiple programs to test the selection
+  const programTypes = client.programTypes || ["SimpleMSK", "SimpleEAP"];
 
   const getProgramLogo = (program: string) => {
     switch (program) {
@@ -40,12 +41,10 @@ export default function ProgramSelector({ client, onProgramSelect, selectedProgr
     }
   };
 
+  // Always show program selection for multiple programs
   // Auto-select if only one program available
   if (programTypes.length === 1 && !selectedProgram) {
     setTimeout(() => onProgramSelect(programTypes[0]), 0);
-  }
-
-  if (programTypes.length === 1) {
     return null;
   }
 
