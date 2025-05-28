@@ -37,6 +37,8 @@ export default function AdminPanel() {
   const [editingCategory, setEditingCategory] = useState<any>(null);
   const [selectedAssetType, setSelectedAssetType] = useState<string>("");
   const [selectedAssetScope, setSelectedAssetScope] = useState<string>("template");
+  const [showLanguageDialog, setShowLanguageDialog] = useState(false);
+  const [selectedTemplate, setSelectedTemplate] = useState<any>(null);
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -737,6 +739,68 @@ export default function AdminPanel() {
                     </form>
                   </DialogContent>
                 </Dialog>
+
+                {/* Add Language Version Dialog */}
+                <Dialog open={showLanguageDialog} onOpenChange={setShowLanguageDialog}>
+                  <DialogContent className="sm:max-w-[500px] max-h-[85vh] overflow-y-auto">
+                    <DialogHeader>
+                      <DialogTitle>Add Language Version</DialogTitle>
+                      <p className="text-sm text-gray-600 dark:text-muted-foreground">
+                        Upload the {selectedTemplate?.language === "English" ? "Spanish" : "English"} version for "{selectedTemplate?.name}"
+                      </p>
+                    </DialogHeader>
+                    <form onSubmit={(e) => {
+                      e.preventDefault();
+                      setShowLanguageDialog(false);
+                      toast({
+                        title: "Language version added!",
+                        description: `${selectedTemplate?.language === "English" ? "Spanish" : "English"} version uploaded successfully.`,
+                      });
+                    }} className="space-y-4">
+                      <div>
+                        <Label htmlFor="languageVersion">Language</Label>
+                        <Select name="language" required defaultValue={selectedTemplate?.language === "English" ? "Spanish" : "English"}>
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="English">🇺🇸 English</SelectItem>
+                            <SelectItem value="Spanish">🇪🇸 Spanish (Español)</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      
+                      <div>
+                        <Label htmlFor="languageFileName">File Name</Label>
+                        <Input 
+                          id="languageFileName" 
+                          name="originalFileName" 
+                          defaultValue={selectedTemplate?.originalFileName ? selectedTemplate.originalFileName.replace(/\.(pdf|ppt|docx|png|jpg|mp4)$/i, `_${selectedTemplate?.language === "English" ? "ES" : "EN"}.$1`) : ""}
+                          required 
+                        />
+                      </div>
+                      
+                      <div>
+                        <Label>Upload Language File</Label>
+                        <UploadZone onUpload={(file) => {
+                          const fileNameInput = document.getElementById('languageFileName') as HTMLInputElement;
+                          if (fileNameInput && !fileNameInput.value) {
+                            fileNameInput.value = file.name;
+                          }
+                        }} />
+                      </div>
+                      
+                      <div className="flex justify-end space-x-2">
+                        <Button type="button" variant="outline" onClick={() => setShowLanguageDialog(false)}>
+                          Cancel
+                        </Button>
+                        <Button type="submit">
+                          Upload Language Version
+                        </Button>
+                      </div>
+                    </form>
+                  </DialogContent>
+                </Dialog>
               </div>
 
               {templatesLoading ? (
@@ -762,6 +826,18 @@ export default function AdminPanel() {
                           )}
                         </div>
                         <div className="flex items-center space-x-2">
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="bg-green-50 hover:bg-green-100 text-green-700 border-green-200"
+                            onClick={() => {
+                              setSelectedTemplate(template);
+                              setShowLanguageDialog(true);
+                            }}
+                          >
+                            <Plus className="h-3 w-3 mr-1" />
+                            Add Language
+                          </Button>
                           <Button variant="outline" size="sm">
                             <Download className="h-3 w-3" />
                           </Button>
