@@ -14,7 +14,13 @@ export default function ProgramSelector({ client, onProgramSelect, selectedProgr
   const getProgramLogo = (program: string) => {
     switch (program) {
       case "SimpleMSK":
-        return "🦴"; // Bone/MSK icon
+        return (
+          <img 
+            src="https://www.simpletherapy.com/images/site/SimpleMSK/logo_brands.svg" 
+            alt="SimpleMSK Logo" 
+            className="h-8 w-auto"
+          />
+        );
       case "SimpleEAP":
         return "🧠"; // Brain/mental health icon
       case "SimpleBehavioural":
