@@ -1,0 +1,51 @@
+create a product design document and further explan this requirement to scale for future. "SimpleTherapy MSK Toolkit
+Project Goals
+•	Provide clients with an easy-to-access, customizable communications toolkit to drive awareness and engagement for the different products.
+•	Ensure all assets are client-branded, accurate, and up-to-date.
+•	Facilitate toolkit access via secure code entry.
+•	Replicate the experience of SimpleTherapy’s EAP toolkit (code: simpletherapy).
+Branding Requirements
+All materials should:
+•	Include the client’s logo (uploaded by client at access or embedded by ST team)
+•	Include client eligibility language
+•	Include client specific QR code
+Toolkit Components
+1. Program Launch Materials
+•	Executive Leader Email 
+•	Program Overview Flyer
+•	Member FAQs
+•	Member Overview Video Link (no branding, just accessible from toolkit)
+•	Launch Webinar Recording Link (no branding, just accessible from toolkit)
+•	Slide Deck for HR Teams with script/notes (explaining the benefit)
+2. Ongoing Assets
+•	Approximately 19 flyers ready to be formatted and separated into buckets
+o	Program feature flyers
+o	Campaign flyers related to specific topics, i.e. mental health
+•	4 Posters 
+•	4 Digital Banners
+3. Phase Two Materials:
+•	Email Templates
+•	Additional webinar recordings
+•	Decide how often materials are refreshed aside from the flyers for newsletter
+•	Add Spanish
+Toolkit Platform Requirements
+Access
+•	Web-based toolkit (similar to mycommstoolkit.com)
+•	Access controlled via unique client-specific code
+•	Code can be reused by all HR/admin team members of a client
+•	ST Admin Panel for:
+o	Adding/removing clients
+o	Uploading logos
+o	Uploading eligibility language
+o	Uploading client-specific QR codes
+o	Managing toolkit updates
+Customization
+•	Dynamically display client name or logo, eligibility language and QR code across templates and materials
+•	Downloadable assets (PDF, PPT, PNG/JPG, DOCX)
+
+For Consideration
+•	Should the QR code be the Onelink for app download or reg flow?
+•	ST or SimpleMSK logo cobranded with the client logo?
+o	Maybe SimpleMSK and client logo at top and ST at bottom?
+•	Remove flyers from newsletter and instead link to the toolkit where they will find a corresponding flyer 
+" 
