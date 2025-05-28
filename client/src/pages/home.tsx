@@ -66,7 +66,8 @@ export default function Home() {
       {/* Footer */}
       <footer className="bg-white dark:bg-card border-t border-gray-200 dark:border-border mt-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center space-y-4 md:space-y-0">
+            {/* Left side - Logo and Platform info */}
             <div className="flex items-center space-x-4">
               <img 
                 src="https://www.simpletherapy.com/images/logo/SimpleTherapy.svg" 
@@ -77,13 +78,16 @@ export default function Home() {
                 SimpleTherapy Care Marketing Toolkit Platform
               </span>
             </div>
-            <div className="text-sm text-gray-500 dark:text-muted-foreground flex flex-col items-end">
-              <div>SimpleTherapy, Inc. is located at 1080 W Shaw Ave, Ste 105, Fresno, CA 93711 © 2025</div>
-              <div className="mt-1">
-                <a href="mailto:support@simpletherapy.com" className="text-primary hover:underline">support@simpletherapy.com</a>
-              </div>
-              <div className="mt-1">
-                Account Support: <a href="mailto:account.support@simpletherapy.com" className="text-primary hover:underline">account.support@simpletherapy.com</a>
+            
+            {/* Right side - Company info */}
+            <div className="text-sm text-gray-500 dark:text-muted-foreground text-right">
+              <div className="font-medium">SimpleTherapy, Inc.</div>
+              <div className="mt-1">1080 W Shaw Ave, Ste 105</div>
+              <div>Fresno, CA 93711</div>
+              <div className="mt-2">© 2025 All rights reserved.</div>
+              <div className="mt-3 space-y-1">
+                <div>General Support: <a href="mailto:support@simpletherapy.com" className="text-primary hover:underline">support@simpletherapy.com</a></div>
+                <div>Account Support: <a href="mailto:account.support@simpletherapy.com" className="text-primary hover:underline">account.support@simpletherapy.com</a></div>
               </div>
             </div>
           </div>
