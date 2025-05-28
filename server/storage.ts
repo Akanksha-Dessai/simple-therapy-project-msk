@@ -246,67 +246,131 @@ export class MemStorage implements IStorage {
     });
   }
 
-  // Clean restart - let me fix this properly
-  private cleanTemplates = [
+  private addDiverseAssets() {
+    const diverseTemplates = [
       {
         id: this.currentTemplateId++,
-        name: "Program Overview Flyer",
-        categoryId: 6, // SimpleEAP Launch Campaign
-        type: "flyer",
-        originalFileName: "program-overview-flyer.pdf",
-        fileUrl: "/templates/program-overview.pdf",
-        fileType: "pdf",
-        version: "v1.8",
-        description: "Visual overview flyer highlighting key benefits",
-        createdAt: new Date(),
-        updatedAt: new Date()
-      },
-      {
-        id: this.currentTemplateId++,
-        name: "Mental Health Awareness",
-        category: "ongoing",
-        type: "flyer",
-        originalFileName: "mental-health-flyer.pdf",
-        fileUrl: "/templates/mental-health.pdf",
-        fileType: "pdf",
-        version: "v3.2",
-        description: "Mental health awareness campaign flyer",
-        createdAt: new Date(),
-        updatedAt: new Date()
-      },
-      {
-        id: this.currentTemplateId++,
-        name: "Stress Management Tips",
-        category: "ongoing",
-        type: "poster",
-        originalFileName: "stress-management-poster.png",
-        fileUrl: "/templates/stress-management.png",
-        fileType: "png",
+        name: "Welcome Guide Presentation",
+        categoryId: 1,
+        type: "presentation",
+        originalFileName: "welcome-presentation.pptx",
+        fileUrl: "/templates/welcome-presentation.pptx",
+        fileType: "pptx",
         version: "v2.5",
-        description: "Poster with stress management tips and techniques",
+        description: "Comprehensive presentation introducing wellness benefits",
+        language: "English",
+        languageVariants: ["English", "Spanish"],
+        vimeoUrl: null,
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
         id: this.currentTemplateId++,
-        name: "Employee Wellness Week",
-        category: "ongoing",
+        name: "Launch Email Template",
+        categoryId: 2,
+        type: "email",
+        originalFileName: "launch-email.html",
+        fileUrl: "/templates/launch-email.html",
+        fileType: "html",
+        version: "v2.0",
+        description: "Professional email template for program announcements",
+        language: "English",
+        languageVariants: ["English", "Spanish"],
+        vimeoUrl: null,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        id: this.currentTemplateId++,
+        name: "Program Launch Banner",
+        categoryId: 2,
         type: "banner",
-        originalFileName: "wellness-week-banner.jpg",
-        fileUrl: "/templates/wellness-week.jpg",
+        originalFileName: "launch-banner.jpg",
+        fileUrl: "/banners/launch-banner.jpg",
         fileType: "jpg",
         version: "v1.0",
-        description: "Digital banner for employee wellness week promotion",
+        description: "Eye-catching web banner for program promotion",
+        language: "English",
+        languageVariants: ["English", "Spanish"],
+        vimeoUrl: null,
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
         id: this.currentTemplateId++,
-        name: "Program Introduction Video",
-        categoryId: 5, // videos category
+        name: "Health Tips Flyer",
+        categoryId: 3,
+        type: "flyer",
+        originalFileName: "health-tips.pdf",
+        fileUrl: "/flyers/health-tips.pdf",
+        fileType: "pdf",
+        version: "v1.4",
+        description: "Colorful flyer with daily wellness tips",
+        language: "English",
+        languageVariants: ["English", "Spanish"],
+        vimeoUrl: null,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        id: this.currentTemplateId++,
+        name: "Virtual Display Screen",
+        categoryId: 3,
+        type: "virtual_display",
+        originalFileName: "wellness-display.jpg",
+        fileUrl: "/displays/wellness-display.jpg",
+        fileType: "jpg",
+        version: "v1.7",
+        description: "Digital display for lobby screens and virtual environments",
+        language: "English",
+        languageVariants: ["English", "Spanish"],
+        vimeoUrl: null,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        id: this.currentTemplateId++,
+        name: "Exercise Tutorial Series",
+        categoryId: 4,
         type: "video",
-        originalFileName: "program-intro-video.mp4",
-        fileUrl: "/templates/program-intro.mp4",
+        originalFileName: "exercise-tutorials.mp4",
+        fileUrl: "/videos/exercise-tutorials.mp4",
+        fileType: "mp4",
+        version: "v2.0",
+        description: "Professional exercise demonstrations for workplace wellness",
+        language: "English",
+        languageVariants: ["English", "Spanish"],
+        vimeoUrl: "https://vimeo.com/123456790",
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        id: this.currentTemplateId++,
+        name: "Stress Management Webinar",
+        categoryId: 4,
+        type: "webinar",
+        originalFileName: "stress-webinar.mp4",
+        fileUrl: "/webinars/stress-webinar.mp4",
+        fileType: "mp4",
+        version: "v1.3",
+        description: "Interactive webinar on effective stress management techniques",
+        language: "English",
+        languageVariants: ["English", "Spanish"],
+        vimeoUrl: "https://vimeo.com/987654321",
+        createdAt: new Date(),
+        updatedAt: new Date()
+      }
+    ];
+
+    diverseTemplates.forEach(template => {
+      this.assetTemplates.set(template.id, template);
+    });
+  }
+
+  constructor() {
+    this.seedData();
+    this.addDiverseAssets(); // Add the new diverse assets
+  }
         fileType: "mp4",
         version: "v1.0",
         description: "Engaging introduction video explaining program benefits",
