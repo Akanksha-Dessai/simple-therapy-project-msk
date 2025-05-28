@@ -23,6 +23,11 @@ export default function ClientDashboard({ client }: ClientDashboardProps) {
     queryFn: () => clientApi.getAssets(client.id),
   });
 
+  const { data: categoriesData } = useQuery({
+    queryKey: ['/api/admin/categories'],
+    queryFn: () => fetch('/api/admin/categories').then(res => res.json()),
+  });
+
   const getAssetsInSelectedLanguage = (assets: any[]) => {
     // Filter assets to show only the selected language
     return assets.filter(asset => {
@@ -272,7 +277,7 @@ export default function ClientDashboard({ client }: ClientDashboardProps) {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {launchAssets.map((asset) => (
-                <AssetCard key={asset.id} asset={asset} client={client} />
+                <AssetCard key={asset.id} asset={asset} client={client} categories={categoriesData || []} />
               ))}
             </div>
           </CardContent>
@@ -299,7 +304,7 @@ export default function ClientDashboard({ client }: ClientDashboardProps) {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                   {ongoingAssets.map((asset) => (
-                    <AssetCard key={asset.id} asset={asset} client={client} />
+                    <AssetCard key={asset.id} asset={asset} client={client} categories={categoriesData || []} />
                   ))}
                 </div>
               </CardContent>
@@ -326,7 +331,7 @@ export default function ClientDashboard({ client }: ClientDashboardProps) {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                   {videoAssets.map((asset) => (
-                    <AssetCard key={asset.id} asset={asset} client={client} />
+                    <AssetCard key={asset.id} asset={asset} client={client} categories={categoriesData || []} />
                   ))}
                 </div>
               </CardContent>
@@ -353,7 +358,7 @@ export default function ClientDashboard({ client }: ClientDashboardProps) {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {introAssets.map((asset) => (
-                    <AssetCard key={asset.id} asset={asset} client={client} />
+                    <AssetCard key={asset.id} asset={asset} client={client} categories={categoriesData || []} />
                   ))}
                 </div>
               </CardContent>

@@ -7,19 +7,15 @@ import { FileText, FileImage, Video, Download, Link, Copy, Play } from "lucide-r
 interface AssetCardProps {
   asset: any;
   client: any;
+  categories: any[];
 }
 
-export default function AssetCard({ asset, client }: AssetCardProps) {
+export default function AssetCard({ asset, client, categories }: AssetCardProps) {
   const { toast } = useToast();
 
   const getCategoryName = (categoryId: number) => {
-    switch (categoryId) {
-      case 1: return "Intro Materials";
-      case 2: return "Launch";
-      case 3: return "Ongoing";
-      case 4: return "Videos";
-      default: return "General";
-    }
+    const category = categories.find(cat => cat.id === categoryId);
+    return category ? category.name : "General";
   };
 
   const getAssetIcon = (type: string, fileType: string) => {
