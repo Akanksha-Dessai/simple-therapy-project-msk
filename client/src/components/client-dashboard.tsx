@@ -5,6 +5,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { clientApi } from "@/lib/api";
 import AssetCard from "./asset-card";
 import ProgramSelector from "./program-selector";
+import SimpleEAPCard from "./simple-eap-card";
 import { useState } from "react";
 import { Rocket, RotateCcw, Clock, QrCode, Globe, Video } from "lucide-react";
 
@@ -281,47 +282,7 @@ export default function ClientDashboard({ client }: ClientDashboardProps) {
         <>
           {/* SimpleEAP External Platform Card */}
           {selectedProgram === 'SimpleEAP' && (
-            <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950 dark:to-indigo-950 border-blue-200 dark:border-blue-800">
-              <CardContent className="p-8">
-                <div className="text-center space-y-6">
-                  <div className="flex justify-center">
-                    <img 
-                      src="https://www.simpletherapy.com/images/site/SimpleEAP/st-logo_brands.svg" 
-                      alt="SimpleEAP Logo" 
-                      className="h-16 w-auto"
-                    />
-                  </div>
-                  <div className="space-y-4">
-                    <h3 className="text-2xl font-bold text-gray-900 dark:text-foreground">
-                      SimpleEAP Communications Toolkit
-                    </h3>
-                    <p className="text-lg text-gray-700 dark:text-muted-foreground max-w-2xl mx-auto">
-                      Access all your branded SimpleEAP marketing materials and communication assets through our dedicated portal.
-                    </p>
-                    <p className="text-gray-600 dark:text-muted-foreground">
-                      Your customized materials are ready and waiting for you with your specific branding and messaging.
-                    </p>
-                  </div>
-                  <div className="pt-4">
-                    <Button 
-                      size="lg" 
-                      className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 text-lg"
-                      onClick={() => {
-                        const groupCode = client.cualincCode || 'CUA-ACME-001';
-                        const url = `https://mysupportportal.com/communications-toolkit?group_code=${groupCode}`;
-                        window.open(url, '_blank');
-                      }}
-                    >
-                      <Globe className="mr-2 h-5 w-5" />
-                      Access SimpleEAP Toolkit
-                    </Button>
-                  </div>
-                  <p className="text-sm text-gray-500 dark:text-muted-foreground">
-                    You'll be redirected to the SimpleEAP communications portal where all your branded materials are hosted.
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
+            <SimpleEAPCard client={client} />
           )}
 
           {/* Regular asset interface for other programs */}
@@ -347,6 +308,20 @@ export default function ClientDashboard({ client }: ClientDashboardProps) {
                   </div>
                 </CardContent>
               </Card>
+
+              {/* Simple asset grid for other programs */}
+              <Card>
+                <CardContent className="p-6">
+                  <h3 className="text-xl font-semibold mb-4">Assets for {selectedProgram}</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {filteredAssets.map((asset: any) => (
+                      <AssetCard key={asset.id} asset={asset} client={client} categories={categoriesData || []} />
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </>
+          )}
 
             {/* Asset Type Filter Buttons */}
             <div className="mb-4 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-red-200">
