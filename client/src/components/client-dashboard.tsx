@@ -423,7 +423,7 @@ export default function ClientDashboard({ client }: ClientDashboardProps) {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                  {videoAssets.map((asset) => (
+                  {filterAssetsByType(videoAssets, categoryFilters["videos"] || "all").map((asset) => (
                     <AssetCard key={asset.id} asset={asset} client={client} categories={categoriesData || []} />
                   ))}
                 </div>
@@ -449,8 +449,44 @@ export default function ClientDashboard({ client }: ClientDashboardProps) {
                   </div>
                 </div>
 
+                {/* Asset Type Filter Buttons */}
+                <div className="mb-4 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-red-200">
+                  <div className="flex flex-wrap gap-2">
+                    {(() => {
+                      const availableTypes = getAssetTypesForCategory(introAssets);
+                      const currentFilter = categoryFilters["intro"] || "all";
+                      return (
+                        <>
+                          <Button
+                            variant={currentFilter === "all" ? "default" : "outline"}
+                            size="sm"
+                            onClick={() => setCategoryFilter("intro", "all")}
+                            className="text-xs"
+                          >
+                            All ({introAssets.length})
+                          </Button>
+                          {availableTypes.map(type => {
+                            const count = introAssets.filter(asset => asset.type === type).length;
+                            return (
+                              <Button
+                                key={type}
+                                variant={currentFilter === type ? "default" : "outline"}
+                                size="sm"
+                                onClick={() => setCategoryFilter("intro", type)}
+                                className="text-xs capitalize"
+                              >
+                                {type} ({count})
+                              </Button>
+                            );
+                          })}
+                        </>
+                      );
+                    })()}
+                  </div>
+                </div>
+
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {introAssets.map((asset) => (
+                  {filterAssetsByType(introAssets, categoryFilters["intro"] || "all").map((asset) => (
                     <AssetCard key={asset.id} asset={asset} client={client} categories={categoriesData || []} />
                   ))}
                 </div>
