@@ -525,7 +525,7 @@ export default function AdminPanel() {
                       <Plus className="mr-2 h-4 w-4" /> Add Template
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="sm:max-w-[425px]">
+                  <DialogContent className="sm:max-w-[700px] max-h-[85vh] overflow-y-auto">
                     <DialogHeader>
                       <DialogTitle>Upload New Asset Template</DialogTitle>
                       <p className="text-sm text-gray-600 dark:text-muted-foreground">

@@ -55,10 +55,12 @@ export interface IStorage {
 
 export class MemStorage implements IStorage {
   private clients: Map<number, Client> = new Map();
+  private assetCategories: Map<number, AssetCategory> = new Map();
   private assetTemplates: Map<number, AssetTemplate> = new Map();
   private clientAssets: Map<number, ClientAsset> = new Map();
   private users: Map<number, User> = new Map();
   private currentClientId = 1;
+  private currentCategoryId = 1;
   private currentTemplateId = 1;
   private currentAssetId = 1;
   private currentUserId = 1;
@@ -123,6 +125,37 @@ export class MemStorage implements IStorage {
     this.clients.set(client1.id, client1);
     this.clients.set(client2.id, client2);
     this.clients.set(client3.id, client3);
+
+    // Create default categories for each program
+    const categories: AssetCategory[] = [
+      // SimpleMSK Categories
+      { id: this.currentCategoryId++, name: "Intro Materials", slug: "intro-materials", description: "Introduction and overview materials", programType: "SimpleMSK", displayOrder: 1, status: "active", createdAt: new Date(), updatedAt: new Date() },
+      { id: this.currentCategoryId++, name: "Launch Campaign", slug: "launch-campaign", description: "Campaign materials for program launch", programType: "SimpleMSK", displayOrder: 2, status: "active", createdAt: new Date(), updatedAt: new Date() },
+      { id: this.currentCategoryId++, name: "Ongoing Promotion", slug: "ongoing-promotion", description: "Materials for ongoing program promotion", programType: "SimpleMSK", displayOrder: 3, status: "active", createdAt: new Date(), updatedAt: new Date() },
+      { id: this.currentCategoryId++, name: "Videos", slug: "videos", description: "Video content and webinars", programType: "SimpleMSK", displayOrder: 4, status: "active", createdAt: new Date(), updatedAt: new Date() },
+      
+      // SimpleEAP Categories
+      { id: this.currentCategoryId++, name: "Intro Materials", slug: "intro-materials", description: "Introduction and overview materials", programType: "SimpleEAP", displayOrder: 1, status: "active", createdAt: new Date(), updatedAt: new Date() },
+      { id: this.currentCategoryId++, name: "Launch Campaign", slug: "launch-campaign", description: "Campaign materials for program launch", programType: "SimpleEAP", displayOrder: 2, status: "active", createdAt: new Date(), updatedAt: new Date() },
+      { id: this.currentCategoryId++, name: "Ongoing Promotion", slug: "ongoing-promotion", description: "Materials for ongoing program promotion", programType: "SimpleEAP", displayOrder: 3, status: "active", createdAt: new Date(), updatedAt: new Date() },
+      { id: this.currentCategoryId++, name: "Videos", slug: "videos", description: "Video content and webinars", programType: "SimpleEAP", displayOrder: 4, status: "active", createdAt: new Date(), updatedAt: new Date() },
+      
+      // SimpleBehavioural Categories
+      { id: this.currentCategoryId++, name: "Intro Materials", slug: "intro-materials", description: "Introduction and overview materials", programType: "SimpleBehavioural", displayOrder: 1, status: "active", createdAt: new Date(), updatedAt: new Date() },
+      { id: this.currentCategoryId++, name: "Launch Campaign", slug: "launch-campaign", description: "Campaign materials for program launch", programType: "SimpleBehavioural", displayOrder: 2, status: "active", createdAt: new Date(), updatedAt: new Date() },
+      { id: this.currentCategoryId++, name: "Ongoing Promotion", slug: "ongoing-promotion", description: "Materials for ongoing program promotion", programType: "SimpleBehavioural", displayOrder: 3, status: "active", createdAt: new Date(), updatedAt: new Date() },
+      { id: this.currentCategoryId++, name: "Videos", slug: "videos", description: "Video content and webinars", programType: "SimpleBehavioural", displayOrder: 4, status: "active", createdAt: new Date(), updatedAt: new Date() },
+      
+      // SimpleWellbeing Categories
+      { id: this.currentCategoryId++, name: "Intro Materials", slug: "intro-materials", description: "Introduction and overview materials", programType: "SimpleWellbeing", displayOrder: 1, status: "active", createdAt: new Date(), updatedAt: new Date() },
+      { id: this.currentCategoryId++, name: "Launch Campaign", slug: "launch-campaign", description: "Campaign materials for program launch", programType: "SimpleWellbeing", displayOrder: 2, status: "active", createdAt: new Date(), updatedAt: new Date() },
+      { id: this.currentCategoryId++, name: "Ongoing Promotion", slug: "ongoing-promotion", description: "Materials for ongoing program promotion", programType: "SimpleWellbeing", displayOrder: 3, status: "active", createdAt: new Date(), updatedAt: new Date() },
+      { id: this.currentCategoryId++, name: "Videos", slug: "videos", description: "Video content and webinars", programType: "SimpleWellbeing", displayOrder: 4, status: "active", createdAt: new Date(), updatedAt: new Date() }
+    ];
+
+    categories.forEach(category => {
+      this.assetCategories.set(category.id, category);
+    });
 
     // Create sample asset templates
     const templates: AssetTemplate[] = [
@@ -447,6 +480,48 @@ export class MemStorage implements IStorage {
 
   async deleteClient(id: number): Promise<boolean> {
     return this.clients.delete(id);
+  }
+
+  // Asset Category operations
+  async createAssetCategory(category: InsertAssetCategory): Promise<AssetCategory> {
+    const newCategory: AssetCategory = {
+      id: this.currentCategoryId++,
+      ...category,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+    this.assetCategories.set(newCategory.id, newCategory);
+    return newCategory;
+  }
+
+  async getAssetCategory(id: number): Promise<AssetCategory | undefined> {
+    return this.assetCategories.get(id);
+  }
+
+  async getAllAssetCategories(): Promise<AssetCategory[]> {
+    return Array.from(this.assetCategories.values());
+  }
+
+  async getAssetCategoriesByProgram(programType: string): Promise<AssetCategory[]> {
+    return Array.from(this.assetCategories.values())
+      .filter(category => category.programType === programType);
+  }
+
+  async updateAssetCategory(id: number, updates: Partial<InsertAssetCategory>): Promise<AssetCategory | undefined> {
+    const category = this.assetCategories.get(id);
+    if (!category) return undefined;
+
+    const updatedCategory = {
+      ...category,
+      ...updates,
+      updatedAt: new Date()
+    };
+    this.assetCategories.set(id, updatedCategory);
+    return updatedCategory;
+  }
+
+  async deleteAssetCategory(id: number): Promise<boolean> {
+    return this.assetCategories.delete(id);
   }
 
   // Asset template operations
