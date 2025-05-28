@@ -30,7 +30,13 @@ export default function ProgramSelector({ client, onProgramSelect, selectedProgr
           />
         );
       case "SimpleBehavioural":
-        return "💭"; // Thought bubble icon
+        return (
+          <img 
+            src="https://www.simpletherapy.com/images/site/SimpleBehavioral/brandMain.svg" 
+            alt="SimpleBehavioural Logo" 
+            className="h-8 w-auto"
+          />
+        );
       case "SimpleWellbeing":
         return (
           <img 
