@@ -348,9 +348,33 @@ export default function AdminPanel() {
                         <TableRow key={client.id}>
                           <TableCell>{client.name}</TableCell>
                           <TableCell>
+                            <code className="bg-blue-50 dark:bg-blue-900 px-2 py-1 rounded text-sm text-blue-700 dark:text-blue-300">
+                              {client.clientId || 'ST-001'}
+                            </code>
+                          </TableCell>
+                          <TableCell>
+                            <code className="bg-purple-50 dark:bg-purple-900 px-2 py-1 rounded text-sm text-purple-700 dark:text-purple-300">
+                              {client.clientCode || 'ACME-MSK-2024'}
+                            </code>
+                          </TableCell>
+                          <TableCell>
                             <code className="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded text-sm">
                               {client.accessCode}
                             </code>
+                          </TableCell>
+                          <TableCell>
+                            {client.landingPageUrl ? (
+                              <a 
+                                href={client.landingPageUrl} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 text-sm truncate max-w-[150px] block"
+                              >
+                                {client.landingPageUrl.replace('https://', '').replace('http://', '')}
+                              </a>
+                            ) : (
+                              <span className="text-gray-400 text-sm">No URL</span>
+                            )}
                           </TableCell>
                           <TableCell>
                             <Badge className={getStatusColor(client.status)}>
