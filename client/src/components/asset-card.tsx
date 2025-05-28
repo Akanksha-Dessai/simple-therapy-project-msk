@@ -80,9 +80,20 @@ export default function AssetCard({ asset, client }: AssetCardProps) {
             {asset.name}
           </span>
         </div>
-        <Badge variant="secondary" className="text-xs">
-          {asset.version}
-        </Badge>
+        <div className="flex items-center space-x-2">
+          <Badge 
+            className={`text-xs ${
+              asset.language === 'English' 
+                ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300' 
+                : 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300'
+            }`}
+          >
+            {asset.language === 'English' ? '🇺🇸 EN' : '🇪🇸 ES'}
+          </Badge>
+          <Badge variant="secondary" className="text-xs bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">
+            v{asset.version}
+          </Badge>
+        </div>
       </div>
       
       <p className="text-xs text-gray-600 dark:text-muted-foreground mb-3 capitalize">
