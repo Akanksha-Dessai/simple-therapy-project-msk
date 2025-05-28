@@ -12,6 +12,16 @@ interface AssetCardProps {
 export default function AssetCard({ asset, client }: AssetCardProps) {
   const { toast } = useToast();
 
+  const getCategoryName = (categoryId: number) => {
+    switch (categoryId) {
+      case 1: return "Intro Materials";
+      case 2: return "Launch";
+      case 3: return "Ongoing";
+      case 4: return "Videos";
+      default: return "General";
+    }
+  };
+
   const getAssetIcon = (type: string, fileType: string) => {
     if (type === "video") {
       return <Video className="text-purple-500 mr-2 h-4 w-4" />;
@@ -158,7 +168,7 @@ export default function AssetCard({ asset, client }: AssetCardProps) {
       </div>
       
       <p className="text-xs text-gray-600 dark:text-muted-foreground mb-3 capitalize">
-        {asset.type} • {asset.category}
+        {asset.type} • {getCategoryName(asset.categoryId)}
       </p>
       
       {asset.description && (
