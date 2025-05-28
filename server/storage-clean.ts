@@ -1,20 +1,10 @@
-import { 
-  clients, 
-  assetCategories,
-  assetTemplates, 
-  clientAssets, 
-  users,
-  type Client, 
-  type InsertClient,
-  type AssetCategory,
-  type InsertAssetCategory,
-  type AssetTemplate,
-  type InsertAssetTemplate,
-  type ClientAsset,
-  type InsertClientAsset,
-  type User,
-  type InsertUser
-} from "@shared/schema";
+import type { 
+  Client, InsertClient,
+  AssetCategory, InsertAssetCategory,
+  AssetTemplate, InsertAssetTemplate,
+  ClientAsset, InsertClientAsset,
+  User, InsertUser 
+} from "../shared/schema";
 
 export interface IStorage {
   // Client operations
@@ -74,7 +64,7 @@ export class MemStorage implements IStorage {
     const adminUser: User = {
       id: this.currentUserId++,
       username: "admin",
-      password: "admin123", // In production, this should be hashed
+      password: "admin123",
       role: "admin"
     };
     this.users.set(adminUser.id, adminUser);
@@ -108,23 +98,8 @@ export class MemStorage implements IStorage {
       updatedAt: new Date()
     };
 
-    const client3: Client = {
-      id: this.currentClientId++,
-      name: "HealthCare Plus",
-      accessCode: "HEALTH24",
-      contactEmail: "admin@healthcareplus.com",
-      logoUrl: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100",
-      eligibilityLanguage: "Available to all staff members and immediate family",
-      qrCodeUrl: null,
-      programTypes: ["SimpleMSK", "SimpleBehavioural"],
-      status: "pending",
-      createdAt: new Date(),
-      updatedAt: new Date()
-    };
-
     this.clients.set(client1.id, client1);
     this.clients.set(client2.id, client2);
-    this.clients.set(client3.id, client3);
 
     // Create default categories for each program
     const categories: AssetCategory[] = [
@@ -162,7 +137,7 @@ export class MemStorage implements IStorage {
       {
         id: this.currentTemplateId++,
         name: "MSK Welcome Brochure",
-        categoryId: 1, // SimpleMSK Intro Materials
+        categoryId: 1,
         type: "document",
         originalFileName: "msk-welcome-brochure.pdf",
         fileUrl: "/templates/msk-welcome-brochure.pdf",
@@ -178,7 +153,7 @@ export class MemStorage implements IStorage {
       {
         id: this.currentTemplateId++,
         name: "MSK Launch Poster",
-        categoryId: 2, // SimpleMSK Launch Campaign
+        categoryId: 2,
         type: "poster",
         originalFileName: "msk-launch-poster.jpg",
         fileUrl: "/templates/msk-launch-poster.jpg",
@@ -188,329 +163,6 @@ export class MemStorage implements IStorage {
         language: "English",
         languageVariants: ["English", "Spanish"],
         vimeoUrl: null,
-        createdAt: new Date(),
-        updatedAt: new Date()
-      },
-      {
-        id: this.currentTemplateId++,
-        name: "MSK Monthly Newsletter",
-        categoryId: 3, // SimpleMSK Ongoing Promotion
-        type: "newsletter",
-        originalFileName: "msk-newsletter.pdf",
-        fileUrl: "/templates/msk-newsletter.pdf",
-        fileType: "pdf",
-        version: "v2.1",
-        description: "Monthly newsletter with health tips and MSK updates",
-        language: "English",
-        languageVariants: ["English", "Spanish"],
-        vimeoUrl: null,
-        createdAt: new Date(),
-        updatedAt: new Date()
-      },
-      {
-        id: this.currentTemplateId++,
-        name: "MSK Overview Video",
-        categoryId: 4, // SimpleMSK Videos
-        type: "video",
-        originalFileName: "msk-overview.mp4",
-        fileUrl: "/templates/msk-overview.mp4",
-        fileType: "mp4",
-        version: "v1.0",
-        description: "Video introduction to MSK program benefits",
-        language: "English",
-        languageVariants: ["English", "Spanish"],
-        vimeoUrl: "https://vimeo.com/123456789",
-        createdAt: new Date(),
-        updatedAt: new Date()
-      },
-      {
-        id: this.currentTemplateId++,
-        name: "EAP Welcome Guide",
-        categoryId: 5, // SimpleEAP Intro Materials
-        type: "document",
-        originalFileName: "eap-welcome.pdf",
-        fileUrl: "/templates/eap-welcome.pdf",
-        fileType: "pdf",
-        version: "v1.0",
-        description: "Employee Assistance Program introduction guide",
-        language: "English",
-        languageVariants: ["English", "Spanish"],
-        vimeoUrl: null,
-        createdAt: new Date(),
-        updatedAt: new Date()
-      }
-    ];
-
-    templates.forEach(template => {
-      this.assetTemplates.set(template.id, template);
-    });
-  }
-
-  // Clean restart - let me fix this properly
-  private cleanTemplates = [
-      {
-        id: this.currentTemplateId++,
-        name: "Program Overview Flyer",
-        categoryId: 6, // SimpleEAP Launch Campaign
-        type: "flyer",
-        originalFileName: "program-overview-flyer.pdf",
-        fileUrl: "/templates/program-overview.pdf",
-        fileType: "pdf",
-        version: "v1.8",
-        description: "Visual overview flyer highlighting key benefits",
-        createdAt: new Date(),
-        updatedAt: new Date()
-      },
-      {
-        id: this.currentTemplateId++,
-        name: "Mental Health Awareness",
-        category: "ongoing",
-        type: "flyer",
-        originalFileName: "mental-health-flyer.pdf",
-        fileUrl: "/templates/mental-health.pdf",
-        fileType: "pdf",
-        version: "v3.2",
-        description: "Mental health awareness campaign flyer",
-        createdAt: new Date(),
-        updatedAt: new Date()
-      },
-      {
-        id: this.currentTemplateId++,
-        name: "Stress Management Tips",
-        category: "ongoing",
-        type: "poster",
-        originalFileName: "stress-management-poster.png",
-        fileUrl: "/templates/stress-management.png",
-        fileType: "png",
-        version: "v2.5",
-        description: "Poster with stress management tips and techniques",
-        createdAt: new Date(),
-        updatedAt: new Date()
-      },
-      {
-        id: this.currentTemplateId++,
-        name: "Employee Wellness Week",
-        category: "ongoing",
-        type: "banner",
-        originalFileName: "wellness-week-banner.jpg",
-        fileUrl: "/templates/wellness-week.jpg",
-        fileType: "jpg",
-        version: "v1.0",
-        description: "Digital banner for employee wellness week promotion",
-        createdAt: new Date(),
-        updatedAt: new Date()
-      },
-      {
-        id: this.currentTemplateId++,
-        name: "Program Introduction Video",
-        categoryId: 5, // videos category
-        type: "video",
-        originalFileName: "program-intro-video.mp4",
-        fileUrl: "/templates/program-intro.mp4",
-        fileType: "mp4",
-        version: "v1.0",
-        description: "Engaging introduction video explaining program benefits",
-        vimeoUrl: "https://vimeo.com/123456789",
-        language: "English",
-        languageVariants: ["English", "Spanish"],
-        createdAt: new Date(),
-        updatedAt: new Date()
-      },
-      {
-        id: this.currentTemplateId++,
-        name: "Mental Health Awareness Video",
-        categoryId: 5, // videos category
-        type: "video",
-        originalFileName: "mental-health-video.mp4",
-        fileUrl: "/templates/mental-health-video.mp4",
-        fileType: "mp4",
-        version: "v2.0",
-        description: "Educational video on mental health awareness",
-        vimeoUrl: "https://vimeo.com/234567890",
-        language: "English",
-        languageVariants: ["English", "Spanish"],
-        createdAt: new Date(),
-        updatedAt: new Date()
-      },
-      {
-        id: this.currentTemplateId++,
-        name: "Employee Testimonials",
-        categoryId: 5, // videos category
-        type: "video",
-        originalFileName: "testimonials-video.mp4",
-        fileUrl: "/templates/testimonials.mp4",
-        fileType: "mp4",
-        version: "v1.5",
-        description: "Real employee stories and testimonials",
-        vimeoUrl: "https://vimeo.com/345678901",
-        language: "English",
-        languageVariants: ["English", "Spanish"],
-        createdAt: new Date(),
-        updatedAt: new Date()
-      },
-      {
-        id: this.currentTemplateId++,
-        name: "Employee Handbook",
-        category: "launch",
-        type: "document",
-        originalFileName: "employee-handbook.pdf",
-        fileUrl: "/templates/employee-handbook.pdf",
-        fileType: "pdf",
-        version: "v4.0",
-        description: "Complete employee handbook with program details",
-        language: "English",
-        languageVariants: ["English", "Spanish"],
-        createdAt: new Date(),
-        updatedAt: new Date()
-      },
-      {
-        id: this.currentTemplateId++,
-        name: "Social Media Banner",
-        category: "ongoing",
-        type: "banner",
-        originalFileName: "social-media-banner.png",
-        fileUrl: "/templates/social-banner.png",
-        fileType: "png",
-        version: "v1.5",
-        description: "Banner optimized for social media platforms",
-        language: "English",
-        languageVariants: ["English", "Spanish"],
-        createdAt: new Date(),
-        updatedAt: new Date()
-      },
-      {
-        id: this.currentTemplateId++,
-        name: "Wellness Workshop Poster",
-        category: "ongoing",
-        type: "poster",
-        originalFileName: "workshop-poster.jpg",
-        fileUrl: "/templates/workshop-poster.jpg",
-        fileType: "jpg",
-        version: "v2.0",
-        description: "Eye-catching poster for wellness workshops",
-        language: "English",
-        languageVariants: ["English", "Spanish"],
-        createdAt: new Date(),
-        updatedAt: new Date()
-      },
-      {
-        id: this.currentTemplateId++,
-        name: "Manager Toolkit",
-        category: "launch",
-        type: "document",
-        originalFileName: "manager-toolkit.docx",
-        fileUrl: "/templates/manager-toolkit.docx",
-        fileType: "docx",
-        version: "v3.1",
-        description: "Comprehensive toolkit for managers and supervisors",
-        language: "English",
-        languageVariants: ["English", "Spanish"],
-        createdAt: new Date(),
-        updatedAt: new Date()
-      },
-      {
-        id: this.currentTemplateId++,
-        name: "Website Header Banner",
-        category: "launch",
-        type: "banner",
-        originalFileName: "website-header.jpg",
-        fileUrl: "/templates/website-header.jpg",
-        fileType: "jpg",
-        version: "v1.3",
-        description: "Header banner for internal website integration",
-        language: "English",
-        languageVariants: ["English", "Spanish"],
-        createdAt: new Date(),
-        updatedAt: new Date()
-      },
-      {
-        id: this.currentTemplateId++,
-        name: "Benefits Enrollment Flyer",
-        category: "launch",
-        type: "flyer",
-        originalFileName: "benefits-flyer.pdf",
-        fileUrl: "/templates/benefits-flyer.pdf",
-        fileType: "pdf",
-        version: "v2.2",
-        description: "Flyer explaining enrollment process and benefits",
-        language: "English",
-        languageVariants: ["English", "Spanish"],
-        createdAt: new Date(),
-        updatedAt: new Date()
-      },
-      {
-        id: this.currentTemplateId++,
-        name: "Wellness Program Presentation",
-        category: "launch",
-        type: "presentation",
-        originalFileName: "wellness-presentation.pptx",
-        fileUrl: "/templates/wellness-presentation.pptx",
-        fileType: "pptx",
-        version: "v3.0",
-        description: "Comprehensive presentation slides for wellness program introduction",
-        language: "English",
-        languageVariants: ["English", "Spanish"],
-        createdAt: new Date(),
-        updatedAt: new Date()
-      },
-      {
-        id: this.currentTemplateId++,
-        name: "Mental Health Webinar Recording",
-        categoryId: 5, // videos category
-        type: "webinar",
-        originalFileName: "mental-health-webinar.mp4",
-        fileUrl: "/templates/mental-health-webinar.mp4",
-        fileType: "mp4",
-        version: "v1.0",
-        description: "Expert-led webinar on mental health best practices",
-        vimeoUrl: "https://vimeo.com/456789012",
-        language: "English",
-        languageVariants: ["English", "Spanish"],
-        createdAt: new Date(),
-        updatedAt: new Date()
-      },
-      {
-        id: this.currentTemplateId++,
-        name: "Monthly Wellness Newsletter",
-        category: "ongoing",
-        type: "newsletter",
-        originalFileName: "wellness-newsletter.pdf",
-        fileUrl: "/templates/wellness-newsletter.pdf",
-        fileType: "pdf",
-        version: "v2.1",
-        description: "Monthly newsletter with wellness tips and program updates",
-        language: "English",
-        languageVariants: ["English", "Spanish"],
-        createdAt: new Date(),
-        updatedAt: new Date()
-      },
-      {
-        id: this.currentTemplateId++,
-        name: "Digital Display Screen Content",
-        category: "ongoing",
-        type: "virtual-display",
-        originalFileName: "digital-display.jpg",
-        fileUrl: "/templates/digital-display.jpg",
-        fileType: "jpg",
-        version: "v1.5",
-        description: "Content optimized for office digital displays and monitors",
-        language: "English",
-        languageVariants: ["English", "Spanish"],
-        createdAt: new Date(),
-        updatedAt: new Date()
-      },
-      {
-        id: this.currentTemplateId++,
-        name: "Leadership Training Presentation",
-        category: "launch",
-        type: "presentation",
-        originalFileName: "leadership-training.pptx",
-        fileUrl: "/templates/leadership-training.pptx",
-        fileType: "pptx",
-        version: "v2.0",
-        description: "Training presentation for managers and team leaders",
-        language: "English",
-        languageVariants: ["English", "Spanish"],
         createdAt: new Date(),
         updatedAt: new Date()
       }
@@ -526,6 +178,10 @@ export class MemStorage implements IStorage {
     const newClient: Client = {
       ...client,
       id: this.currentClientId++,
+      logoUrl: client.logoUrl || null,
+      qrCodeUrl: client.qrCodeUrl || null,
+      status: client.status || "active",
+      programTypes: client.programTypes || [],
       createdAt: new Date(),
       updatedAt: new Date()
     };
@@ -563,6 +219,9 @@ export class MemStorage implements IStorage {
     const newCategory: AssetCategory = {
       id: this.currentCategoryId++,
       ...category,
+      status: category.status || "active",
+      description: category.description || null,
+      displayOrder: category.displayOrder || 1,
       createdAt: new Date(),
       updatedAt: new Date()
     };
@@ -605,6 +264,10 @@ export class MemStorage implements IStorage {
     const newTemplate: AssetTemplate = {
       ...template,
       id: this.currentTemplateId++,
+      description: template.description || null,
+      language: template.language || "English",
+      languageVariants: template.languageVariants || ["English"],
+      vimeoUrl: template.vimeoUrl || null,
       createdAt: new Date(),
       updatedAt: new Date()
     };
@@ -640,8 +303,10 @@ export class MemStorage implements IStorage {
   // Client asset operations
   async createClientAsset(clientAsset: InsertClientAsset): Promise<ClientAsset> {
     const newAsset: ClientAsset = {
-      ...clientAsset,
       id: this.currentAssetId++,
+      ...clientAsset,
+      downloadCount: clientAsset.downloadCount || 0,
+      lastDownloaded: clientAsset.lastDownloaded || null,
       createdAt: new Date()
     };
     this.clientAssets.set(newAsset.id, newAsset);
@@ -662,8 +327,8 @@ export class MemStorage implements IStorage {
     
     const updatedAsset = { 
       ...asset, 
-      downloadCount: (asset.downloadCount || 0) + 1,
-      lastDownloaded: new Date()
+      downloadCount: (asset.downloadCount || 0) + 1, 
+      lastDownloaded: new Date() 
     };
     this.clientAssets.set(id, updatedAsset);
     return updatedAsset;
@@ -672,8 +337,9 @@ export class MemStorage implements IStorage {
   // User operations
   async createUser(user: InsertUser): Promise<User> {
     const newUser: User = {
+      id: this.currentUserId++,
       ...user,
-      id: this.currentUserId++
+      role: user.role || "user"
     };
     this.users.set(newUser.id, newUser);
     return newUser;
@@ -688,5 +354,4 @@ export class MemStorage implements IStorage {
   }
 }
 
-// Use the working storage for now
 export const storage = new MemStorage();
