@@ -48,7 +48,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         {
           id: 999,
           name: "Program Introduction Video",
-          category: "launch",
+          categoryId: 4, // SimpleMSK Videos
           type: "video",
           originalFileName: "program-intro.mp4",
           fileUrl: "/videos/program-intro.mp4",
@@ -60,14 +60,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
           vimeoUrl: "https://vimeo.com/123456789",
           createdAt: new Date(),
           updatedAt: new Date(),
-          categoryId: 1,
           clientSpecific: null,
           downloadUrl: null
         },
         {
           id: 998,
           name: "Video de Introducción del Programa",
-          category: "launch", 
+          categoryId: 4, // SimpleMSK Videos
           type: "video",
           originalFileName: "programa-intro.mp4",
           fileUrl: "/videos/programa-intro.mp4",
@@ -79,7 +78,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
           vimeoUrl: "https://vimeo.com/123456790",
           createdAt: new Date(),
           updatedAt: new Date(),
-          categoryId: 1,
           clientSpecific: null,
           downloadUrl: null
         }
