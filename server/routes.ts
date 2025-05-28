@@ -100,7 +100,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
         
         // Spanish version
-        const spanishNames = {
+        const spanishNames: { [key: string]: string } = {
           "Executive Leader Email": "Correo Electrónico del Líder Ejecutivo",
           "Program Overview Flyer": "Folleto de Descripción del Programa", 
           "Mental Health Awareness": "Conciencia sobre Salud Mental",
@@ -108,7 +108,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           "Employee Wellness Week": "Semana de Bienestar del Empleado"
         };
         
-        const spanishDescriptions = {
+        const spanishDescriptions: { [key: string]: string } = {
           "Ready-to-send email template for leadership announcement": "Plantilla de correo electrónico lista para enviar para anuncio de liderazgo",
           "Visual overview flyer highlighting key benefits": "Folleto visual que destaca los beneficios clave",
           "Mental health awareness campaign flyer": "Folleto de campaña de conciencia sobre salud mental",
@@ -120,7 +120,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           ...template,
           id: template.id + 1000, // Unique ID for Spanish version
           name: spanishNames[template.name] || template.name,
-          description: spanishDescriptions[template.description] || template.description,
+          description: spanishDescriptions[template.description || ""] || template.description,
           language: "Spanish",
           languageVariants: ["English", "Spanish"],
           clientSpecific: clientAsset || null,
