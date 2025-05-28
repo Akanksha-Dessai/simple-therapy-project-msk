@@ -38,9 +38,20 @@ export const assetTemplates = pgTable("asset_templates", {
   fileType: text("file_type").notNull(), // 'pdf', 'ppt', 'docx', 'png', 'jpg'
   version: text("version").notNull(),
   description: text("description"),
-  supportedLanguages: text("supported_languages").array().notNull().default(["English"]), // English, Spanish, etc.
+  language: text("language").notNull().default("English"), // English, Spanish
+  languageVariants: text("language_variants").array().notNull().default(["English"]), // Track all available language versions
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// New table to store language-specific file URLs for each template
+export const assetLanguageVersions = pgTable("asset_language_versions", {
+  id: serial("id").primaryKey(),
+  templateId: integer("template_id").notNull().references(() => assetTemplates.id),
+  language: text("language").notNull(), // English, Spanish
+  fileName: text("file_name").notNull(),
+  fileUrl: text("file_url").notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
 });
 
 export const clientAssets = pgTable("client_assets", {
@@ -78,6 +89,11 @@ export const insertAssetTemplateSchema = createInsertSchema(assetTemplates).omit
   updatedAt: true,
 });
 
+export const insertAssetLanguageVersionSchema = createInsertSchema(assetLanguageVersions).omit({
+  id: true,
+  createdAt: true,
+});
+
 export const insertClientAssetSchema = createInsertSchema(clientAssets).omit({
   id: true,
   createdAt: true,
@@ -93,6 +109,8 @@ export type AssetCategory = typeof assetCategories.$inferSelect;
 export type InsertAssetCategory = z.infer<typeof insertAssetCategorySchema>;
 export type AssetTemplate = typeof assetTemplates.$inferSelect;
 export type InsertAssetTemplate = z.infer<typeof insertAssetTemplateSchema>;
+export type AssetLanguageVersion = typeof assetLanguageVersions.$inferSelect;
+export type InsertAssetLanguageVersion = z.infer<typeof insertAssetLanguageVersionSchema>;
 export type ClientAsset = typeof clientAssets.$inferSelect;
 export type InsertClientAsset = z.infer<typeof insertClientAssetSchema>;
 export type User = typeof users.$inferSelect;

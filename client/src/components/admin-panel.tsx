@@ -166,12 +166,14 @@ export default function AdminPanel() {
     const formData = new FormData(e.currentTarget);
     const templateData = {
       name: formData.get("name") as string,
-      category: formData.get("category") as string,
+      categoryId: parseInt(formData.get("categoryId") as string),
       type: formData.get("type") as string,
       originalFileName: formData.get("originalFileName") as string,
       fileUrl: "/templates/" + formData.get("originalFileName"),
       fileType: formData.get("fileType") as string,
       version: formData.get("version") as string,
+      language: formData.get("language") as string,
+      languageVariants: [formData.get("language") as string],
       description: formData.get("description") as string || null,
     };
 
@@ -352,14 +354,28 @@ export default function AdminPanel() {
                     </div>
                     <div>
                       <Label htmlFor="category">Category</Label>
-                      <Select name="category" required>
+                      <Select name="categoryId" required>
                         <SelectTrigger>
                           <SelectValue placeholder="Select category" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="launch">Launch Materials</SelectItem>
-                          <SelectItem value="ongoing">Ongoing Assets</SelectItem>
-                          <SelectItem value="future">Future Phase</SelectItem>
+                          {categories.map((category: any) => (
+                            <SelectItem key={category.id} value={category.id.toString()}>
+                              {category.name} ({category.programType})
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div>
+                      <Label htmlFor="language">Language Version</Label>
+                      <Select name="language" defaultValue="English" required>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select language" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="English">English</SelectItem>
+                          <SelectItem value="Spanish">Spanish (Español)</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -750,48 +766,196 @@ export default function AdminPanel() {
             <CardContent>
               <UploadZone onUpload={(file) => console.log("Uploaded:", file)} />
 
-              {/* Template Categories */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-                <Card>
-                  <CardContent className="p-4">
-                    <div className="flex items-center mb-3">
-                      <div className="w-8 h-8 bg-secondary rounded flex items-center justify-center mr-2">
-                        <span className="text-white text-sm font-bold">L</span>
-                      </div>
-                      <h4 className="font-medium text-gray-900 dark:text-foreground">
-                        Launch Materials
-                      </h4>
-                    </div>
-                    <p className="text-sm text-gray-600 dark:text-muted-foreground mb-3">
-                      {categoryStats.launch} templates
-                    </p>
-                    <div className="space-y-2 text-sm">
-                      {templates
-                        .filter((t: any) => t.category === "launch")
-                        .slice(0, 3)
-                        .map((template: any) => (
-                          <div
-                            key={template.id}
-                            className="flex items-center justify-between"
-                          >
-                            <span>{template.name}</span>
-                            <span className="text-gray-500 dark:text-muted-foreground">
-                              {template.version}
-                            </span>
-                          </div>
-                        ))}
-                    </div>
-                  </CardContent>
-                </Card>
+              {/* Asset Templates with Language Versions */}
+              <div className="mt-8">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-foreground">Asset Templates</h3>
+                  <Dialog open={showTemplateDialog} onOpenChange={setShowTemplateDialog}>
+                    <DialogTrigger asChild>
+                      <Button className="bg-secondary hover:bg-green-600 text-white">
+                        <Plus className="mr-2 h-4 w-4" /> Add Template
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-[425px]">
+                      <DialogHeader>
+                        <DialogTitle>Upload New Asset Template</DialogTitle>
+                      </DialogHeader>
+                      <form onSubmit={handleTemplateSubmit} className="space-y-4">
+                        <div>
+                          <Label htmlFor="templateName">Template Name</Label>
+                          <Input id="templateName" name="name" required />
+                        </div>
+                        <div>
+                          <Label htmlFor="category">Category</Label>
+                          <Select name="categoryId" required>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select category" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {categories.map((category: any) => (
+                                <SelectItem key={category.id} value={category.id.toString()}>
+                                  {category.name} ({category.programType})
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div>
+                          <Label htmlFor="language">Language Version</Label>
+                          <Select name="language" defaultValue="English" required>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select language" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="English">English</SelectItem>
+                              <SelectItem value="Spanish">Spanish (Español)</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div>
+                          <Label htmlFor="type">Asset Type</Label>
+                          <Select name="type" required>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select type" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="flyer">Flyer</SelectItem>
+                              <SelectItem value="poster">Poster</SelectItem>
+                              <SelectItem value="banner">Banner</SelectItem>
+                              <SelectItem value="email">Email Template</SelectItem>
+                              <SelectItem value="video">Video</SelectItem>
+                              <SelectItem value="presentation">Presentation</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div>
+                          <Label htmlFor="originalFileName">File Name</Label>
+                          <Input id="originalFileName" name="originalFileName" required />
+                        </div>
+                        <div>
+                          <Label htmlFor="fileType">File Type</Label>
+                          <Select name="fileType" required>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select file type" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="pdf">PDF</SelectItem>
+                              <SelectItem value="ppt">PowerPoint</SelectItem>
+                              <SelectItem value="docx">Word Document</SelectItem>
+                              <SelectItem value="png">PNG Image</SelectItem>
+                              <SelectItem value="jpg">JPEG Image</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div>
+                          <Label htmlFor="version">Version</Label>
+                          <Input id="version" name="version" defaultValue="1.0" required />
+                        </div>
+                        <div>
+                          <Label htmlFor="description">Description</Label>
+                          <Textarea id="description" name="description" rows={3} />
+                        </div>
+                        <div className="flex justify-end space-x-2">
+                          <Button type="button" variant="outline" onClick={() => setShowTemplateDialog(false)}>
+                            Cancel
+                          </Button>
+                          <Button type="submit" disabled={createTemplateMutation.isPending}>
+                            Upload Template
+                          </Button>
+                        </div>
+                      </form>
+                    </DialogContent>
+                  </Dialog>
+                </div>
 
-                <Card>
-                  <CardContent className="p-4">
-                    <div className="flex items-center mb-3">
-                      <div className="w-8 h-8 bg-blue-600 rounded flex items-center justify-center mr-2">
-                        <span className="text-white text-sm font-bold">O</span>
-                      </div>
-                      <h4 className="font-medium text-gray-900 dark:text-foreground">
-                        Ongoing Assets
+                {templatesLoading ? (
+                  <div className="text-center py-8">Loading templates...</div>
+                ) : (
+                  <div className="space-y-4">
+                    {templates.map((template: any) => (
+                      <Card key={template.id} className="p-4">
+                        <div className="flex items-center justify-between">
+                          <div className="flex-1">
+                            <div className="flex items-center space-x-3">
+                              <h4 className="font-medium text-gray-900 dark:text-foreground">{template.name}</h4>
+                              <Badge variant="outline">{template.type}</Badge>
+                              <Badge className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300">
+                                {template.language}
+                              </Badge>
+                            </div>
+                            <p className="text-sm text-gray-500 dark:text-muted-foreground mt-1">
+                              Version {template.version} • {template.fileType.toUpperCase()}
+                            </p>
+                            {template.description && (
+                              <p className="text-sm text-gray-600 dark:text-muted-foreground mt-1">{template.description}</p>
+                            )}
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <Button variant="outline" size="sm">
+                              <Download className="h-3 w-3" />
+                            </Button>
+                            <Button variant="outline" size="sm">
+                              <Edit className="h-3 w-3" />
+                            </Button>
+                            <Button variant="outline" size="sm">
+                              <Trash2 className="h-3 w-3" />
+                            </Button>
+                          </div>
+                        </div>
+                        
+                        {/* Language Versions Indicator */}
+                        <div className="mt-3 pt-3 border-t">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center space-x-2">
+                              <span className="text-xs text-gray-500 dark:text-muted-foreground">Available Languages:</span>
+                              <div className="flex space-x-1">
+                                {template.languageVariants?.map((lang: string) => (
+                                  <Badge key={lang} variant="secondary" className="text-xs">
+                                    {lang === "English" ? "EN" : "ES"}
+                                  </Badge>
+                                ))}
+                              </div>
+                            </div>
+                            <div className="flex space-x-1">
+                              {!template.languageVariants?.includes("English") && (
+                                <Button variant="outline" size="sm" className="text-xs">
+                                  + Add English
+                                </Button>
+                              )}
+                              {!template.languageVariants?.includes("Spanish") && (
+                                <Button variant="outline" size="sm" className="text-xs">
+                                  + Add Spanish
+                                </Button>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </Card>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="settings" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>System Settings</CardTitle>
+              <p className="text-gray-600 dark:text-muted-foreground">
+                Configure platform settings and preferences
+              </p>
+            </CardHeader>
+            <CardContent>
+              <p className="text-gray-500 dark:text-muted-foreground">Settings panel coming soon...</p>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
+    </div>
+  );
+}
                       </h4>
                     </div>
                     <p className="text-sm text-gray-600 dark:text-muted-foreground mb-3">
