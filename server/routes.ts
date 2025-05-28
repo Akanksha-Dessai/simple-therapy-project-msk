@@ -481,33 +481,179 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       });
 
-      // Add bilingual versions for all additional sample assets
-      const allSampleAssets = [...additionalSampleAssets, ...sampleVideoAssets];
-      const sampleAssetsWithLanguages = [];
-      
-      allSampleAssets.forEach(asset => {
-        // English version
-        sampleAssetsWithLanguages.push({
-          ...asset,
+      // Add comprehensive additional sample assets directly
+      const extraAssets = [
+        // More Introduction Materials
+        {
+          id: 5001,
+          name: "Welcome to Your MSK Program",
+          categoryId: 1,
+          type: "document",
+          originalFileName: "welcome-guide.pdf",
+          fileUrl: "/docs/welcome-guide.pdf",
+          fileType: "pdf",
+          version: "v1.0",
+          description: "Complete introduction guide to get you started",
           language: "English",
+          languageVariants: ["English", "Spanish"],
+          vimeoUrl: null,
+          createdAt: new Date(),
+          updatedAt: new Date(),
           clientSpecific: null,
           downloadUrl: null
-        });
-        
-        // Spanish version
-        sampleAssetsWithLanguages.push({
-          ...asset,
-          id: asset.id + 3000, // Unique ID for Spanish version
-          language: "Spanish",
+        },
+        {
+          id: 5002,
+          name: "Employee Wellness Presentation", 
+          categoryId: 1,
+          type: "presentation",
+          originalFileName: "wellness-presentation.pptx",
+          fileUrl: "/presentations/wellness-presentation.pptx",
+          fileType: "pptx",
+          version: "v2.5",
+          description: "Comprehensive presentation on workplace wellness benefits",
+          language: "English",
+          languageVariants: ["English", "Spanish"],
+          vimeoUrl: null,
+          createdAt: new Date(),
+          updatedAt: new Date(),
           clientSpecific: null,
           downloadUrl: null
-        });
-      });
+        },
+        // More Launch Campaign Materials
+        {
+          id: 5003,
+          name: "Launch Announcement Email",
+          categoryId: 2,
+          type: "email",
+          originalFileName: "launch-email.html",
+          fileUrl: "/templates/launch-email.html",
+          fileType: "html",
+          version: "v2.0",
+          description: "Professional email template for program launch",
+          language: "English",
+          languageVariants: ["English", "Spanish"],
+          vimeoUrl: null,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          clientSpecific: null,
+          downloadUrl: null
+        },
+        {
+          id: 5004,
+          name: "Program Launch Banner",
+          categoryId: 2,
+          type: "banner",
+          originalFileName: "launch-banner.jpg",
+          fileUrl: "/banners/launch-banner.jpg",
+          fileType: "jpg",
+          version: "v1.0",
+          description: "Eye-catching web banner for program announcement",
+          language: "English",
+          languageVariants: ["English", "Spanish"],
+          vimeoUrl: null,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          clientSpecific: null,
+          downloadUrl: null
+        },
+        // More Ongoing Promotion Materials
+        {
+          id: 5005,
+          name: "Monthly Wellness Newsletter",
+          categoryId: 3,
+          type: "newsletter",
+          originalFileName: "wellness-newsletter.pdf",
+          fileUrl: "/newsletters/wellness-newsletter.pdf",
+          fileType: "pdf",
+          version: "v3.1",
+          description: "Monthly tips for maintaining workplace wellness",
+          language: "English",
+          languageVariants: ["English", "Spanish"],
+          vimeoUrl: null,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          clientSpecific: null,
+          downloadUrl: null
+        },
+        {
+          id: 5006,
+          name: "Health Tips Information Flyer",
+          categoryId: 3,
+          type: "flyer",
+          originalFileName: "health-tips-flyer.pdf",
+          fileUrl: "/flyers/health-tips-flyer.pdf",
+          fileType: "pdf",
+          version: "v1.4",
+          description: "Colorful flyer with daily health and wellness tips",
+          language: "English",
+          languageVariants: ["English", "Spanish"],
+          vimeoUrl: null,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          clientSpecific: null,
+          downloadUrl: null
+        },
+        {
+          id: 5007,
+          name: "Wellness Program Virtual Display",
+          categoryId: 3,
+          type: "virtual_display",
+          originalFileName: "wellness-vdm.jpg",
+          fileUrl: "/displays/wellness-vdm.jpg",
+          fileType: "jpg",
+          version: "v1.7",
+          description: "Digital display for lobby screens and virtual environments",
+          language: "English",
+          languageVariants: ["English", "Spanish"],
+          vimeoUrl: null,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          clientSpecific: null,
+          downloadUrl: null
+        },
+        // More Video Content
+        {
+          id: 5008,
+          name: "Exercise Tutorial Series",
+          categoryId: 4,
+          type: "video",
+          originalFileName: "exercise-tutorials.mp4",
+          fileUrl: "/videos/exercise-tutorials.mp4",
+          fileType: "mp4",
+          version: "v2.0",
+          description: "Professional exercise demonstrations for workplace wellness",
+          language: "English",
+          languageVariants: ["English", "Spanish"],
+          vimeoUrl: "https://vimeo.com/123456790",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          clientSpecific: null,
+          downloadUrl: null
+        },
+        {
+          id: 5009,
+          name: "Stress Management Webinar",
+          categoryId: 4,
+          type: "webinar",
+          originalFileName: "stress-webinar.mp4",
+          fileUrl: "/webinars/stress-webinar.mp4",
+          fileType: "mp4",
+          version: "v1.3",
+          description: "Interactive webinar on effective stress management techniques",
+          language: "English",
+          languageVariants: ["English", "Spanish"],
+          vimeoUrl: "https://vimeo.com/987654321",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          clientSpecific: null,
+          downloadUrl: null
+        }
+      ];
       
-      const allAssets = [...assetsWithClientData, ...sampleAssetsWithLanguages];
+      const allAssets = [...assetsWithClientData, ...extraAssets];
       
       console.log(`Total assets being returned: ${allAssets.length}`);
-      console.log(`Sample assets count: ${sampleAssetsWithLanguages.length}`);
 
       res.json({
         client,
