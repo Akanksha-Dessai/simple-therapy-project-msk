@@ -77,8 +77,11 @@ export default function Home() {
                 SimpleTherapy Care Marketing Toolkit Platform
               </span>
             </div>
-            <div className="text-sm text-gray-500 dark:text-muted-foreground">
-              © 2024 SimpleTherapy. All rights reserved.
+            <div className="text-sm text-gray-500 dark:text-muted-foreground flex flex-col items-end">
+              <div>© 2025 SimpleTherapy. All rights reserved.</div>
+              <div className="mt-1">
+                Account Support: <a href="mailto:account.support@simpletherapy.com" className="text-primary hover:underline">account.support@simpletherapy.com</a>
+              </div>
             </div>
           </div>
         </div>
