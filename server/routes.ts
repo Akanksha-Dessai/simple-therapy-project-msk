@@ -505,6 +505,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
       
       const allAssets = [...assetsWithClientData, ...sampleAssetsWithLanguages];
+      
+      console.log(`Total assets being returned: ${allAssets.length}`);
+      console.log(`Sample assets count: ${sampleAssetsWithLanguages.length}`);
 
       res.json({
         client,
