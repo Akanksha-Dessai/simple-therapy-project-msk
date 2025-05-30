@@ -11,7 +11,7 @@ export const clients = pgTable("clients", {
   eligibilityLanguage: text("eligibility_language").notNull(),
   qrCodeUrl: text("qr_code_url"),
   // programTypes: text("program_types").array().notNull().default(["SimpleMSK"]), // Programs client has access to
-  activePrograms: text("active_programs").array().notNull().default(["SimpleMSK"]), // correct column name for clients
+  activePrograms: text("active_programs").array().notNull().default(["SimpleMSK"]), 
   status: text("status").notNull().default("active"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
