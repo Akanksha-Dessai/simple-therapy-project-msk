@@ -152,19 +152,32 @@ export default function AdminPanel() {
     const formData = new FormData(e.currentTarget);
     const clientData = {
       name: formData.get("name") as string,
+      clientId: formData.get("clientId") as string,
+      clientCode: formData.get("clientCode") as string,
+      cualincCode: formData.get("cualincCode") as string || null,
+      marqueeCode: formData.get("marqueeCode") as string || null,
       accessCode: formData.get("accessCode") as string,
       contactEmail: formData.get("contactEmail") as string,
+      landingPageUrl: formData.get("landingPageUrl") as string || null,
       eligibilityLanguage: formData.get("eligibilityLanguage") as string,
       logoUrl: formData.get("logoUrl") as string || null,
       qrCodeUrl: formData.get("qrCodeUrl") as string || null,
-      status: formData.get("status") as string,
+      activePrograms: selectedPrograms.length > 0 ? selectedPrograms : ["SimpleMSK"],
+      status: formData.get("status") as string || "active",
     };
 
     if (editingClient) {
       updateClientMutation.mutate({ id: editingClient.id, data: clientData });
     } else {
       createClientMutation.mutate(clientData);
+      toast({
+        title: "Client added!",
+        description: "New client has been created successfully.",
+        variant: "default",
+      });
     }
+    setShowClientDialog(false);
+    setSelectedPrograms([]);
   };
 
   const handleTemplateSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -261,7 +274,14 @@ export default function AdminPanel() {
                     onChange={(e) => setSearchTerm(e.target.value)}
                   />
                 </div>
-                <Dialog open={showClientDialog} onOpenChange={setShowClientDialog}>
+                <Dialog open={showClientDialog} 
+                onOpenChange={(open) => {
+                  setShowClientDialog(open);
+                  if (!open) {
+                    setSelectedPrograms([]); // Reset when dialog is closed
+                  }
+                }}
+                >
                   <DialogTrigger asChild>
                     <Button className="bg-secondary hover:bg-green-600 text-white">
                       <Plus className="mr-2 h-4 w-4" /> Add New Client
@@ -274,14 +294,7 @@ export default function AdminPanel() {
                         Create a new client with access credentials and configuration
                       </p>
                     </DialogHeader>
-                    <form onSubmit={(e) => {
-                      e.preventDefault();
-                      setShowClientDialog(false);
-                      toast({
-                        title: "Client added!",
-                        description: "New client has been created successfully.",
-                      });
-                    }} className="space-y-4">
+                    <form onSubmit={handleClientSubmit} className="space-y-4">
                       <div>
                         <Label htmlFor="clientName">Client Name</Label>
                         <Input id="clientName" name="name" required />
@@ -304,6 +317,13 @@ export default function AdminPanel() {
                           Unique code from SimpleTherapy's client list
                         </p>
                       </div>
+                      <div>
+                          <Label htmlFor="accessCode">Access Code</Label>
+                          <Input id="accessCode" name="accessCode" required />
+                          <p className="text-xs text-gray-500 mt-1">
+                            Unique access code for client login
+                          </p>
+                        </div>
                       {selectedPrograms.includes('SimpleEAP') && (
                         <div>
                           <Label htmlFor="cualincCode">

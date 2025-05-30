@@ -5,8 +5,13 @@ import { z } from "zod";
 export const clients = pgTable("clients", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
+  clientId: text("client_id").notNull(),
+  clientCode: text("client_code").notNull(),
+  cualincCode: text("cualinc_code"),
+  marqueeCode: text("marquee_code"),
   accessCode: text("access_code").notNull().unique(),
   contactEmail: text("contact_email").notNull(),
+  landingPageUrl: text("landing_page_url"),
   logoUrl: text("logo_url"),
   eligibilityLanguage: text("eligibility_language").notNull(),
   qrCodeUrl: text("qr_code_url"),
