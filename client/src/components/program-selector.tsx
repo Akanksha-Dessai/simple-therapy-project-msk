@@ -10,8 +10,6 @@ interface ProgramSelectorProps {
 export default function ProgramSelector({ client, onProgramSelect, selectedProgram }: ProgramSelectorProps) {
   // For now, let's add multiple programs to test the selection
   const activePrograms = client.activePrograms || ["SimpleMSK", "SimpleEAP"];
-
-  console.log("Active pograms",activePrograms);
   const getProgramLogo = (program: string) => {
     switch (program) {
       case "SimpleMSK":
