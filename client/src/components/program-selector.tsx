@@ -9,8 +9,9 @@ interface ProgramSelectorProps {
 
 export default function ProgramSelector({ client, onProgramSelect, selectedProgram }: ProgramSelectorProps) {
   // For now, let's add multiple programs to test the selection
-  const programTypes = client.programTypes || ["SimpleMSK", "SimpleEAP"];
+  const activePrograms = client.activePrograms || ["SimpleMSK", "SimpleEAP"];
 
+  console.log("Active pograms",activePrograms);
   const getProgramLogo = (program: string) => {
     switch (program) {
       case "SimpleMSK":
@@ -60,8 +61,8 @@ export default function ProgramSelector({ client, onProgramSelect, selectedProgr
 
   // Always show program selection for multiple programs
   // Auto-select if only one program available
-  if (programTypes.length === 1 && !selectedProgram) {
-    setTimeout(() => onProgramSelect(programTypes[0]), 0);
+  if (activePrograms.length === 1 && !selectedProgram) {
+    setTimeout(() => onProgramSelect(activePrograms[0]), 0);
     return null;
   }
 
@@ -72,7 +73,7 @@ export default function ProgramSelector({ client, onProgramSelect, selectedProgr
           Select Your Program
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {programTypes.map((program) => (
+          {activePrograms.map((program) => (
             <Button
               key={program}
               onClick={() => onProgramSelect(program)}

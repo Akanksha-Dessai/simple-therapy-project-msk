@@ -26,6 +26,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       res.json(client);
     } catch (error) {
+      console.error(error);
       res.status(500).json({ message: "Internal server error" });
     }
   });
@@ -660,6 +661,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         assets: allAssets
       });
     } catch (error) {
+      console.error(error);
       res.status(500).json({ message: "Internal server error" });
     }
   });

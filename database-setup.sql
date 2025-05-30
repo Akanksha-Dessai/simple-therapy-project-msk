@@ -132,8 +132,8 @@ INSERT INTO clients (
     'MQ-ACME-2024',
     'hr@acmecorp.com',
     'https://acme-corp.com/wellness',
-    'https://via.placeholder.com/150x75/0066CC/FFFFFF?text=ACME',
-    'https://via.placeholder.com/100x100/000000/FFFFFF?text=QR',
+    'https://placehold.co/150x75/0066CC/FFFFFF?text=ACME',
+    'https://placehold.co/100x100/000000/FFFFFF?text=QR',
     'Available to all full-time employees and their families',
     ARRAY['SimpleMSK', 'SimpleEAP'],
     'active'
@@ -147,8 +147,8 @@ INSERT INTO clients (
     'MQ-TECH-2024',
     'benefits@techstart.com',
     'https://techstart.com/employee-benefits',
-    'https://via.placeholder.com/150x75/FF6600/FFFFFF?text=TECHSTART',
-    'https://via.placeholder.com/100x100/000000/FFFFFF?text=QR',
+    'https://placehold.co/150x75/FF6600/FFFFFF?text=TECHSTART',
+    'https://placehold.co/100x100/000000/FFFFFF?text=QR',
     'Available to all employees after 90-day probation period',
     ARRAY['SimpleWellbeing', 'SimpleBehavioural'],
     'active'
@@ -162,8 +162,8 @@ INSERT INTO clients (
     'MQ-GHS-2024',
     'wellness@globalhealthsys.com',
     'https://globalhealthsys.com/employee-wellness',
-    'https://via.placeholder.com/150x75/009900/FFFFFF?text=GHS',
-    'https://via.placeholder.com/100x100/000000/FFFFFF?text=QR',
+    'https://placehold.co/150x75/009900/FFFFFF?text=GHS',
+    'https://placehold.co/100x100/000000/FFFFFF?text=QR',
     'Comprehensive wellness program for all staff and dependents',
     ARRAY['SimpleMSK', 'SimpleEAP', 'SimpleWellbeing', 'SimpleBehavioural'],
     'active'

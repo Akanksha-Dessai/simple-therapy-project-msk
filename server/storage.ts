@@ -78,7 +78,7 @@ export class MemStorage implements IStorage {
       logoUrl: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100",
       eligibilityLanguage: "Available to all full-time employees and their families",
       qrCodeUrl: null,
-      programTypes: ["SimpleMSK", "SimpleEAP", "SimpleBehavioural", "SimpleWellbeing"],
+      activePrograms: ["SimpleMSK", "SimpleEAP", "SimpleBehavioural", "SimpleWellbeing"],
       status: "active",
       createdAt: new Date(),
       updatedAt: new Date()
@@ -92,7 +92,7 @@ export class MemStorage implements IStorage {
       logoUrl: "https://images.unsplash.com/photo-1497366216548-37526070297c?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100",
       eligibilityLanguage: "Available to all employees working 20+ hours per week",
       qrCodeUrl: null,
-      programTypes: ["SimpleEAP", "SimpleWellbeing"],
+      activePrograms: ["SimpleEAP", "SimpleWellbeing"],
       status: "active",
       createdAt: new Date(),
       updatedAt: new Date()
@@ -325,7 +325,7 @@ export class MemStorage implements IStorage {
       logoUrl: client.logoUrl || null,
       qrCodeUrl: client.qrCodeUrl || null,
       status: client.status || "active",
-      programTypes: client.programTypes || [],
+      activePrograms: client.activePrograms || [],
       createdAt: new Date(),
       updatedAt: new Date()
     };
@@ -501,7 +501,17 @@ export class MemStorage implements IStorage {
 // DatabaseStorage implementation for PostgreSQL
 export class DatabaseStorage implements IStorage {
   // Import the database connection
-  private db = require('./db').db;
+  //private db = require('./db').db;
+  private db: any;
+
+  constructor() {
+    this.initDb();
+  }
+
+  private async initDb() {
+    const { db } = await import('./db.js');
+    this.db = db;
+  }
 
   // Client operations
   async createClient(client: InsertClient): Promise<Client> {
@@ -693,6 +703,6 @@ export class DatabaseStorage implements IStorage {
 }
 
 // Use MemStorage by default for development, change to DatabaseStorage for production
-export const storage = new MemStorage();
+// export const storage = new MemStorage();
 // To use PostgreSQL database, uncomment the line below and comment the line above:
-// export const storage = new DatabaseStorage();
+export const storage = new DatabaseStorage();
