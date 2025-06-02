@@ -278,6 +278,7 @@ export default function AdminPanel() {
                 onOpenChange={(open) => {
                   setShowClientDialog(open);
                   if (!open) {
+                    setEditingClient(null);
                     setSelectedPrograms([]); // Reset when dialog is closed
                   }
                 }}
@@ -289,37 +290,57 @@ export default function AdminPanel() {
                   </DialogTrigger>
                   <DialogContent className="sm:max-w-[500px] max-h-[85vh] overflow-y-auto">
                     <DialogHeader>
-                      <DialogTitle>Add New Client</DialogTitle>
-                      <p className="text-sm text-gray-600 dark:text-muted-foreground">
-                        Create a new client with access credentials and configuration
-                      </p>
+                    <DialogTitle>{editingClient ? "Edit Client" : "Add New Client"}</DialogTitle>
+                        <p className="text-sm text-gray-600 dark:text-muted-foreground">
+                          {editingClient ? "Update client information" : "Create a new client with access credentials and configuration"}
+                        </p>
                     </DialogHeader>
                     <form onSubmit={handleClientSubmit} className="space-y-4">
                       <div>
                         <Label htmlFor="clientName">Client Name</Label>
-                        <Input id="clientName" name="name" required />
+                        <Input id="clientName" 
+                        name="name" 
+                        defaultValue={editingClient?.name || ""}
+                        required />
                       </div>
                       <div>
                         <Label htmlFor="clientId">Client ID</Label>
-                        <Input id="clientId" name="clientId" required />
+                        <Input
+                         id="clientId"
+                          name="clientId" 
+                          defaultValue={editingClient?.clientId || ""}
+                          required />
                         <p className="text-xs text-gray-500 mt-1">
                           Unique identifier for this client
                         </p>
                       </div>
                       <div>
                         <Label htmlFor="contactEmail">Contact Email</Label>
-                        <Input id="contactEmail" name="contactEmail" type="email" required />
+                        <Input 
+                        id="contactEmail"
+                         name="contactEmail" 
+                         type="email" 
+                         defaultValue={editingClient?.contactEmail || ""}
+                         required />
                       </div>
                       <div>
                         <Label htmlFor="clientCode">Client Code</Label>
-                        <Input id="clientCode" name="clientCode" required />
+                        <Input 
+                        id="clientCode" 
+                        name="clientCode"
+                        defaultValue={editingClient?.clientCode || ""}
+                        required />
                         <p className="text-xs text-gray-500 mt-1">
                           Unique code from SimpleTherapy's client list
                         </p>
                       </div>
                       <div>
                           <Label htmlFor="accessCode">Access Code</Label>
-                          <Input id="accessCode" name="accessCode" required />
+                          <Input 
+                          id="accessCode"
+                           name="accessCode"
+                           defaultValue={editingClient?.accessCode || ""}
+                           required />
                           <p className="text-xs text-gray-500 mt-1">
                             Unique access code for client login
                           </p>
@@ -330,7 +351,11 @@ export default function AdminPanel() {
                             Cualinc Code 
                             <span className="text-red-500">*</span>
                           </Label>
-                          <Input id="cualincCode" name="cualincCode" required />
+                          <Input
+                           id="cualincCode" 
+                           name="cualincCode"
+                           defaultValue={editingClient?.cualincCode || ""}
+                           required />
                           <p className="text-xs text-gray-500 mt-1">
                             Required for SimpleEAP program
                           </p>
@@ -342,7 +367,11 @@ export default function AdminPanel() {
                             Marquee Code 
                             <span className="text-red-500">*</span>
                           </Label>
-                          <Input id="marqueeCode" name="marqueeCode" required />
+                          <Input 
+                          id="marqueeCode" 
+                          name="marqueeCode" 
+                          defaultValue={editingClient?.marqueeCode || ""}
+                          required />
                           <p className="text-xs text-gray-500 mt-1">
                             Required for SimpleWellbeing program
                           </p>
@@ -350,7 +379,12 @@ export default function AdminPanel() {
                       )}
                       <div>
                         <Label htmlFor="landingPageUrl">Landing Page URL</Label>
-                        <Input id="landingPageUrl" name="landingPageUrl" type="url" placeholder="https://example.com" />
+                        <Input
+                         id="landingPageUrl"
+                          name="landingPageUrl"
+                           type="url"
+                           defaultValue={editingClient?.landingPageUrl || ""}
+                           placeholder="https://example.com" />
                         <p className="text-xs text-gray-500 mt-1">
                           URL where clients will be redirected (optional)
                         </p>
@@ -362,80 +396,36 @@ export default function AdminPanel() {
                             Select which programs this client can access
                           </p>
                           <div className="grid grid-cols-2 gap-2">
-                            <div className="flex items-center space-x-2">
-                              <input 
-                                type="checkbox" 
-                                id="simpleMSK" 
-                                name="activePrograms" 
-                                value="SimpleMSK" 
-                                className="rounded"
-                                onChange={(e) => {
-                                  if (e.target.checked) {
-                                    setSelectedPrograms(prev => [...prev, 'SimpleMSK']);
-                                  } else {
-                                    setSelectedPrograms(prev => prev.filter(p => p !== 'SimpleMSK'));
-                                  }
-                                }}
-                              />
-                              <label htmlFor="simpleMSK" className="text-sm">SimpleMSK</label>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                              <input 
-                                type="checkbox" 
-                                id="simpleEAP" 
-                                name="activePrograms" 
-                                value="SimpleEAP" 
-                                className="rounded"
-                                onChange={(e) => {
-                                  if (e.target.checked) {
-                                    setSelectedPrograms(prev => [...prev, 'SimpleEAP']);
-                                  } else {
-                                    setSelectedPrograms(prev => prev.filter(p => p !== 'SimpleEAP'));
-                                  }
-                                }}
-                              />
-                              <label htmlFor="simpleEAP" className="text-sm">SimpleEAP</label>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                              <input 
-                                type="checkbox" 
-                                id="simpleBehavioural" 
-                                name="activePrograms" 
-                                value="SimpleBehavioural" 
-                                className="rounded"
-                                onChange={(e) => {
-                                  if (e.target.checked) {
-                                    setSelectedPrograms(prev => [...prev, 'SimpleBehavioural']);
-                                  } else {
-                                    setSelectedPrograms(prev => prev.filter(p => p !== 'SimpleBehavioural'));
-                                  }
-                                }}
-                              />
-                              <label htmlFor="simpleBehavioural" className="text-sm">SimpleBehavioural</label>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                              <input 
-                                type="checkbox" 
-                                id="simpleWellbeing" 
-                                name="activePrograms" 
-                                value="SimpleWellbeing" 
-                                className="rounded"
-                                onChange={(e) => {
-                                  if (e.target.checked) {
-                                    setSelectedPrograms(prev => [...prev, 'SimpleWellbeing']);
-                                  } else {
-                                    setSelectedPrograms(prev => prev.filter(p => p !== 'SimpleWellbeing'));
-                                  }
-                                }}
-                              />
-                              <label htmlFor="simpleWellbeing" className="text-sm">SimpleWellbeing</label>
-                            </div>
+                          {["SimpleMSK", "SimpleEAP", "SimpleBehavioural", "SimpleWellbeing"].map((program) => (
+                              <div key={program} className="flex items-center space-x-2">
+                                <input 
+                                  type="checkbox" 
+                                  id={program.toLowerCase()} 
+                                  name="activePrograms" 
+                                  value={program} 
+                                  className="rounded"
+                                  defaultChecked={editingClient?.activePrograms?.includes(program)}
+                                  onChange={(e) => {
+                                    if (e.target.checked) {
+                                      setSelectedPrograms(prev => [...prev, program]);
+                                    } else {
+                                      setSelectedPrograms(prev => prev.filter(p => p !== program));
+                                    }
+                                  }}
+                                />
+                                <label htmlFor={program.toLowerCase()} className="text-sm">{program}</label>
+                              </div>
+                            ))}
                           </div>
                         </div>
                       </div>
                       <div>
                         <Label htmlFor="eligibilityLanguage">Eligibility Language</Label>
-                        <Textarea id="eligibilityLanguage" name="eligibilityLanguage" rows={3} placeholder="Enter eligibility text..." />
+                        <Textarea
+                         id="eligibilityLanguage" 
+                         name="eligibilityLanguage" 
+                         defaultValue={editingClient?.eligibilityLanguage || ""}
+                         rows={3} placeholder="Enter eligibility text..." />
                       </div>
                       <div className="flex justify-end space-x-2">
                         <Button type="button" variant="outline" onClick={() => setShowClientDialog(false)}>
@@ -528,7 +518,15 @@ export default function AdminPanel() {
                           </TableCell>
                           <TableCell>
                             <div className="flex space-x-2">
-                              <Button variant="outline" size="sm">
+                              <Button 
+                              variant="outline" 
+                              size="sm"
+                              onClick={() => {
+                                setEditingClient(client);
+                                setSelectedPrograms(client.activePrograms || ['SimpleMSK']);
+                                setShowClientDialog(true);
+                              }}
+                              >
                                 <Edit className="h-3 w-3" />
                               </Button>
                               <Button
