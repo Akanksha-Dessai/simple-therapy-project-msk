@@ -166,6 +166,8 @@ export default function AdminPanel() {
       status: formData.get("status") as string || "active",
     };
 
+    console.log('Client Data to be submitted:', clientData);
+
     if (editingClient) {
       updateClientMutation.mutate({ id: editingClient.id, data: clientData });
     } else {
