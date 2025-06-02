@@ -360,17 +360,28 @@ export class MemStorage implements IStorage {
 
   // Asset Category operations
   async createAssetCategory(category: InsertAssetCategory): Promise<AssetCategory> {
-    const newCategory: AssetCategory = {
-      id: this.currentCategoryId++,
-      ...category,
-      status: category.status || "active",
-      description: category.description || null,
-      displayOrder: category.displayOrder || 1,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    };
-    this.assetCategories.set(newCategory.id, newCategory);
-    return newCategory;
+    const { assetCategories } = await import('../shared/schema.js');
+    try {
+      const [newCategory] = await this.db.insert(assetCategories)
+        .values({
+          name: category.name,
+          slug: category.slug,
+          description: category.description,
+          programTypes: category.programTypes,
+          displayOrder: category.displayOrder || 0,
+          status: category.status || 'active'
+        })
+        .returning();
+      
+      if (!newCategory) {
+        throw new Error('Failed to create category');
+      }
+      
+      return newCategory;
+    } catch (error) {
+      console.error('Error creating category:', error);
+      throw error;
+    }
   }
 
   async getAssetCategory(id: number): Promise<AssetCategory | undefined> {
@@ -560,8 +571,27 @@ export class DatabaseStorage implements IStorage {
   // Asset category operations
   async createAssetCategory(category: InsertAssetCategory): Promise<AssetCategory> {
     const { assetCategories } = await import('../shared/schema.js');
-    const [newCategory] = await this.db.insert(assetCategories).values(category).returning();
-    return newCategory;
+    try {
+      const [newCategory] = await this.db.insert(assetCategories)
+        .values({
+          name: category.name,
+          slug: category.slug,
+          description: category.description,
+          programTypes: category.programTypes,
+          displayOrder: category.displayOrder || 0,
+          status: category.status || 'active'
+        })
+        .returning();
+      
+      if (!newCategory) {
+        throw new Error('Failed to create category');
+      }
+      
+      return newCategory;
+    } catch (error) {
+      console.error('Error creating category:', error);
+      throw error;
+    }
   }
 
   async getAssetCategory(id: number): Promise<AssetCategory | undefined> {
@@ -582,7 +612,7 @@ export class DatabaseStorage implements IStorage {
     return await this.db
       .select()
       .from(assetCategories)
-      .where(sql`${assetCategories.programType} @> ARRAY[${programType}]`)
+      .where(sql`${assetCategories.programTypes} @> ARRAY[${programType}]`)
       .orderBy(assetCategories.displayOrder);
   }
 

@@ -855,27 +855,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Get all categories
   app.get("/api/admin/categories", async (req, res) => {
     try {
-      // Provide categories directly while we fix the storage issue
-      const categories = [
-        { id: 1, name: "Intro Materials", slug: "intro-materials", description: "Introduction and overview materials", programType: "SimpleMSK", displayOrder: 1, status: "active" },
-        { id: 2, name: "Launch Campaign", slug: "launch-campaign", description: "Campaign materials for program launch", programType: "SimpleMSK", displayOrder: 2, status: "active" },
-        { id: 3, name: "Ongoing Promotion", slug: "ongoing-promotion", description: "Materials for ongoing program promotion", programType: "SimpleMSK", displayOrder: 3, status: "active" },
-        { id: 4, name: "Videos", slug: "videos", description: "Video content and webinars", programType: "SimpleMSK", displayOrder: 4, status: "active" },
-        { id: 5, name: "Intro Materials", slug: "intro-materials", description: "Introduction and overview materials", programType: "SimpleEAP", displayOrder: 1, status: "active" },
-        { id: 6, name: "Launch Campaign", slug: "launch-campaign", description: "Campaign materials for program launch", programType: "SimpleEAP", displayOrder: 2, status: "active" },
-        { id: 7, name: "Ongoing Promotion", slug: "ongoing-promotion", description: "Materials for ongoing program promotion", programType: "SimpleEAP", displayOrder: 3, status: "active" },
-        { id: 8, name: "Videos", slug: "videos", description: "Video content and webinars", programType: "SimpleEAP", displayOrder: 4, status: "active" },
-        { id: 9, name: "Intro Materials", slug: "intro-materials", description: "Introduction and overview materials", programType: "SimpleBehavioural", displayOrder: 1, status: "active" },
-        { id: 10, name: "Launch Campaign", slug: "launch-campaign", description: "Campaign materials for program launch", programType: "SimpleBehavioural", displayOrder: 2, status: "active" },
-        { id: 11, name: "Ongoing Promotion", slug: "ongoing-promotion", description: "Materials for ongoing program promotion", programType: "SimpleBehavioural", displayOrder: 3, status: "active" },
-        { id: 12, name: "Videos", slug: "videos", description: "Video content and webinars", programType: "SimpleBehavioural", displayOrder: 4, status: "active" },
-        { id: 13, name: "Intro Materials", slug: "intro-materials", description: "Introduction and overview materials", programType: "SimpleWellbeing", displayOrder: 1, status: "active" },
-        { id: 14, name: "Launch Campaign", slug: "launch-campaign", description: "Campaign materials for program launch", programType: "SimpleWellbeing", displayOrder: 2, status: "active" },
-        { id: 15, name: "Ongoing Promotion", slug: "ongoing-promotion", description: "Materials for ongoing program promotion", programType: "SimpleWellbeing", displayOrder: 3, status: "active" },
-        { id: 16, name: "Videos", slug: "videos", description: "Video content and webinars", programType: "SimpleWellbeing", displayOrder: 4, status: "active" }
-      ];
+      const categories = await storage.getAllAssetCategories();
       res.json(categories);
     } catch (error) {
+      console.error('Error fetching categories:', error);
       res.status(500).json({ message: "Internal server error" });
     }
   });
@@ -883,14 +866,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Create category
   app.post("/api/admin/categories", async (req, res) => {
     try {
+      console.log('Received category data:', req.body);
       const validatedData = insertAssetCategorySchema.parse(req.body);
-      const category = await storage.createAssetCategory(validatedData);
-      res.status(201).json(category);
+      console.log('Validated category data:', validatedData);
+      
+      try {
+        const category = await storage.createAssetCategory(validatedData);
+        console.log('Category created successfully:', category);
+        res.status(201).json(category);
+      } catch (dbError) {
+        console.error('Database error creating category:', dbError);
+        throw dbError;
+      }
     } catch (error) {
+      console.error('Error creating category:', error);
       if (error instanceof z.ZodError) {
         return res.status(400).json({ message: "Validation error", errors: error.errors });
       }
-      res.status(500).json({ message: "Internal server error" });
+      res.status(500).json({ 
+        message: "Internal server error",
+        details: error instanceof Error ? error.message : 'Unknown error',
+        stack: error instanceof Error ? error.stack : undefined
+      });
     }
   });
 

@@ -204,14 +204,20 @@ export default function AdminPanel() {
   const handleCategorySubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
+
+    // Get all selected program types
+  const selectedPrograms = formData.getAll("programTypes") as string[];
+
     const categoryData = {
       name: formData.get("name") as string,
       slug: formData.get("slug") as string,
       description: formData.get("description") as string || null,
-      programType: formData.get("programType") as string,
+      programTypes: selectedPrograms.length > 0 ? selectedPrograms : ["SimpleMSK"], // Ensure at least one program type,
       displayOrder: parseInt(formData.get("displayOrder") as string) || 0,
       status: formData.get("status") as string,
     };
+
+    console.log('Category Data to be submitted:', categoryData);
 
     if (editingCategory) {
       updateCategoryMutation.mutate({ id: editingCategory.id, data: categoryData });
@@ -619,18 +625,22 @@ export default function AdminPanel() {
                         />
                       </div>
                       <div>
-                        <Label htmlFor="programType">Assign to Program</Label>
-                        <Select name="programType" defaultValue={editingCategory?.programType || ""} required>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select program" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="SimpleMSK">SimpleMSK</SelectItem>
-                            <SelectItem value="SimpleEAP">SimpleEAP</SelectItem>
-                            <SelectItem value="SimpleBehavioural">SimpleBehavioural</SelectItem>
-                            <SelectItem value="SimpleWellbeing">SimpleWellbeing</SelectItem>
-                          </SelectContent>
-                        </Select>
+                        <Label htmlFor="programTypes">Assign to Programs</Label>
+                        <div className="space-y-2">
+                          {["SimpleMSK", "SimpleEAP", "SimpleBehavioural", "SimpleWellbeing"].map((program) => (
+                            <div key={program} className="flex items-center space-x-2">
+                              <input
+                                type="checkbox"
+                                id={program}
+                                name="programTypes"
+                                value={program}
+                                defaultChecked={editingCategory?.programTypes?.includes(program)}
+                                className="rounded"
+                              />
+                              <label htmlFor={program} className="text-sm">{program}</label>
+                            </div>
+                          ))}
+                        </div>
                       </div>
                       <div>
                         <Label htmlFor="categoryDescription">Description</Label>
@@ -683,7 +693,7 @@ export default function AdminPanel() {
               ) : (
                 <div className="space-y-4">
                   {["SimpleMSK", "SimpleEAP", "SimpleBehavioural", "SimpleWellbeing"].map(program => {
-                    const programCategories = categories.filter((cat: any) => cat.programType === program);
+                    const programCategories = categories.filter((cat: any) => cat.programTypes.includes(program));
                     return (
                       <Card key={program} className="border-l-4 border-l-secondary">
                         <CardHeader className="pb-3">

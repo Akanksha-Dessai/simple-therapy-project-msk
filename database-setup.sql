@@ -47,6 +47,7 @@ CREATE TABLE asset_categories (
     description TEXT,
     program_types TEXT[], -- Array of programs this category applies to
     display_order INTEGER DEFAULT 0,
+    status VARCHAR(50) DEFAULT 'active',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

@@ -27,7 +27,7 @@ export const assetCategories = pgTable("asset_categories", {
   name: text("name").notNull(),
   slug: text("slug").notNull().unique(),
   description: text("description"),
-  programType: text("program_type").notNull(), // SimpleMSK, SimpleBehavioural, etc.
+  programTypes: text("program_types").array().notNull(), // SimpleMSK, SimpleBehavioural, etc.
   displayOrder: integer("display_order").notNull().default(0),
   status: text("status").notNull().default("active"), // active, inactive
   createdAt: timestamp("created_at").defaultNow(),
